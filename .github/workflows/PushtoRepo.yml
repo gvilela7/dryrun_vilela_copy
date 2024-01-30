@@ -18,8 +18,8 @@ jobs:
           repository: gvilela7/dryrun_vilela
           ref: ${{ github.ref_name }}
           sparse-checkout: |
-            text.txt
-            naoMexe.txt
+            src/text.txt
+            src/naoMexe.txt
           path: tmp
 
       - name: Edit Files 
@@ -30,13 +30,19 @@ jobs:
           cat text.txt
           echo "$(ls)"
 
+      - name: Move Files 
+          env:
+            APIGEE_PATH: ${{ inputs.APIGEE_PATH }}
+          run: |
+            sudo mv -f "tmp" src
+
       - name: install tree
         run: | 
           sudo apt-get install tree
 
       - name: check Files
         run: |
-          cd tmp
+          cd src
           tree
 
       - name: List modified files
