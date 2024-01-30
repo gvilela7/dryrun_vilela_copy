@@ -147,4 +147,4 @@ const main = async () => {
 
 
 main()
-  .catch((error) => console.log(error.response.data));
+  .catch((error) => console.log(error.message));
