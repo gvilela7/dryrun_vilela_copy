@@ -28,7 +28,7 @@ jobs:
 
       - name: Edit Files 
         run: |
-          cd src
+          cd tmp
           echo "hello world" >> text.txt
           cat naoMexe.txt
           cat text.txt
