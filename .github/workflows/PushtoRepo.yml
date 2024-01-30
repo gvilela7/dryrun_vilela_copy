@@ -14,14 +14,28 @@ jobs:
           git config --global user.email "goncalo.freitas.vilela@devoteam.com"
           git config --global user.name "gvilela7"
           git checkout -b new-branch
-          git remote add destination_repository https://github.com/gvilela7/dryrun_vilela.git
 
       - name: Create a new text file
         run: echo "Hello, this is a new text file." > newfile.txt
 
-      - name: Set remote URL and push code
+      - name: Set remote URL with authentication
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const token = process.env.DESTINATION_REPO_TOKEN;
+            const remoteUrl = `https://${token}@github.com/gvilela7/dryrun_vilela.git`;
+            await github.repos.createOrUpdateFile({
+              ...context.repo,
+              path: '.git/config',
+              message: 'Set remote URL with authentication',
+              content: Buffer.from(`
+[remote "destination_repository"]
+    url = ${remoteUrl}
+`).toString('base64'),
+            });
+          
+      - name: Add, commit, and push code
         run: |
-          git remote set-url destination_repository "https://${DESTINATION_REPO_TOKEN}@github.com/gvilela7/dryrun_vilela.git"
           git add newfile.txt
           git commit -m "Automated commit from GitHub Actions"
           git push destination_repository new-branch
