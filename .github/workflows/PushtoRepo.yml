@@ -40,6 +40,9 @@ jobs:
     - name: Commit Files
       if: ${{ steps.modifiedFiles.outputs.result != '' }}        
       run: |
+
+          cat "${{steps.modifiedFiles.outputs.result}}"
+          
           npm install axios
 
           node .github/GitVerifiedCommit/index.js \
