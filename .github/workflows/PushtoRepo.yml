@@ -37,6 +37,7 @@ jobs:
       - name: Commit Files
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
         run: |
+          cd tmp
           cat text.txt
           echo "${{steps.modifiedFiles.outputs.result}}"
           npm install axios
