@@ -22,7 +22,8 @@ jobs:
             naoMexe.txt
           path: tmp
 
-      - name: Edit Files 
+      - name: Edit Files
+        id: modifiedFiles 
         run: |
           cd tmp
           echo "hello world" >> text.txt
