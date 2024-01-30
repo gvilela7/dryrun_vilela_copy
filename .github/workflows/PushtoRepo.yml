@@ -3,6 +3,8 @@ on: [workflow_dispatch]
 jobs:
   push_code:
     runs-on: ubuntu-latest
+    env:
+      DESTINATION_REPO_TOKEN: ${{ secrets.DESTINATION_REPO_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -27,4 +29,5 @@ jobs:
           git commit -m "Automated commit from GitHb Actions"
           echo $(git remote get-url destination_repository)
           echo $(git branch)
+          echo "https://$DESTINATION_REPO_TOKEN@github.com/gvilela7/dryrun_vilela.git new-branch"
           git push https://$DESTINATION_REPO_TOKEN@github.com/gvilela7/dryrun_vilela.git new-branch
