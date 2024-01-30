@@ -22,7 +22,7 @@ jobs:
 
     - name: Push changes to repository B
       run: |
-        git remote add repositoryB https://github.com/gvilela7/dryrun_vilela.git
+        git remote add repositoryB https://github.com/gvilela7/dryrun_vilela.git || true  # Add remote, ignore error if it already exists
         git push -u repositoryB new-branch
       env:
         REPO_B_TOKEN: ${{ secrets.REPO_B_TOKEN }}
