@@ -21,18 +21,18 @@ jobs:
             src/text.txt
             src/naoMexe.txt
           path: tmp
+      
+      - name: Move Files 
+        run: |
+          sudo mv -f "tmp" "src"
 
       - name: Edit Files 
         run: |
-          cd tmp
+          cd src
           echo "hello world" >> text.txt
           cat naoMexe.txt
           cat text.txt
           echo "$(ls)"
-
-      - name: Move Files 
-        run: |
-          sudo mv -f "tmp" "src"
 
       - name: install tree
         run: | 
