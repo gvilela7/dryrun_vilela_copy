@@ -26,6 +26,8 @@ jobs:
       run: |
         cd tmp
         echo "hello world" >> text.txt
+        cat naoMexe.txt
+        cat text.txt
 
     - name: List modified files
       if: ${{ always() }}
