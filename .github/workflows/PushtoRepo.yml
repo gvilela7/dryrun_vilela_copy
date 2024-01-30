@@ -30,6 +30,19 @@ jobs:
         cat text.txt
         echo "$(ls)"
 
+    - name: Move Files 
+          run: |
+            sudo mv -f "tmp/" "src"
+    
+    - name: install tree
+          run: | 
+            sudo apt-get install tree
+
+    - name: check Files
+          run: |
+            cd $dir
+            tree
+
     - name: List modified files
       if: ${{ always() }}
       id: modifiedFiles
