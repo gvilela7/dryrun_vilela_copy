@@ -31,10 +31,8 @@ jobs:
           echo "$(ls)"
 
       - name: Move Files 
-          env:
-            APIGEE_PATH: ${{ inputs.APIGEE_PATH }}
-          run: |
-            sudo mv -f "tmp" src
+        run: |
+          sudo mv -f "tmp" "src"
 
       - name: install tree
         run: | 
