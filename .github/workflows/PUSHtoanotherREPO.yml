@@ -1,4 +1,4 @@
-name: "Create Branch and Push to another Repo"
+name: "Create Branch and Push to another repo"
 on: [workflow_dispatch]
 jobs:
   create_branch_and_push:
