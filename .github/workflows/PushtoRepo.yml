@@ -40,7 +40,7 @@ jobs:
           echo "${{steps.modifiedFiles.outputs.result}}"
           npm install axios
           
-         node .github/GitVerifiedCommit/index.js \
+          node .github/GitVerifiedCommit/index.js \
                ${{secrets.PIPELINE_ACCESS}} \
                gvilela7 \
                dryrun_vilela \
