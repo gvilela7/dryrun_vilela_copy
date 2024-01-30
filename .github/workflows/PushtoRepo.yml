@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
     - name: Create branch in target repository
       env:
         TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
