@@ -1,10 +1,9 @@
 name: "Push to another repo"
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
 jobs:
   push_code:
     runs-on: ubuntu-latest
-    env:
-      DESTINATION_REPO_TOKEN: ${{ secrets.DESTINATION_REPO_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -14,20 +13,15 @@ jobs:
         run: |
           git config --global user.email "goncalo.freitas.vilela@devoteam.com"
           git config --global user.name "gvilela7"
-
-      - name: Create a new text file
-        run: echo "Hello, this is a new text file." > newfile.txt
-
-      - name: Create and switch to a new branch
-        run: |
           git remote add destination_repository https://github.com/gvilela7/dryrun_vilela.git
           git checkout -b new-branch
+          git config --local credential.helper "!f() { echo username=oauth; echo password=${DESTINATION_REPO_TOKEN}; }; f"
+          
+      - name: Create a new text file
+        run: echo "Hello, this is a new text file." > newfile.txt
 
       - name: Add, commit, and push code
         run: |
           git add newfile.txt
-          git commit -m "Automated commit from GitHb Actions"
-          echo $(git remote get-url destination_repository)
-          echo $(git branch)
-          echo "https://$DESTINATION_REPO_TOKEN@github.com/gvilela7/dryrun_vilela.git new-branch"
-          git push https://$DESTINATION_REPO_TOKEN@github.com/gvilela7/dryrun_vilela.git new-branch
+          git commit -m "Automated commit from GitHub Actions"
+          git push destination_repository new-branch
