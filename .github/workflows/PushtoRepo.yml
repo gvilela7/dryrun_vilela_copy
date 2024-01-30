@@ -13,10 +13,9 @@ jobs:
         run: |
           git config --global user.email "goncalo.freitas.vilela@devoteam.com"
           git config --global user.name "gvilela7"
-          git remote add destination_repository https://github.com/gvilela7/dryrun_vilela.git
           git checkout -b new-branch
-          git config --local credential.helper "!f() { echo username=oauth; echo password=${DESTINATION_REPO_TOKEN}; }; f"
-          
+          git remote add destination_repository https://github.com/gvilela7/dryrun_vilela.git
+
       - name: Create a new text file
         run: echo "Hello, this is a new text file." > newfile.txt
 
@@ -24,4 +23,5 @@ jobs:
         run: |
           git add newfile.txt
           git commit -m "Automated commit from GitHub Actions"
+          git remote set-url destination_repository "https://x-access-token:${DESTINATION_REPO_TOKEN}@github.com/gvilela7/dryrun_vilela.git"
           git push destination_repository new-branch
