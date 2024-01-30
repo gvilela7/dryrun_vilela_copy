@@ -25,4 +25,5 @@ jobs:
         git remote -v
 
         # Push the new branch to the target repository
+        echo $(target_repo)
         git push target_repo new_branch_name
