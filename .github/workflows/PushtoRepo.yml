@@ -34,6 +34,7 @@ jobs:
       id: modifiedFiles
       run: |
             echo "result<<EOF" >> $GITHUB_OUTPUT
+            cho "ficheiros alterados: $(git ls-files -o -m --exclude-standard -- ':!:contrib/*' ':!node_modules/*')"
             echo "$(git ls-files -o -m --exclude-standard -- ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT   
 
