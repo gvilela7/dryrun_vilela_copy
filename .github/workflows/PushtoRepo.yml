@@ -19,17 +19,9 @@ jobs:
         run: echo "Hello, this is a new text file." > newfile.txt
 
       - name: Set remote URL with authentication
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const token = process.env.DESTINATION_REPO_TOKEN;
-            const remoteUrl = `https://${token}@github.com/gvilela7/dryrun_vilela.git`;
-            await github.repos.createOrUpdateFile({
-              ...context.repo,
-              path: '.git/config',
-              message: 'Set remote URL with authentication',
-              content: Buffer.from(`[remote "destination_repository"] url = ${remoteUrl}`).toString('base64'),
-            });
+        run: |
+          echo "[remote \"destination_repository\"]" >> .git/config
+          echo "url = https://${DESTINATION_REPO_TOKEN}@github.com/gvilela7/dryrun_vilela.git" >> .git/config
           
       - name: Add, commit, and push code
         run: |
