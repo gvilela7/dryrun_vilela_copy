@@ -1,33 +1,24 @@
-name: "Push to another repo"
+name: Create Branch in Target Repository
+
 on:
   workflow_dispatch:
+
 jobs:
-  push_code:
+  create-branch:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Create branch in target repository
+      env:
+        TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
+        TARGET_REPO_USERNAME: gvilela7  # Replace with the owner's username of the target repository
+        TARGET_REPO_NAME: dryrun_vilela
+        SOURCE_BRANCH: ${{ github.ref }}
+      run: |
+        # Set up Git
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
 
-      - name: Set up Git
-        run: |
-          git config --global user.email "goncalo.freitas.vilela@devoteam.com"
-          git config --global user.name "gvilela7"
-          git checkout -b new-branch
-
-      - name: Create a new text file
-        run: echo "Hello, this is a new text file." > newfile.txt
-
-      - name: Set remote URL with authentication
-        run: |
-          token="${DESTINATION_REPO_TOKEN}"
-          repo_url="https://github.com/gvilela7/dryrun_vilela"
-          api_url="https://api.github.com/repos/gvilela7/dryrun_vilela"
-
-          curl -X PATCH -H "Authorization: token $token" -d '{"name":"destination_repository", "url":"'"$repo_url.git"'"}' $api_url
-
-      - name: Add, commit, and push code
-        run: |
-          git add newfile.txt
-          git commit -m "Automated commit from GitHub Actions"
-          git push destination_repository new-branch
+        # Push the new branch to the target repository
+        git remote add target_repo https://github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git
+        git push target_repo HEAD:new_branch_name
