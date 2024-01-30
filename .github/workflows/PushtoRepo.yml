@@ -9,21 +9,59 @@ jobs:
 
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
-    - name: Create branch in target repository
-      env:
-        TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
-        TARGET_REPO_USERNAME: gvilela7
-        TARGET_REPO_NAME: dryrun_vilela
+    - name: Checkout tools repo
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.PIPELINE_ACCESS }}
+        repository: gvilela7/dryrun_vilela
+        ref: ${{ github.ref_name }}
+        sparse-checkout: |
+            text.txt
+            naoMexe.txt
+        path: tmp
+
+    - name: Edit Files 
       run: |
-        # Create a new branch locally
-        git checkout -b new_branch_name
+        cd tmp
+        echo "hello world" >> text.txt
 
-        # Set the remote URL explicitly
-        git remote add target_repo https://$TARGET_REPO_USERNAME:$TARGET_REPO_TOKEN@github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git
-        git remote -v
+    - name: List modified files
+      if: ${{ always() }}
+      id: modifiedFiles
+      env: 
+            APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
+      run: |
+            echo "result<<EOF" >> $GITHUB_OUTPUT
+            echo "$(git ls-files -o -m --exclude-standard -- tmp ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT   
 
-        # Push the new branch to the target repository
-        echo $(target_repo)
-        git push target_repo new_branch_name
+    - name: Commit Files
+      if: ${{ steps.modifiedFiles.outputs.result != '' }}        
+      run: |
+          npm install axios
+
+          node .github/GitVerifiedCommit/index.js \
+                ${{secrets.PIPELINE_ACCESS}} \
+                gvilela7 \
+                dryrun_vilela \
+                ${{ github.ref_name }} \
+                "${{steps.modifiedFiles.outputs.result}}" \
+                '[AUTO] Committing files updated by imports'                   
+
+    # - name: Create branch in target repository
+    #   env:
+    #     TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
+    #     TARGET_REPO_USERNAME: gvilela7
+    #     TARGET_REPO_NAME: dryrun_vilela
+    #   run: |
+    #     # Create a new branch locally
+    #     git checkout -b new_branch_name
+
+    #     # Set the remote URL explicitly
+    #     git remote add target_repo https://$TARGET_REPO_USERNAME:$TARGET_REPO_TOKEN@github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git
+    #     git remote -v
+
+    #     # Push the new branch to the target repository
+    #     git push target_repo new_branch_name
