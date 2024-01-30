@@ -41,17 +41,17 @@ jobs:
       if: ${{ steps.modifiedFiles.outputs.result != '' }}        
       run: |
 
-          cat "${{steps.modifiedFiles.outputs.result}}"
-          
-          npm install axios
+          echo "${{steps.modifiedFiles.outputs.result}}"
 
-          node .github/GitVerifiedCommit/index.js \
-                ${{secrets.PIPELINE_ACCESS}} \
-                gvilela7 \
-                dryrun_vilela \
-                ${{ github.ref_name }} \
-                "${{steps.modifiedFiles.outputs.result}}" \
-                '[AUTO] Committing files updated by imports'                   
+          # npm install axios
+
+          # node .github/GitVerifiedCommit/index.js \
+          #       ${{secrets.PIPELINE_ACCESS}} \
+          #       gvilela7 \
+          #       dryrun_vilela \
+          #       ${{ github.ref_name }} \
+          #       "${{steps.modifiedFiles.outputs.result}}" \
+          #       '[AUTO] Committing files updated by imports'                   
 
     # - name: Create branch in target repository
     #   env:
