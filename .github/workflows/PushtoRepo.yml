@@ -24,3 +24,6 @@ jobs:
         # Push the new branch to the target repository
         git remote add target_repo https://github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git
         git push target_repo HEAD:new_branch_name || echo "Failed to push branch to target repository"
+
+        # Show remotes for debugging
+        git remote -v
