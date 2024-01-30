@@ -13,13 +13,16 @@ jobs:
           git config --global user.email "goncalo.freitas.vilela@devoteam.com"
           git config --global user.name "gvilela7"
 
+      - name: Create a new text file
+        run: echo "Hello, this is a new text file." > newfile.txt
+
       - name: Create and switch to a new branch
         run: |
           git remote add destination_repo https://github.com/gvilela7/dryrun_vilela.git
           git checkout -b new-feature-branch
 
-      - name: Commit and push code
+      - name: Add, commit, and push code
         run: |
-          git add .
+          git add newfile.txt
           git commit -m "Automated commit from GitHub Actions"
           git push https://$REPO_B_TOKEN@github.com/gvilela7/dryrun_vilela.git new-feature-branch
