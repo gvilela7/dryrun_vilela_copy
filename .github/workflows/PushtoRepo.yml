@@ -25,4 +25,4 @@ jobs:
         run: |
           git add newfile.txt
           git commit -m "Automated commit from GitHub Actions"
-          git push https://$REPO_B_TOKEN@github.com/gvilela7/dryrun_vilela.git new-feature-branch
+          git push https://$DESTINATION_REPO_TOKEN@github.com/gvilela7/dryrun_vilela.git new-feature-branch
