@@ -33,19 +33,18 @@ jobs:
           echo "result<<EOF" >> $GITHUB_OUTPUT
           echo "$(git ls-files -o -m --exclude-standard -- ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
-          echo "${{steps.modifiedFiles.outputs.result}}"
 
       - name: Commit Files
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
         run: |
           echo "${{steps.modifiedFiles.outputs.result}}"
-       ##   npm install axios
+          npm install axios
           
-       #   node .github/GitVerifiedCommit/index.js \
-       #         ${{secrets.PIPELINE_ACCESS}} \
-       #         gvilela7 \
-       #         dryrun_vilela \
-       #         ${{ github.ref_name }} \
-       #         "${{steps.modifiedFiles.outputs.result}}" \
-       #         '[AUTO] Committing files updated by imports'                   
+         node .github/GitVerifiedCommit/index.js \
+               ${{secrets.PIPELINE_ACCESS}} \
+               gvilela7 \
+               dryrun_vilela \
+               ${{ github.ref_name }} \
+               "${{steps.modifiedFiles.outputs.result}}" \
+               '[AUTO] Committing files updated by imports'                   
 
