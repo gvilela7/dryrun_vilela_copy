@@ -46,5 +46,9 @@ jobs:
                dryrun_vilela \
                ${{ github.ref_name }} \
                "${{steps.modifiedFiles.outputs.result}}" \
-               '[AUTO] Committing files updated by imports'                   
+               '[AUTO] Committing files updated by imports'  
+
+      - name: Clean repo sync              
+          run: |
+            sudo rm -rf tmp               
 
