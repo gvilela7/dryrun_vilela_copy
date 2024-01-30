@@ -34,7 +34,7 @@ jobs:
             APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
       run: |
             echo "result<<EOF" >> $GITHUB_OUTPUT
-            echo "$(git ls-files -o -m --exclude-standard -- tmp ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+            echo "$(git ls-files -o -m --exclude-standard -- ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT   
 
     - name: Commit Files
