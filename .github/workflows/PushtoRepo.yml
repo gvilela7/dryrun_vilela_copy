@@ -8,13 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install GitHub CLI
-      run: |
-        sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-        sudo apt-add-repository https://cli.github.com/packages
-        sudo apt-get update
-        sudo apt-get install gh
-
     - name: Checkout source code
       uses: actions/checkout@v2
 
@@ -22,13 +15,17 @@ jobs:
       env:
         TARGET_REPO_USERNAME: gvilela7
         TARGET_REPO_NAME: dryrun_vilela
+        TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
       run: |
-        # Authenticate with GitHub CLI using the token
-        gh auth login --with-token <<< "${{ secrets.TARGET_REPO_TOKEN }}"
+        # Set up Git
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
 
-        # Create a new branch in the target repository
-        gh repo create $TARGET_REPO_USERNAME/$TARGET_REPO_NAME -p
-        git push origin HEAD:new_branch_name || echo "Failed to push branch to target repository"
+        # Create a new branch locally
+        git checkout -b new_branch_name
+
+        # Push the new branch to the target repository
+        git push https://github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git HEAD:new_branch_name -f
 
         # Show remotes for debugging
         git remote -v
