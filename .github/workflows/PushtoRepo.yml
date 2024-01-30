@@ -28,6 +28,7 @@ jobs:
         echo "hello world" >> text.txt
         cat naoMexe.txt
         cat text.txt
+        echo "$(ls)"
 
     - name: List modified files
       if: ${{ always() }}
