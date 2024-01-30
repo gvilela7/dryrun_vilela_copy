@@ -29,24 +29,9 @@ jobs:
           cat naoMexe.txt
           cat text.txt
           echo "ficheiros alterados: $(git ls-files -o -m)"
-
-      - name: install tree
-        run: | 
-          sudo apt-get install tree
-
-      - name: check Files
-        run: |
-          cd tmp
-          tree
-
-      - name: List modified files
-        if: ${{ always() }}
-        id: modifiedFiles
-        run: |
-          echo "ficheiros alterados: $(git ls-files -o -m)"
           echo "result<<EOF" >> $GITHUB_OUTPUT
           echo "$(git ls-files -o -m --exclude-standard -- ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT   
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Commit Files
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
