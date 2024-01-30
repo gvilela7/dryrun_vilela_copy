@@ -46,6 +46,20 @@ jobs:
                dryrun_vilela \
                ${{ github.ref_name }} \
                "${{steps.modifiedFiles.outputs.result}}" \
+               '[AUTO] Committing files updated by imports'
+
+      - name: Commit File
+        if: ${{ steps.modifiedFiles.outputs.result != '' }}        
+        run: |
+          echo "${{steps.modifiedFiles.outputs.result}}"
+          npm install axios
+          
+          node .github/GitVerifiedCommit/index.js \
+               ${{secrets.PIPELINE_ACCESS}} \
+               gvilela7 \
+               dryrun_vilela_copy \
+               ${{ github.ref_name }} \
+               "${{steps.modifiedFiles.outputs.result}}" \
                '[AUTO] Committing files updated by imports'  
 
       - name: Clean repo sync              
