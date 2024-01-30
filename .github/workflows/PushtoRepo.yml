@@ -32,8 +32,6 @@ jobs:
     - name: List modified files
       if: ${{ always() }}
       id: modifiedFiles
-      env: 
-            APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
       run: |
             echo "result<<EOF" >> $GITHUB_OUTPUT
             echo "$(git ls-files -o -m --exclude-standard -- ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
@@ -55,18 +53,3 @@ jobs:
           #       "${{steps.modifiedFiles.outputs.result}}" \
           #       '[AUTO] Committing files updated by imports'                   
 
-    # - name: Create branch in target repository
-    #   env:
-    #     TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
-    #     TARGET_REPO_USERNAME: gvilela7
-    #     TARGET_REPO_NAME: dryrun_vilela
-    #   run: |
-    #     # Create a new branch locally
-    #     git checkout -b new_branch_name
-
-    #     # Set the remote URL explicitly
-    #     git remote add target_repo https://$TARGET_REPO_USERNAME:$TARGET_REPO_TOKEN@github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git
-    #     git remote -v
-
-    #     # Push the new branch to the target repository
-    #     git push target_repo new_branch_name
