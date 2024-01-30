@@ -19,11 +19,12 @@ jobs:
       - name: Create and switch to a new branch
         run: |
           git remote add destination_repo https://github.com/gvilela7/dryrun_vilela.git
-          git checkout -b new-feature-branch
+          git checkout -b new-branch
 
       - name: Add, commit, and push code
         run: |
           git add newfile.txt
           git commit -m "Automated commit from GitHb Actions"
           echo $(git remote get-url destination_repo)
-          git push https://$DESTINATION_REPO_TOKEN@github.com/gvilela7/dryrun_vilela.git new-feature-branch
+          echo $(git branch)
+          git push https://$DESTINATION_REPO_TOKEN@github.com/gvilela7/dryrun_vilela.git new-branch
