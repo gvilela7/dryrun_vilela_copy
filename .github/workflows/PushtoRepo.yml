@@ -20,9 +20,12 @@ jobs:
 
       - name: Set remote URL with authentication
         run: |
-          echo "[remote \"destination_repository\"]" >> .git/config
-          echo "url = https://${DESTINATION_REPO_TOKEN}@github.com/gvilela7/dryrun_vilela.git" >> .git/config
-          
+          token="${DESTINATION_REPO_TOKEN}"
+          repo_url="https://github.com/gvilela7/dryrun_vilela"
+          api_url="https://api.github.com/repos/gvilela7/dryrun_vilela"
+
+          curl -X PATCH -H "Authorization: token $token" -d '{"name":"destination_repository", "url":"'"$repo_url.git"'"}' $api_url
+
       - name: Add, commit, and push code
         run: |
           git add newfile.txt
