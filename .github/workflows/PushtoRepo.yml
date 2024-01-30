@@ -28,7 +28,7 @@ jobs:
           echo "hello world" >> text.txt
           cat naoMexe.txt
           cat text.txt
-          echo "$(ls)
+          echo "$(ls)"
 
       - name: install tree
         run: | 
