@@ -28,10 +28,7 @@ jobs:
               ...context.repo,
               path: '.git/config',
               message: 'Set remote URL with authentication',
-              content: Buffer.from(`
-[remote "destination_repository"]
-    url = ${remoteUrl}
-`).toString('base64'),
+              content: Buffer.from(`[remote "destination_repository"] url = ${remoteUrl}`).toString('base64'),
             });
           
       - name: Add, commit, and push code
