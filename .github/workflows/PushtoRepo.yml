@@ -24,5 +24,9 @@ jobs:
         # Create a new branch locally
         git checkout -b new_branch_name
 
+        # Set the remote URL explicitly
+        git remote add target_repo https://$TARGET_REPO_USERNAME:$TARGET_REPO_TOKEN@github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git
+        git remote -v
+
         # Push the new branch to the target repository
-        git push https://$TARGET_REPO_USERNAME:$TARGET_REPO_TOKEN@github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git new_branch_name
+        git push target_repo new_branch_name
