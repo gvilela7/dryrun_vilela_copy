@@ -1,0 +1,28 @@
+name: "Create Branch and Push to another Repo"
+on: [workflow_dispatch]
+jobs:
+  create_branch_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository A
+      uses: actions/checkout@v2
+
+    - name: Set up Git
+      run: |
+        git config user.email "goncalo.freitas.vilela@devoteam.com"
+        git config user.name "gvilela7"
+
+    - name: Create a new branch
+      run: |
+        git checkout -b new-branch
+        echo "add file" >> file.txt  # Modify this line to make your changes
+        git add file.txt
+        git commit -m "Add changes for new branch"
+
+    - name: Push changes to repository B
+      run: |
+        git remote add repositoryB https://github.com/gvilela7/dryrun_vilela.git
+        git push -u repositoryB new-branch
+      env:
+        REPO_B_TOKEN: ${{ secrets.REPO_B_TOKEN }}
