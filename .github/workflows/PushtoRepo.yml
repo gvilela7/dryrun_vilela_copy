@@ -28,7 +28,7 @@ jobs:
           echo "hello world" >> text.txt
           cat naoMexe.txt
           cat text.txt
-          echo "$(ls)"
+          echo "ficheiros alterados: $(git ls-files -o -m)"
 
       - name: install tree
         run: | 
@@ -52,13 +52,13 @@ jobs:
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
         run: |
           echo "${{steps.modifiedFiles.outputs.result}}"
-          npm install axios
+       ##   npm install axios
           
-          node .github/GitVerifiedCommit/index.js \
-                ${{secrets.PIPELINE_ACCESS}} \
-                gvilela7 \
-                dryrun_vilela \
-                ${{ github.ref_name }} \
-                "${{steps.modifiedFiles.outputs.result}}" \
-                '[AUTO] Committing files updated by imports'                   
+       #   node .github/GitVerifiedCommit/index.js \
+       #         ${{secrets.PIPELINE_ACCESS}} \
+       #         gvilela7 \
+       #         dryrun_vilela \
+       #         ${{ github.ref_name }} \
+       #         "${{steps.modifiedFiles.outputs.result}}" \
+       #         '[AUTO] Committing files updated by imports'                   
 
