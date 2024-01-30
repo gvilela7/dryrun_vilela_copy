@@ -49,6 +49,6 @@ jobs:
                '[AUTO] Committing files updated by imports'  
 
       - name: Clean repo sync              
-          run: |
-            sudo rm -rf tmp               
+        run: |
+          sudo rm -rf tmp               
 
