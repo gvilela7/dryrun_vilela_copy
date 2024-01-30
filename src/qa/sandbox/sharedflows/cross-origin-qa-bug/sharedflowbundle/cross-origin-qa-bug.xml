@@ -1,0 +1,16 @@
+<SharedFlowBundle revision="1" name="cross-origin-qa-bug">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1695121158050</CreatedAt>
+    <LastModifiedAt>1695121158050</LastModifiedAt>
+    <Policies>
+        <Policy>AM-cors-default-headers</Policy>
+        <Policy>AM-cors-targetA-headers</Policy>
+        <Policy>AM-cors-targetB-headers</Policy>
+        <Policy>cors-enforceCors</Policy>
+    </Policies>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

@@ -1,0 +1,25 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: teste-qa
+            aliases:
+              - alias: qa-alias
+                certsInfo:
+                  certInfo:
+                    - version: 3
+                      subject: O=Internet Widgits Pty Ltd,ST=Some-State,C=PT
+                      issuer: O=Internet Widgits Pty Ltd,ST=Some-State,C=PT
+                      expiryDate: "2016109584000"
+                      validFrom: "1700749584000"
+                      isValid: Yes
+                      sigAlgName: SHA256-RSA
+                      publicKey: RSA Public Key, 2048 bits
+                      basicConstraints: CA:TRUE
+                      serialNumber: 28:cd:2a:21:01:ba:f4:2f:05:63:4d:6c:6f:7c:c5:e1:8a:e3:91:69
+                type: KEY_CERT
+                password: teste123

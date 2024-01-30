@@ -1,0 +1,343 @@
+operations:
+  - id: AP_PDLP_001
+    cmd: apigee proxy deployments
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+    overview: Get deployments for any ENVIRONMENT in an ORGANIZATION    
+    scenarios:
+      - case: proxy is deployed in Apigee          
+        expected: retrieves an array of objects with API information
+        payload:
+          {
+            "NAME": "cors-mock-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "[{\"environment\":\"dev\",\"apiProxy\":\"cors-mock-qa-qa\",\"revision\":\"7\",\"deployStartTime\":\"1697102678104\",\"proxyDeploymentType\":\"EXTENSIBLE\"}]"  }
+
+      - case: proxy is not deployed
+        expected: nothing is retrieved an array of objects with API information
+        payload:
+          {
+            "NAME": "cors-mock-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "null"}
+
+      - case: proxy is not deployed and not exist in Apigee
+        expected: nothing is retrieved an array of objects with API information
+        payload:
+          {
+            "NAME": "teste",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+          
+  - id: AP_PUNORG_001
+    cmd: apigee proxy undeployOrganization
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+    overview: undeploy a proxy in a ANY ENVIRONMENT from ORGANIZATION  
+    scenarios:
+      - case: proxy is deployed is multiple ENVIRONMENTS
+        expected: requires the proxy to be deployed in 1 or more ENVIRONMENTS, and will undeploy
+        payload:
+          {
+            "NAME": "cors-mock-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Proxy Undeployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }
+        
+      - case: proxy is not deployed in any ENVIRONMENT
+        expected: command fails because proxy is not deploy
+        payload:
+          {
+            "NAME": "cors-mock-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200,  "data": "Proxy Undeployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }  #this step must be give a error
+
+      - case: NAME is not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500,  "data": "Internal Error – a generic error occurred" }
+
+  - id: AP_PUN_001
+    cmd: apigee proxy undeploy
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+        - ENVIRONMENT
+        - VERSION
+    overview: undeploy a proxy in a given ENVIRONMENT from ORGANIZATION
+    scenarios:
+      - case: proxy is deployed
+        expected: requires the proxy to be deployed and will undeploy
+        payload:
+          {
+            "NAME": "cors-mock-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Proxy Undeployed in ENVIRONMENT dev!"}
+
+      - case: proxy is not deployed
+        expected: will inform that proxy is not deploy
+        payload:
+          {
+            "NAME": "cors-mock-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "prod"
+          }
+        result: {"code": 400, "data": "Proxy NOT deployed in ENVIRONMENT prod!" }
+  
+  - id: AP_PV_001
+    cmd: apigee proxy version
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: Get a version proxy in a given ENVIRONMENT from ORGANIZATION  
+    scenarios:
+      - case: proxy doesn't exist
+        expected: return a -1 result once that proxy is not exist
+        payload:
+          {
+            "NAME": "agite-alpt-AccountManagement_tempddds",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "-1" }
+
+      - case: proxy exist and deployed
+        expected: requires the proxy exists and deployed given an ORGANIZATION and ENVIRONMENT
+        payload:
+          {
+            "NAME": "agite-alpt-AccountManagement_temp",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "7" } # where 7 is a number of revision is deployed
+
+  - id: AP_PD_001
+    cmd: apigee proxy deploy
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+        - ENVIRONMENT
+      optional:
+        - VERSION
+        - DEPLOY_ASYNC
+        - SERVICE_ACCOUNT
+    overview: deploy a proxy in a given ENVIRONMENT from ORGANIZATION  
+    features:
+      scenarios:
+        - case: proxy is created in the ORGANIZATION and deployed
+          expected: proxy will be deployed
+          payload: 
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "NAME": "cors-mock-qa",
+              "ENVIRONMENT": "dev",
+              "SERVICE_ACCOUNT": "apigeeops-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+            }
+          result: {"code": 200, "data": "Proxy deployed!" }
+
+        - case: proxy is created in the ORGANIZATION with VERSION
+          expected: specified proxy revision will be deployed
+          payload: 
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "NAME": "cors-mock-qa",
+              "ENVIRONMENT": "dev",
+              "VERSION": 5,
+              "SERVICE_ACCOUNT": "apigeeops-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+            }
+          result: {"code": 200, "data": "Proxy deployed!" }
+
+        - case: proxy created in the ORGANIZATION without ENVIRONMENT
+          expected: proxy will NOT be deployed
+          payload: 
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "NAME": "cors-mock-qa",
+              "SERVICE_ACCOUNT": "apigeeops-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+            }
+          result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+        - case: proxy is created in the ORGANIZATION without SERVICE_ACCOUNT
+          expected: proxy will be deployed
+          payload: 
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "NAME": "cors-mock-qa",
+              "ENVIRONMENT": "dev"
+            }
+          result: {"code": 200, "data": "Proxy deployed!" }
+
+        - case: proxy is created in the ORGANIZATION
+          expected: proxy will be NOT deployed
+          description: The proxy have a sharedflow dependencie and these dependencie is not created/deployed
+          payload: 
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "NAME": "proxy-2-delete-qa",
+              "VERSION": 7,
+              "ENVIRONMENT": "dev"
+            }
+          result: {"code": 500, "data": "Internal Error – a generic error occurred"  }
+
+  - id: AP_PE_001
+    cmd: apigee proxy export
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+      optional:
+        - VERSION
+        - KEEP_APIPROXY
+    overview: Download proxy bundle from an APIGEE ORGANIZATION
+    features:
+      scenarios:
+        - case: proxy exists in APIGEE within an ORGANIZATION
+          expected: proxy will be CREATED/UPDATED locally 
+          payload: 
+            {
+              "NAME": "cors-mock-qa",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }  
+          result: {"code": 200,  "data": "Proxy exported!"}
+    
+        - case: proxy exists in APIGEE within an ORGANIZATION
+          expected: proxy will be CREATED/UPDATED locally 
+          payload: 
+            {
+              "NAME": "cors-mock-qa",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "VERSION": 7
+            }
+          result: {"code": 200, "data": "Proxy exported!" }
+
+        - case: proxy revision does not exist in APIGEE within an ORGANIZATION
+          expected: proxy will NOT be CREATED/UPDATED locally 
+          payload: 
+            {
+              "NAME": "cors-mock-qa",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "VERSION": 9
+            }
+          result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+        - case: proxy exists in APIGEE within an ORGANIZATION with KEEP_APIPROXY set to true
+          expected: proxy will be CREATED/UPDATED locally but "apiproxy" folder will not be deleted first
+          payload: 
+            {
+              "NAME": "cors-mock-qa",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "KEEP_APIPROXY": true
+            }  
+          result: {"code": 200, "data": "Proxy exported!" }
+
+  - id: AP_PI_0001
+    cmd: apigee proxy import
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+      optional:
+        - BUILD_NAME
+    overview: Import a bundle into APIGEE
+    features:
+      scenarios:
+        - case: proxy exist in repository and exist in Apigee
+          expected: a new revision is available in repository and increase version in Apigee
+          payload: 
+            { 
+                "NAME": "cors-mock-qa",
+                "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+          result: {"code": 200,  "data": "8" }   # instead to show the "proxy imported!!"
+        
+        - case: proxy exist in repository but it does not exist in Apigee
+          expected: create proxy in Apigee 
+          payload: 
+            { 
+                "NAME": "cors-mock-qa",
+                "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+          result: {"code": 200,  "data": "8" }   # instead to show the "proxy imported!!"
+        
+        - case: proxy exist in repository and not set NAME proxy
+          expected: command fails, missing input NAME
+          payload: 
+            { 
+                "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+          result: {"code": 500,   "data": "Internal Error – a generic error occurred" }
+
+        - case: proxy exist in repository and not set ORGANIZATION
+          expected: command fails, missing input ORGANIZATION
+          payload: 
+            { 
+                "NAME": "cors-mock-qa"
+            }
+          result: {"code": 500,   "data": "Internal Error – a generic error occurred" }    
+
+  - id: AP_PD_0001
+    cmd: apigee proxy delete
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+    overview: Delete proxy from APIGEE
+    features:
+      scenarios:
+        - case: proxy exists in APIGEE within an ORGANIZATION
+          expected: proxy will be DELETED from proxy list and a new one with the same name can be created afterwards
+          payload: 
+            {
+              "NAME": "cors-mock-qa",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }  
+          result: {"code": 200,  "data": "Proxy Deleted!"}
+
+  - id: AP_PDEP_0001
+    cmd: apigee proxy dependencies
+    inputs:
+      required:
+        - NAME
+    overview: Extract proxy dependencies
+    features:
+      scenarios:
+        - case: proxy is exported locally and DOES have dependencies
+          expected: proxy dependencies will be extracted into payload
+          payload: 
+            {
+              "NAME": "cors-mock-qa"
+            }  
+          result: {"code": 200, "data": "{\"sharedflows\":[\"auth-northbound\",\"auth-southbound\",\"default-fault-handling\",\"logging-variables\",\"rest-cloud-logging\"],\"kvms\":[],\"targetservers\":[\"Filenet\"],\"integrations\":[]}" }
+
+        - case: proxy is exported locally and DOES NOT have dependencies
+          expected: no proxy dependencies will be extracted but command still succeeds
+          payload: 
+            {
+              "NAME": "proxy-2-delete-qa"
+            }  
+          result: {"code": 200,  "data": "{\"sharedflows\":[],\"kvms\":[],\"targetservers\":[],\"integrations\":[]}" }
+
+        - case: proxy is NOT exported locally and doesn't exist in repository
+          expected: command fails
+          payload: 
+            {
+              "NAME": "agite-alpt-sim2k-SimCard"
+            }  
+          result: {"code": 500, "data": "Internal Error – a generic error occurred"}

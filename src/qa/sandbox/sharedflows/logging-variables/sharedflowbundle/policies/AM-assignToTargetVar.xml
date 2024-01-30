@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="true" enabled="true" name="AM-assignToTargetVar">
+    <DisplayName>AM-assignToTargetVar</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>toTarget.uri</Name>
+        <Ref>request.uri</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toTarget.body</Name>
+        <Ref>request.content</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toTarget.bodysize</Name>
+        <Ref>request.header.content-length</Ref>
+        <Value>0</Value>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toTarget.verb</Name>
+        <Ref>request.verb</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toTarget.querystring</Name>
+        <Ref>request.querystring</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toTarget.headers</Name>
+        <Ref>jsreqheaders</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toTargetBody</Name>
+        <Template>{escapeJSON(toTarget.body)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toTargetHeaders</Name>
+        <Ref>{escapeJSON(toTarget.headers)}</Ref>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

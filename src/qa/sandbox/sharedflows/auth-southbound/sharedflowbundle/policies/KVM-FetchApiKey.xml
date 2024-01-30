@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyValueMapOperations continueOnError="false" enabled="true" name="KVM-FetchApiKey" mapIdentifier="Auth-Southbound-Apikey">
+  <DisplayName>KVM-FetchApiKey</DisplayName>
+  <Properties/>
+  <Get assignTo="southbound-token">
+    <Key>
+      <Parameter ref="flow.system.name"/>
+      <Parameter ref="targetSystem"/>
+      <Parameter>apikey</Parameter>
+    </Key>
+  </Get>
+  <Scope>environment</Scope>
+</KeyValueMapOperations>

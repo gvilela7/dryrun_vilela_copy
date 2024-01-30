@@ -1,0 +1,36 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      data:
+        appId: 0b58523b-7027-4779-b714-6ae4c17de763
+        attributes:
+          - name: DisplayName
+            value: TestApp-QA
+          - name: system.authType
+            value: jwt
+          - name: system.name
+            value: netcracker
+        createdAt: "1694181841194"
+        credentials:
+          - apiProducts:
+              - apiproduct: Product2
+                status: approved
+            consumerKey: 31890c54-6524-4dac-9c71-589291306733
+            consumerSecret: AKm8UsRBzGcv6D4BtqSMhkcoCbzU7BJJU2HQCP3gggPdEU21mk5E8tlS6EW2scnf
+            expiresAt: "-1"
+            issuedAt: "1694181842152"
+            status: approved
+          - apiProducts:
+              - apiproduct: TestProduct
+                status: approved
+            consumerKey: AOoRQ6Qlu3boV7YHw34wSFAj09144O8dltu36T2n9X59XFj6
+            consumerSecret: YKNGBb7A5Y5F5vcpOXSkUADyQAKXyw18b6S7xGbocrQ3rz4K6sjuO3Y8TRi7sWgj
+            expiresAt: "-1"
+            issuedAt: "1694181843744"
+            status: approved
+        developerId: 0aefc233-6ddc-461d-8a4d-9901349914b7
+        lastModifiedAt: "1694181841194"
+        name: TestApp-QA
+        status: approved

@@ -1,0 +1,638 @@
+{
+  "name": "projects/896403917428/locations/europe-west1/integrations/sandbox_bahri/versions/58041617-8f41-49c6-a2a6-54ae99f448dd",
+  "updateTime": "2023-09-18T09:50:34.034Z",
+  "lockHolder": "bruno.selistre@devoteam.com",
+  "createTime": "2023-09-13T13:32:11.556Z",
+  "lastModifierEmail": "bruno.selistre@devoteam.com",
+  "triggerConfigs": [
+    {
+      "label": "Schedule Trigger",
+      "startTasks": [
+        {
+          "taskId": "7"
+        },
+        {
+          "taskId": "1"
+        },
+        {
+          "taskId": "8"
+        },
+        {
+          "taskId": "9"
+        },
+        {
+          "taskId": "10"
+        }
+      ],
+      "properties": {
+        "Timer Name": "sandbox_bahri_Timer_1",
+        "Scheduled Time spec": "0 20 * * *"
+      },
+      "triggerType": "CRON",
+      "triggerNumber": "1",
+      "triggerId": "cron_trigger/sandbox_bahri_Timer_1/0+20+*+*+*",
+      "position": {
+        "x": -168,
+        "y": -336
+      }
+    }
+  ],
+  "taskConfigs": [
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "1",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_1_responseBody`$"
+              ]
+            }
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_1_responseHeader`$"
+              ]
+            }
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_1_responseStatus`$"
+              ]
+            }
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "3",
+          "condition": "0 == 0",
+          "displayName": "REST",
+          "description": "XML"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Fetch Currencies",
+      "description": " EUR, SAR, USD",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -378,
+        "y": -168
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "10",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_10_responseBody`$"
+              ]
+            }
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_10_responseHeader`$"
+              ]
+            }
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_10_responseStatus`$"
+              ]
+            }
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "6",
+          "condition": "0 == 0",
+          "displayName": "SMTP"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Fetch All Currencies (CSV)",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": 252,
+        "y": -168
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "9",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_9_responseBody`$"
+              ]
+            }
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_9_responseHeader`$"
+              ]
+            }
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_9_responseStatus`$"
+              ]
+            }
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "5",
+          "condition": "0 == 0",
+          "displayName": "MQ"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Fetch Currencies",
+      "description": "CHF, KES, CNY, EGP, KWD, KRW",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": 42,
+        "y": -168
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "7",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_7_responseBody`$"
+              ]
+            }
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_7_responseHeader`$"
+              ]
+            }
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_7_responseStatus`$"
+              ]
+            }
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "2",
+          "condition": "0 == 0",
+          "displayName": "SFTP "
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Fetch All Currencies (XML)",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -588,
+        "y": -168
+      }
+    },
+    {
+      "task": "GenericConnectorTask",
+      "taskId": "4",
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "System C",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -168,
+        "y": -42
+      }
+    },
+    {
+      "task": "GenericConnectorTask",
+      "taskId": "2",
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "System A",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -588,
+        "y": -42
+      }
+    },
+    {
+      "task": "GenericConnectorTask",
+      "taskId": "3",
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "System B",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -378,
+        "y": -42
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "8",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_8_responseBody`$"
+              ]
+            }
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_8_responseHeader`$"
+              ]
+            }
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_8_responseStatus`$"
+              ]
+            }
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "4",
+          "condition": "0 == 0",
+          "displayName": "SOAP"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Fetch Currencies",
+      "description": "CHF, CAD, CNY, EGP, JOD, JPY",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -168,
+        "y": -168
+      }
+    },
+    {
+      "task": "GenericConnectorTask",
+      "taskId": "5",
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "System D",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": 42,
+        "y": -42
+      }
+    },
+    {
+      "task": "GenericConnectorTask",
+      "taskId": "6",
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "System E",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": 252,
+        "y": -42
+      }
+    }
+  ],
+  "integrationParameters": [
+    {
+      "key": "`Task_1_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseHeader`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "`Task_1_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseBody`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "`Task_1_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseStatus`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "`Task_7_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_7_responseHeader`",
+      "isTransient": true,
+      "producer": "1_7"
+    },
+    {
+      "key": "`Task_7_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_7_responseBody`",
+      "isTransient": true,
+      "producer": "1_7"
+    },
+    {
+      "key": "`Task_7_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_7_responseStatus`",
+      "isTransient": true,
+      "producer": "1_7"
+    },
+    {
+      "key": "`Task_8_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_8_responseHeader`",
+      "isTransient": true,
+      "producer": "1_8"
+    },
+    {
+      "key": "`Task_8_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_8_responseBody`",
+      "isTransient": true,
+      "producer": "1_8"
+    },
+    {
+      "key": "`Task_8_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_8_responseStatus`",
+      "isTransient": true,
+      "producer": "1_8"
+    },
+    {
+      "key": "`Task_9_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_9_responseHeader`",
+      "isTransient": true,
+      "producer": "1_9"
+    },
+    {
+      "key": "`Task_9_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_9_responseBody`",
+      "isTransient": true,
+      "producer": "1_9"
+    },
+    {
+      "key": "`Task_9_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_9_responseStatus`",
+      "isTransient": true,
+      "producer": "1_9"
+    },
+    {
+      "key": "`Task_10_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_10_responseHeader`",
+      "isTransient": true,
+      "producer": "1_10"
+    },
+    {
+      "key": "`Task_10_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_10_responseBody`",
+      "isTransient": true,
+      "producer": "1_10"
+    },
+    {
+      "key": "`Task_10_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_10_responseStatus`",
+      "isTransient": true,
+      "producer": "1_10"
+    }
+  ]
+}

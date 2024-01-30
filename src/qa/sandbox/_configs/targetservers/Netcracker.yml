@@ -1,0 +1,24 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: Netcracker
+            host: netcracker.com
+            port: 443
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+            protocol: HTTP
+        prod:
+          data:
+            name: Netcracker
+            host: teste.netcracker.com
+            port: 443
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+            protocol: HTTP

@@ -1,0 +1,14 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: RMCA
+            host: alticept.local.testeqa
+            port: 7777
+            isEnabled: true
+            sSLInfo: {}
+            protocol: HTTP

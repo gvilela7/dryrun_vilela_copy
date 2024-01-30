@@ -1,0 +1,30 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        prod:
+          data:
+            PreProxyFlowHook:
+              sharedFlow: cross-origin-qa
+              continueOnError: true
+            PostProxyFlowHook:
+              continueOnError: true
+            PreTargetFlowHook:
+              sharedFlow: cross-origin-qa
+              continueOnError: true
+            PostTargetFlowHook:
+              sharedFlow: logging-set-variables-qa
+              continueOnError: true
+        dev:
+          data:
+            PreProxyFlowHook:
+              sharedFlow: cross-origin-qa
+              continueOnError: true
+            PostProxyFlowHook:
+              continueOnError: true
+            PreTargetFlowHook:
+              continueOnError: true
+            PostTargetFlowHook:
+              continueOnError: true

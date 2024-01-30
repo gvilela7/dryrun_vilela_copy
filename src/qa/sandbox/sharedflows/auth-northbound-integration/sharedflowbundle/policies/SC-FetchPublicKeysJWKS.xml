@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="false" enabled="true" name="SC-FetchPublicKeysJWKS">
+    <DisplayName>SC-FetchPublicKeysJWKS</DisplayName>
+    <Properties/>
+    <Request clearPayload="true">
+        <Set>
+            <Verb>GET</Verb>
+        </Set>
+    </Request>
+    <Response>publicKeys</Response>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>https://www.googleapis.com/oauth2/v3/certs</URL>
+    </HTTPTargetConnection>
+</ServiceCallout>

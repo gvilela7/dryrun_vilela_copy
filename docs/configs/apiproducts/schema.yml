@@ -1,0 +1,231 @@
+---
+"$schema": https://json-schema.org/draft/2020-12/schema
+"$id": https://example.com/product.schema.json
+title: Build Api Product yaml file
+description: Build Api Product yaml file
+type: object
+additionalProperties: false
+properties:
+  status:
+    type: string
+    description: Action to execute
+    enum:
+    - enable
+    - disable
+  settings:
+    type: object
+    description: Placeholder for Api Product settings.
+    additionalProperties: false
+    properties:
+      scope:
+        type: string
+        description: Scope of the file.
+        enum:
+        - org
+        - project
+      organizations:
+        type: object
+        description: Organization gcp scope.
+        additionalProperties: false
+        minProperties: 1
+        patternProperties:
+          "^[a-zA-Z0-9-_]+$":
+            type: object
+            description: Project in wich the Api Product will exist.
+            additionalProperties: false
+            properties:
+              data:
+                "$ref": "#/$defs/commonData"
+            required:
+            - data
+    required:
+    - scope
+    - organizations
+required:
+- status
+- settings
+"$defs":
+  commonData:
+    type: object
+    additionalProperties: false
+    properties:
+      name: 
+        type: string
+      displayName: 
+        type: string
+      approvalType:
+        type: string
+      description:
+        type: string
+      attributes:
+        type: array
+        items: 
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+            value:
+              type: string
+          required:
+          - name
+          - value
+      apiResources:
+        type: array
+        items: 
+          type: string
+      environments:
+        type: array
+        items: 
+          type: string
+      proxies:
+        type: array
+        items: 
+          type: string
+      quota:
+        type: string
+      quotaInterval:
+        type: string
+      quotaTimeUnit:
+        type: string
+      scopes:
+        type: array
+        items: 
+          type: string
+      createdAt:
+        type: string
+      lastModifiedAt:
+        type: string
+      operationGroup:
+        "$ref": "#/$defs/OperationGroup"
+      graphqlOperationGroup:
+         "$ref": "#/$defs/GraphQLOperationGroup"
+      quotaCounterScope:
+        type: string
+        enum:
+          - QUOTA_COUNTER_SCOPE_UNSPECIFIED
+          - PROXY
+          - OPERATION
+    required:
+    - name
+    - displayName
+    - approvalType
+    - attributes
+
+  OperationGroup:   
+    type: object
+    additionalProperties: false
+    properties:
+      operationConfigType:
+        type: string
+      operationConfigs:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            apiSource:
+              type: string
+            operations:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  resource:
+                    type: string
+                  methods:
+                    type: array
+                    items: 
+                      type: string
+                required:
+                - resource
+            quota:
+              type: object
+              additionalProperties: false
+              properties:
+                limit:
+                  type: string
+                interval:
+                  type: string
+                timeUnit:
+                  type: string
+            attributes:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: string
+                required:
+                - name
+                - value
+          required:
+          - apiSource
+          - operations
+          - quota
+    required:
+    - operationConfigType
+    - operationConfigs
+  
+  GraphQLOperationGroup:   
+    type: object
+    additionalProperties: false
+    properties:
+      operationConfigType:
+        type: string
+      operationConfigs:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            apiSource:
+              type: string
+            operations:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  operation:
+                    type: string
+                  operationTypes:
+                    type: array
+                    items: 
+                      type: string
+                required:
+                - operationTypes
+            quota:
+              type: object
+              additionalProperties: false
+              properties:
+                limit:
+                  type: string
+                interval:
+                  type: string
+                timeUnit:
+                  type: string
+            attributes:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: string
+                required:
+                - name
+                - value
+          required:
+          - apiSource
+          - operations
+          - quota
+    required:
+    - operationConfigType
+    - operationConfigs

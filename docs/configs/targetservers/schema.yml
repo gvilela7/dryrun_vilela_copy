@@ -1,0 +1,122 @@
+---
+"$schema": https://json-schema.org/draft/2020-12/schema
+"$id": https://example.com/product.schema.json
+title: Build Target Server yaml file
+description: Build Target Server yaml file
+type: object
+additionalProperties: false
+properties:
+  status:
+    type: string
+    description: Action to execute
+    enum:
+    - enable
+    - disable
+  settings:
+    type: object
+    description: Placeholder for Target Server settings.
+    additionalProperties: false
+    properties:
+      scope:
+        type: string
+        description: Scope of the file.
+        enum:
+        - org
+        - project
+      organizations:
+        type: object
+        description: Organization gcp scope.
+        additionalProperties: false
+        minProperties: 1
+        patternProperties:
+          "^[a-zA-Z0-9-_]+$":
+            type: object
+            description: Project in which the target server will exist.
+            additionalProperties: false
+            properties:
+              environments:
+                type: object
+                description: Environments placeholder.
+                minProperties: 1
+                additionalProperties: false
+                patternProperties:
+                  "^[a-zA-Z0-9-_]+$":
+                    type: object
+                    description: Environment data of the target server.
+                    additionalProperties: false
+                    properties:
+                      data:
+                        "$ref": "#/$defs/commonData"
+                    required:
+                    - data
+            required:
+            - environments
+    required:
+    - scope
+    - organizations
+required:
+- status
+- settings
+"$defs":
+  commonData:
+    type: object
+    additionalProperties: false
+    properties:
+      host:
+        type: string
+      isEnabled:
+        type: boolean
+      name:
+        type: string
+      description:
+        type: string
+      port:
+        type: integer
+        minimum: 1
+        maximum: 65535
+      protocol:
+        type: string
+        enum:
+          - PROTOCOL_UNSPECIFIED
+          - HTTP
+          - GRPC
+      sSLInfo:
+        "$ref": "#/$defs/TLS-INFO"
+    required:
+    - host
+    - name
+    - port
+    - protocol
+    - isEnabled
+  TLS-INFO:
+    type: object
+    additionalProperties: false
+    properties:
+      enabled:
+        type: boolean
+      clientAuthEnabled:
+        type: boolean
+      keyStore:
+        type: string
+      keyAlias:
+        type: string
+      trustStore:
+        type: string
+      ignoreValidationErrors:
+        type: boolean
+      protocols:
+        type: array
+        items: 
+          type: string
+      ciphers:
+        type: array
+        items: 
+          type: string
+      commonName:
+        type: object
+        additionalProperties: false
+        properties:
+          value:
+            type: string
+          wildcardMatch:
+            type: boolean

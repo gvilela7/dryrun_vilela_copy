@@ -1,0 +1,13 @@
+operations:
+  - id: framework_examples_AUX_ArrayToJson
+    cmd: framework examples AUX_ArrayToJson
+    overview: |
+      Show example how to convert BASH Array to Json and send it output
+
+    features:
+    - description: Output an array
+      scenarios:
+        - case: We do NOT set on INPUT payload
+          expected: Code 200 and an array is given in data
+          payload: {}
+          result: { "code": 200, "data": "[1,2,3,4,5,\"b\"]" }

@@ -1,0 +1,48 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    r875:
+      data:
+        name: in consequat quis ut sunt
+        displayName: laboris sit in irure minim
+        approvalType: culpa
+        attributes:
+          - name: reprehenderit anim elit
+            value: cillum
+        quotaTimeUnit: in in proident
+        quotaCounterScope: PROXY
+        scopes:
+          - ex amet commodo culpa velit
+        lastModifiedAt: occaecat veniam
+        environments:
+          - aute anim
+        description: est laboris
+        graphqlOperationGroup:
+          operationConfigType: magna
+          operationConfigs:
+            - apiSource: id
+              operations:
+                - operationTypes:
+                    - minim
+              quota:
+                interval: nisi voluptate occaecat velit reprehenderit
+        quotaInterval: magna
+        operationGroup:
+          operationConfigType: est
+          operationConfigs:
+            - apiSource: laboris
+              operations:
+                - resource: fugiat eiusmod Excepteur id
+                  methods:
+                    - consequat reprehenderit non veniam
+              quota:
+                interval: do ex nostrud sed pariatur
+                limit: sit et esse irure
+                timeUnit: veniam
+        quota: id amet incididunt Excepteur commodo
+        proxies:
+          - quis do non veniam
+        apiResources:
+          - consequat fugiat est
+        createdAt: in anim

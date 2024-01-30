@@ -1,0 +1,54 @@
+{
+  "name": "projects/896403917428/locations/europe-west1/integrations/test-int/versions/f29a8c1c-2106-4e50-a66b-828481ab8f9d",
+  "updateTime": "2023-06-26T15:48:23.789Z",
+  "createTime": "2023-06-26T15:46:57.406Z",
+  "lastModifierEmail": "joao.andre.marques@devoteam.com",
+  "triggerConfigs": [
+    {
+      "label": "API Trigger",
+      "startTasks": [
+        {
+          "taskId": "1"
+        }
+      ],
+      "properties": {
+        "Trigger name": "test-int_API_1"
+      },
+      "triggerType": "API",
+      "triggerNumber": "1",
+      "triggerId": "api_trigger/test-int_API_1",
+      "position": {
+        "x": 42,
+        "y": -126
+      }
+    }
+  ],
+  "taskConfigs": [
+    {
+      "task": "FieldMappingTask",
+      "taskId": "1",
+      "parameters": {
+        "FieldMappingConfigTaskParameterKey": {
+          "key": "FieldMappingConfigTaskParameterKey",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.proto.FieldMappingConfig\",\n  \"mappedFields\": [{\n    \"inputField\": {\n      \"fieldType\": \"STRING_VALUE\",\n      \"transformExpression\": {\n        \"initialValue\": {\n          \"referenceValue\": \"$test$\"\n        }\n      }\n    },\n    \"outputField\": {\n      \"referenceKey\": \"$test$\",\n      \"fieldType\": \"STRING_VALUE\",\n      \"cardinality\": \"OPTIONAL\"\n    }\n  }]\n}"
+          }
+        }
+      },
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Data Mapping",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": 42,
+        "y": -42
+      }
+    }
+  ],
+  "integrationParameters": [
+    {
+      "key": "test",
+      "dataType": "STRING_VALUE",
+      "displayName": "test"
+    }
+  ]
+}

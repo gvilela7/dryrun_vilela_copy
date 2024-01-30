@@ -1,0 +1,13 @@
+<SharedFlowBundle revision="1" name="PreTargetCommon">
+    <DisplayName></DisplayName>
+    <Description>shared flow to attach to pre-target flow hookj</Description>
+    <CreatedAt>1685704388262</CreatedAt>
+    <LastModifiedAt>1685704492026</LastModifiedAt>
+    <Policies>
+        <Policy>FC-Logging</Policy>
+    </Policies>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

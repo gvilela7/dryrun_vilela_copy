@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="true" enabled="true" name="AM-SetErrorMessage">
+    <DisplayName>AM-SetErrorMessage</DisplayName>
+    <AssignVariable>
+        <Name>errorMessageString</Name>
+        <Template>{escapeJSON(error.message)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromClientBody</Name>
+        <Template>{escapeJSON(fromClient.body)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toClientBody</Name>
+        <Template>{escapeJSON(toClient.body)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromClientHeaders</Name>
+        <Template>{escapeJSON(fromClient.headers)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toClientHeaders</Name>
+        <Template>{escapeJSON(toClient.headers)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromTargetBody</Name>
+        <Template>{escapeJSON(fromTarget.body)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toTargetBody</Name>
+        <Template>{escapeJSON(toTarget.body)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>errorMessagePart1</Name>
+        <Template>{
+            "severity":"{log.severity}",
+            "jsonPayload": {
+                "tag": "PROXY_FLOW",
+            	"organization": "{organization.name}",
+            	"environment": "{environment.name}",
+            	"apiProduct": "{apiproduct.name}",
+            	"developerApp": "{apiproduct.name}",
+            	"apiProxy": "{apiproxy.name}",
+            	"apiProxyRevision": "{apiproxy.revision}",
+            	"apiProxyBasePath": "{apiproxy.basepath}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"developerId": "{developer.id}",
+            	"correlationId": "{correlation.id}",
+                "messageId": "{messageid}",
+
+            	"proxyRequestReceivedStart": "{client.received.start.timestamp}",
+            	"proxyRequestReceivedEnd": "{client.received.end.timestamp}",
+
+
+                "clientRequestUri":"{fromClient.uri}",
+                "clientRequestOperation": "{fromClient.verb}",
+                "clientRequestQuerystring":"{fromClient.querystring}",
+                "clientRequestBody":"{fromClientBody}",
+                "clientRequestHeaders":"{fromClientHeaders}",
+                
+                "targetServicesCalls": {servicesLogs},
+                
+                "proxyResponseBody":"{toClientBody}",
+                "proxyResponseHeaders": "{toClientHeaders}",
+                "proxyResponseStatusCode":"{toClient.status.code}",
+                "proxyResponseReasonPhrase":"{toClient.reason.phrase}",
+                
+            	</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>errorMessagePart2</Name>
+        <Template>
+    		    "messageError": "{errorMessageString}",
+        		"faultName":"{fault.name}"
+    		}
+        }, {
+            "severity":"INFO",
+            "jsonPayload": {
+                "tag": "EVENT",
+            	"environment": "{environment.name}",
+            	"apiProxyRevision": "{apiproxy.revision}",
+            	"apiProxyBasePath": "{apiproxy.basepath}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"correlationId": "{correlation.id}",
+            	"proxyRequestReceivedStart": "{client.received.start.timestamp}",
+            	"proxyRequestReceivedEnd": "{client.received.end.timestamp}",
+            	"apiProxy": "{apiproxy.name}",
+            	"clientRequestUri": "{fromClient.uri}",
+            	"clientRequestOperation": "{fromClient.verb}",
+            	"clientRequestBodySize": "{fromClient.bodysize}"
+        	}
+        },{
+            "severity":"INFO",
+            "jsonPayload": {
+                "tag": "EVENT",
+            	"environment": "{environment.name}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"correlationId": "{correlation.id}",
+            	"apiProxy": "{apiproxy.name}",
+            	"targetRequestSent": "{target.sent.end.timestamp}",
+            	"targetUri":"{toTarget.uri}",
+            	"targetOperation":"{toTarget.verb}",
+            	"targetRequestBodySize":"{toTarget.bodysize}",
+            	"targetRequestQuerystring":"{toTarget.querystring}"
+        	}
+        },{
+            "severity":"INFO",
+            "jsonPayload": {
+                "tag": "EVENT",
+            	"environment": "{environment.name}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"correlationId": "{correlation.id}",
+            	"apiProxy": "{apiproxy.name}",
+            	"targetUri":"{toTarget.uri}",
+            	"targetOperation":"{toTarget.verb}",
+            	"targetRequestBodySize":"{toTarget.bodysize}",
+            	"targetResponseStatusCode":"{fromTarget.status.code}",
+            	"targetResponseReasonPhrase":"{fromTarget.reason.phrase}",
+            	"targetResponseBodySize":"{fromTarget.bodysize}",
+            	"targetErrorMessage": "{fromTarget.error.message}"
+        	}
+        },{
+            "severity":"INFO",
+            "jsonPayload": {
+                "tag": "EVENT",
+            	"environment": "{environment.name}",
+            	"apiProxyRevision": "{apiproxy.revision}",
+            	"apiProxyBasePath": "{apiproxy.basepath}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"correlationId": "{correlation.id}",
+            	"apiProxy": "{apiproxy.name}",
+            	"clientRequestUri":"{fromClient.uri}",
+            	"clientRequestOperation": "{fromClient.verb}",
+            	"clientRequestQuerystring":"{fromClient.querystring}",
+            	"clientRequestBodySize": "{fromClient.bodysize}",
+            	"proxyResponseSentStart": "{client.sent.start.timestamp}",
+            	"proxyResponseSentEnd": "{client.sent.end.timestamp}",
+            	"proxyResponseStatusCode":"{toClient.status.code}",
+            	"proxyResponseErrorReason":"{toClient.reason.phrase}"
+        	}
+        }
+</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>errorMessagePart3</Name>
+        <Template>{
+            "severity":"INFO",
+            "jsonPayload": {
+                "tag": "EVENT",
+            	"environment": "{environment.name}",
+            	"apiProxyRevision": "{apiproxy.revision}",
+            	"apiProxyBasePath": "{apiproxy.basepath}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"correlationId": "{correlation.id}",
+            	"proxyRequestReceivedStart": "{client.received.start.timestamp}",
+            	"proxyRequestReceivedEnd": "{client.received.end.timestamp}",
+            	"apiProxy": "{apiproxy.name}",
+            	"clientRequestUri": "{fromClient.uri}",
+            	"clientRequestOperation": "{fromClient.verb}",
+            	"clientRequestBodySize": "{fromClient.bodysize}"
+        	}
+        },{
+            "severity":"INFO",
+            "jsonPayload": {
+                "tag": "EVENT",
+            	"environment": "{environment.name}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"correlationId": "{correlation.id}",
+            	"apiProxy": "{apiproxy.name}",
+            	"targetRequestSent": "{target.sent.end.timestamp}",
+            	"targetUri":"{toTarget.uri}",
+            	"targetOperation":"{toTarget.verb}",
+            	"targetRequestBodySize":"{toTarget.bodysize}",
+            	"targetRequestQuerystring":"{toTarget.querystring}"
+        	}
+        },{
+            "severity":"INFO",
+            "jsonPayload": {
+                "tag": "EVENT",
+            	"environment": "{environment.name}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"correlationId": "{correlation.id}",
+            	"apiProxy": "{apiproxy.name}",
+            	"targetUri":"{toTarget.uri}",
+            	"targetOperation":"{toTarget.verb}",
+            	"targetRequestBodySize":"{toTarget.bodysize}",
+            	"targetResponseStatusCode":"{fromTarget.status.code}",
+            	"targetResponseReasonPhrase":"{fromTarget.reason.phrase}",
+            	"targetResponseBodySize":"{fromTarget.bodysize}",
+            	"targetErrorMessage": "{fromTarget.error.message}"
+        	}
+        },{
+            "severity":"INFO",
+            "jsonPayload": {
+                "tag": "EVENT",
+            	"environment": "{environment.name}",
+            	"apiProxyRevision": "{apiproxy.revision}",
+            	"apiProxyBasePath": "{apiproxy.basepath}",
+            	"clientId": "{client_id}",
+            	"clientIp": "{client.ip}",
+            	"correlationId": "{correlation.id}",
+            	"apiProxy": "{apiproxy.name}",
+            	"clientRequestUri":"{fromClient.uri}",
+            	"clientRequestOperation": "{fromClient.verb}",
+            	"clientRequestQuerystring":"{fromClient.querystring}",
+            	"clientRequestBodySize": "{fromClient.bodysize}",
+            	"proxyResponseSentStart": "{client.sent.start.timestamp}",
+            	"proxyResponseSentEnd": "{client.sent.end.timestamp}",
+            	"proxyResponseStatusCode":"{toClient.status.code}",
+            	"proxyResponseErrorReason":"{toClient.reason.phrase}"
+        	}
+        }
+</Template>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

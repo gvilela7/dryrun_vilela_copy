@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="true" enabled="true" name="EV-ReqFields">
+  <DisplayName>EV-ReqFields</DisplayName>
+  <Header name="X-Billing-Account-Id">
+    <Pattern ignoreCase="true">{header.account_id}</Pattern>
+  </Header>
+  <JSONPayload>
+    <Variable name="body.id" type="string">
+      <JSONPath>$.id</JSONPath>
+    </Variable>
+    <Variable name="body.status" type="string">
+      <JSONPath>$.status</JSONPath>
+    </Variable>
+    <Variable name="body.billingAccount.id" type="string">
+      <JSONPath>$.billingAccount.id</JSONPath>
+    </Variable>
+  </JSONPayload>
+  <Source clearPayload="false">request</Source>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <VariablePrefix>req</VariablePrefix>
+</ExtractVariables>

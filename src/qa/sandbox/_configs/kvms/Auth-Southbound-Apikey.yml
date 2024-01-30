@@ -1,0 +1,18 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: Auth-Southbound-Apikey
+            encrypted: true
+            keyValueEntries: []
+            nextPageToken: ""
+        prod:
+          data:
+            name: Auth-Southbound-Apikey
+            encrypted: true
+            keyValueEntries: []
+            nextPageToken: ""

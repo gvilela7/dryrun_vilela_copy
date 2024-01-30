@@ -1,0 +1,24 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: Sim2k
+            host: testes.qa.telecom.pt
+            port: 8080
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+            protocol: HTTP
+        prod:
+          data:
+            name: Sim2k
+            host: testes.qa.telecom.pt
+            port: 8443
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+            protocol: HTTP

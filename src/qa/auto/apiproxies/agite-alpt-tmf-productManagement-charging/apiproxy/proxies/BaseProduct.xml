@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="BaseProduct">
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>FC-NorthboundAuth</Name>
+      </Step>
+      <Step>
+        <Name>OAS-BaseProduct</Name>
+      </Step>
+      <Step>
+        <Name>FC-SouthboundAuth</Name>
+      </Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <Flows>
+    <Flow name="CreateProduct">
+      <Description>Create Product</Description>
+      <Request>
+        <Step>
+          <Name>EV-ReqFields</Name>
+          <Condition>(request.content != null)</Condition>
+        </Step>
+        <Step>
+          <Name>RF-BadRequest</Name>
+          <Condition>(extractvariables.EV-RequiredFields.failed = true)</Condition>
+        </Step>
+        <Step>
+          <Name>JS-CharacteristicsToString</Name>
+        </Step>
+        <Step>
+          <Name>RF-JSError</Name>
+          <Condition>(js.isError = true)</Condition>
+        </Step>
+        <Step>
+          <Name>JSONToXML-Request</Name>
+        </Step>
+        <Step>
+          <Name>XSL-MapRequest</Name>
+        </Step>
+        <Step>
+          <Name>AM-CreateRequest</Name>
+        </Step>
+        <!-- Request prepared but will be executed by integration, no Target in Apigee X -->
+      </Request>
+      <Response>
+        <!-- Product creation handled in Integration -->
+        <Step>
+          <Name>SIR-BaseProductCreate</Name>
+        </Step>
+        <Step>
+          <Name>IC-ProductManagement</Name>
+        </Step>
+        <Step>
+          <Name>EV-GetResponse</Name>
+          <Condition>responseProductManagementIntegration.content != null</Condition>
+        </Step>
+        <!-- Set response to client-->
+        <Step>
+          <Name>AM-SetResponse</Name>
+          <Condition>apimStatusCode != 200</Condition>
+        </Step>
+        <Step>
+          <Name>AM-SetResponseOk</Name>
+          <Condition>apimStatusCode = 200</Condition>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix JavaRegex "(/?)") and (request.verb = "POST")</Condition>
+    </Flow>
+    <Flow name="QueryProduct">
+      <Description>Query Product</Description>
+      <Request>
+        <Step>
+          <Name>EV-PathParam</Name>
+        </Step>
+        <Step>
+          <Name>RF-BadRequest</Name>
+          <Condition>(extractvariables.EV-PathParam.failed = true)</Condition>
+        </Step>
+      </Request>
+      <Response>
+        <Step>
+          <Name>XMLToJSON-Response</Name>
+        </Step>
+        <Step>
+          <Name>JS-MapResponse</Name>
+        </Step>
+        <Step>
+          <Name>RF-JSError</Name>
+          <Condition>(js.isError = true)</Condition>
+        </Step>
+        <Step>
+          <Name>AM-QueryResponse</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/*") and (request.verb = "GET")</Condition>
+    </Flow>
+    <Flow name="UpdateProduct">
+      <Description>Update Product</Description>
+      <Request>
+        <!-- Extracting Request Data -->
+        <Step>
+          <Name>EV-ReqFields</Name>
+          <Condition>(request.content != null)</Condition>
+        </Step>
+        <Step>
+          <Name>EV-PathParam</Name>
+          <Condition>(extractvariables.EV-RequiredFieldsReq.failed != true)</Condition>
+        </Step>
+        <Step>
+          <Name>RF-BadRequest</Name>
+          <Condition>(extractvariables.EV-RequiredFieldsReq.failed = true) or
+                        (extractvariables.EV-PathParam.failed = true)</Condition>
+        </Step>
+        <Step>
+          <Name>JS-CharacteristicsToString</Name>
+        </Step>
+        <Step>
+          <Name>RF-JSError</Name>
+          <Condition>(js.isError = true)</Condition>
+        </Step>
+        <!-- ________Callout for Current Data________ -->
+        <Step>
+          <Name>AM-CalloutRequest</Name>
+        </Step>
+        <!-- record start time of SC -->
+        <Step>
+          <Name>AM-LogServiceCallout</Name>
+        </Step>
+        <Step>
+          <Name>SC-GetCurrentData</Name>
+        </Step>
+        <Step>
+          <Name>FC-LogServiceGetCurrData</Name>
+        </Step>
+        <!-- Error: Move calloutResponse to error mapping flow -->
+        <Step>
+          <Name>AM-CalloutErrorSetAsResponse</Name>
+          <Condition>(calloutResponse.status.code != null and calloutResponse.status.code GreaterThan 299)</Condition>
+        </Step>
+        <Step>
+          <Name>RF-ServiceCalloutResponseCode</Name>
+          <Condition>(calloutResponse.status.code != null and calloutResponse.status.code GreaterThan 299)</Condition>
+        </Step>
+        <Step>
+          <Name>RF-ServiceCalloutTimeout</Name>
+          <Condition>(servicecallout.SC-ChargingGetCurrentData.failed = true and calloutResponse = null)</Condition>
+        </Step>
+        <!-- Success: Extract Callout data : convert to json and map to TMF -->
+        <Step>
+          <Name>XMLToJSON-CalloutResponse</Name>
+        </Step>
+        <Step>
+          <Name>JS-MapResponse</Name>
+        </Step>
+        <Step>
+          <Name>RF-JSError</Name>
+          <Condition>(js.isError = true)</Condition>
+        </Step>
+        <!-- ________Merge Data________  : Client Request vs Current Data -->
+        <Step>
+          <Name>JS-UpdateOperations</Name>
+        </Step>
+        <Step>
+          <Name>RF-JSError</Name>
+          <Condition>(js.isError = true)</Condition>
+        </Step>
+        <!-- ________Create Target Request________ : Convert to XML and map to producer -->
+        <Step>
+          <Name>JSONToXML-Request</Name>
+        </Step>
+        <Step>
+          <Name>XSL-MapRequest</Name>
+        </Step>
+      </Request>
+      <Response>
+        <!-- ________Billing account change________ : handled in Integration -->
+        <Step>
+          <Name>SIR-BaseProductUpdate</Name>
+          <Condition>(req.header.account_id != req.body.billingAccount.id)</Condition>
+        </Step>
+        <Step>
+          <Name>IC-ProductManagement</Name>
+          <Condition>(req.header.account_id != req.body.billingAccount.id)</Condition>
+        </Step>
+        <Step>
+          <Name>EV-GetResponse</Name>
+          <Condition>(req.header.account_id != req.body.billingAccount.id) and (responseProductManagementIntegration.content != null)</Condition>
+        </Step>
+        <!-- Set response to client-->
+        <Step>
+          <Name>AM-SetResponse</Name>
+          <Condition>(req.header.account_id != req.body.billingAccount.id) and apimStatusCode != 200</Condition>
+        </Step>
+        <Step>
+          <Name>AM-SetResponseOk</Name>
+          <Condition>(req.header.account_id != req.body.billingAccount.id) and apimStatusCode = 200</Condition>
+        </Step>
+        <!-- ________ No Billing account change________ : just respond to client-->
+        <Step>
+          <Name>AM-EmptyResponse</Name>
+          <Condition>(req.header.account_id = req.body.billingAccount.id)</Condition>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/*") and (request.verb = "PUT")</Condition>
+    </Flow>
+    <Flow name="DeleteProduct">
+      <Description>Delete Product</Description>
+      <Request>
+        <Step>
+          <Name>EV-PathParam</Name>
+          <Condition>(extractvariables.EV-RequiredFieldsReqHeaders.failed != true)</Condition>
+        </Step>
+        <Step>
+          <Name>RF-BadRequest</Name>
+          <Condition>(extractvariables.EV-PathParam.failed = true)</Condition>
+        </Step>
+        <!-- ________Delete Agreement________ -->
+        <Step>
+          <Name>AM-CalloutRequestDelete</Name>
+        </Step>
+        <!-- record start time of SC -->
+        <Step>
+          <Name>AM-LogServiceCallout</Name>
+        </Step>
+        <Step>
+          <Name>SC-DeleteAgreement</Name>
+        </Step>
+        <Step>
+          <Name>FC-LogServiceDelete</Name>
+        </Step>
+        <!-- Error: Move calloutResponse to error mapping flow. Except on error "1998" -->
+        <Step>
+          <Name>AM-CalloutErrorSetAsResponse</Name>
+          <Condition>(calloutResponse.status.code != null and calloutResponse.status.code GreaterThan 299 and calloutResponse.header.X-QNT-Error != "1998")</Condition>
+        </Step>
+        <Step>
+          <Name>RF-ServiceCalloutResponseCode</Name>
+          <Condition>(calloutResponse.status.code != null and calloutResponse.status.code GreaterThan 299 and calloutResponse.header.X-QNT-Error != "1998")</Condition>
+        </Step>
+        <Step>
+          <Name>RF-ServiceCalloutTimeout</Name>
+          <Condition>(servicecallout.SC-DeleteAgreement.failed = true and calloutResponse = null)</Condition>
+        </Step>
+      </Request>
+      <Response>
+        <Step>
+          <Name>AM-DeleteResponse</Name>
+        </Step>
+      </Response>
+      <Condition>(proxy.pathsuffix MatchesPath "/*") and (request.verb = "DELETE")</Condition>
+    </Flow>
+  </Flows>
+  <PostFlow name="PostFlow">
+    <Response/>
+    <Request/>
+  </PostFlow>
+  <PostClientFlow>
+    <Response>
+      <Step>
+        <!-- Call Shared Flow to send the Logging -->
+        <Name>FC-SendLog</Name>
+      </Step>
+    </Response>
+  </PostClientFlow>
+  <FaultRules>
+    <!-- FaultRules are evaluated from bottom to top in ProxyEndpoint -->
+    <FaultRule name="ServiceCalloutResponseCode">
+      <Step>
+        <Name>EV-ErrorMessage</Name>
+        <Condition>response.content != null</Condition>
+      </Step>
+      <Step>
+        <Name>AM-HTTPErrorResponse</Name>
+      </Step>
+      <Condition>(fault.name matches "RaiseFault") and (raisefault.RF-ServiceCalloutResponseCode.failed = true)</Condition>
+    </FaultRule>
+    <FaultRule name="GatewayTimeout">
+      <Step>
+        <Name>AM-GatewayTimeout</Name>
+      </Step>
+      <Step>
+        <Name>FC-FaultHandling</Name>
+      </Step>
+      <Condition>(fault.name matches "RaiseFault") and (raisefault.RF-ServiceCalloutTimeout.failed = true)</Condition>
+    </FaultRule>
+  </FaultRules>
+  <DefaultFaultRule name="fault-rule">
+    <Step>
+      <Name>FC-FaultHandling</Name>
+    </Step>
+  </DefaultFaultRule>
+  <HTTPProxyConnection>
+    <BasePath>/tmf-api/productManagement/v2/product/charging</BasePath>
+    <Properties>
+      <Property name="api.timeout">90000</Property>
+    </Properties>
+  </HTTPProxyConnection>
+  <RouteRule name="Charging">
+    <TargetEndpoint>ocs-rfb_Agreements_Base</TargetEndpoint>
+    <Condition>((proxy.pathsuffix MatchesPath "/*") and ((request.verb = "GET") or (request.verb = "PUT")))</Condition>
+  </RouteRule>
+  <RouteRule name="TECH_ACC_Delete">
+    <TargetEndpoint>ocs-gcc_TECH_ACC_Delete</TargetEndpoint>
+    <Condition>(proxy.pathsuffix MatchesPath "/*") and (request.verb = "DELETE")</Condition>
+  </RouteRule>
+  <RouteRule name="noroute"/>
+  <!--<Condition>((proxy.pathsuffix JavaRegex "(/?)") and (request.verb = "POST"))</Condition>-->
+  <Description>MVP_API_ID_21</Description>
+</ProxyEndpoint>

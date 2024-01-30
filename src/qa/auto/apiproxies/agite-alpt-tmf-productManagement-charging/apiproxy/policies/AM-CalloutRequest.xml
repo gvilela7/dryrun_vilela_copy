@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-CalloutRequest">
+  <DisplayName>AM-CalloutRequest</DisplayName>
+  <AssignVariable>
+    <Name>sc_accountId</Name>
+    <Template>acc_{req.path.id}</Template>
+  </AssignVariable>
+  <AssignVariable>
+    <Name>sc_productId</Name>
+    <Template>{req.path.id}</Template>
+  </AssignVariable>
+  <Set>
+    <Verb>GET</Verb>
+    <Headers>
+      <Header name="Authorization">Basic {southbound-token}</Header>
+      <Header name="X-QNT-Rqid">{request.header.x-request-apim-id}</Header>
+      <Header name="x-request-apim-id">{request.header.x-request-apim-id}</Header>
+    </Headers>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="true" transport="http" type="request">calloutRequest</AssignTo>
+</AssignMessage>

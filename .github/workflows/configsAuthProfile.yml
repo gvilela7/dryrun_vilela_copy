@@ -1,0 +1,250 @@
+name: '[ APIGEE CONFIGS ] Authentication Profile'
+on:
+  workflow_call:
+    inputs:
+      OPERATION:
+        type: string
+        required: true         
+      NAME:
+        type: string
+        required: true 
+      REGION:     
+        type: string
+        required: true 
+      PROJECT:
+        type: string
+        required: true 
+      APIGEE_PATH:
+        type: string
+        default: src/apigee
+      GITHUB_ENVIRONMENT:
+        type: string
+        required: false          
+
+  workflow_dispatch:
+    inputs:
+      OPERATION:
+        description: 'Operation'
+        type: choice
+        required: true
+        options:
+          - EXPORT
+          - IMPORT        
+      NAME:
+        description: 'Name'  
+        type: string
+        required: true 
+      REGION:     
+        description: 'Region'
+        type: string
+        required: true 
+      PROJECT:
+        description: 'Project'
+        type: string
+        required: true  
+      APIGEE_PATH:
+        description: "APIGEE Path"
+        type: string
+        default: src/apigee
+      GITHUB_ENVIRONMENT:
+        description: 'GITHUB Environment'
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - PROD
+          - HOTFIX
+          - STG
+          - UAT
+          - SIT
+          - DEVCI
+
+jobs:
+  authProfile-Export:
+    if: ${{ inputs.OPERATION == 'EXPORT' }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    env:
+      SETTINGS_FILE: ${{format('{0}/_configs/authprofiles/{1}.yml', inputs.APIGEE_PATH, inputs.NAME)}}
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 
+      - name: Set Secrets Vars
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.INTEGRATION_SERVICE_ACCOUNT }}
+        run: |
+          echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}
+
+          
+      - name: cliOPS setup
+        env:
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }}  
+        run: |
+          export INTEGRATIONCLI_VERSION=v0.69
+          curl -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh -
+  
+          yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml
+ 
+          npm install -g ajv-cli
+
+      - name: Set Payload Vars
+        env:
+          NAME: ${{ inputs.NAME }}
+          PROJECT: ${{ inputs.PROJECT }}
+          REGION: ${{ inputs.REGION }}          
+        run: |
+            jq --null-input \
+                --arg 'name' "$NAME" \
+                --arg 'project' "$PROJECT" \
+                --arg 'region' "$REGION" \
+                '{"PROJECT": $project, "REGION": $region, "NAME": $name}' \
+                > ./contrib/cliOPS/_contrib/payload.json
+
+      - name: Export Auth Profile
+        id: export_auth
+        run: |
+          chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee configurations authprofiles export >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+
+      - name: Check for errors
+        if: ${{ failure() && steps.export_auth.conclusion == 'failure' }}
+        run: |  
+            echo "::error title=ApiProducts Export with failures::Please check what failed to export - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"        
+      - name: Upload error report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10
+
+      - name: List modified files
+        id: modifiedFiles
+        env: 
+              APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
+        run: |
+                  echo "result<<EOF" >> $GITHUB_OUTPUT
+                  echo "$(git ls-files -o -m --exclude-standard -- $APIGEE_PATH ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+                  echo "EOF" >> $GITHUB_OUTPUT
+    
+      - name: Commit Files
+        if: ${{ steps.modifiedFiles.outputs.result != ''}}        
+        run: |      
+            npm install axios
+  
+            node .github/GitVerifiedCommit/index.js \
+                  ${{secrets.GITHUB_TOKEN}} \
+                  $GITHUB_REPOSITORY_OWNER \
+                  ${{github.event.repository.name}} \
+                  $GITHUB_REF_NAME \
+                  "${{steps.modifiedFiles.outputs.result}}" \
+                  '[AUTO] Committing ${{env.SETTINGS_FILE}}'
+
+  authProfile-Import:
+    if: ${{ inputs.OPERATION == 'IMPORT' }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    env:
+      SETTINGS_FILE: ${{format('{0}/_configs/authprofiles/{1}.yml', inputs.APIGEE_PATH, inputs.NAME)}}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 
+      
+      - name: Set Secrets Vars
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.INTEGRATION_SERVICE_ACCOUNT }}
+        run: |
+          echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}
+
+      - name: cliOPS setup
+        env:
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }}  
+        run: |
+          export INTEGRATIONCLI_VERSION=v0.69
+          curl -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh -
+
+          yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml
+
+          npm install -g ajv-cli
+
+      - name: Set Payload Vars
+        env:
+          NAME: ${{ inputs.NAME }}
+          PROJECT: ${{ inputs.PROJECT }}
+          REGION: ${{ inputs.REGION }}          
+        run: |
+            jq --null-input \
+                --arg 'name' "$NAME" \
+                --arg 'project' "$PROJECT" \
+                --arg 'region' "$REGION" \
+                '{"PROJECT": $project, "REGION": $region, "NAME": $name}' \
+                > ./contrib/cliOPS/_contrib/payload.json
+    
+      - name: Import Auth Profile
+        id: import_auth
+        run: |
+          chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee configurations authprofiles import >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+
+      - name: Check for errors
+        if: ${{ failure() && steps.import_auth.conclusion == 'failure' }}
+        run: |  
+            echo "::error title=AuthProfile Import with failures::Please check what failed to import - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+      
+      - name: Upload error report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10
+
+      - name: List modified files
+        id: modifiedFiles
+        env: 
+              APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
+        run: |
+                  echo "result<<EOF" >> $GITHUB_OUTPUT
+                  echo "$(git ls-files -o -m --exclude-standard -- $APIGEE_PATH ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+                  echo "EOF" >> $GITHUB_OUTPUT
+    
+      - name: Commit Files
+        if: ${{ steps.modifiedFiles.outputs.result != ''}}        
+        run: |      
+            npm install axios
+  
+            node .github/GitVerifiedCommit/index.js \
+                  ${{secrets.GITHUB_TOKEN}} \
+                  $GITHUB_REPOSITORY_OWNER \
+                  ${{github.event.repository.name}} \
+                  $GITHUB_REF_NAME \
+                  "${{steps.modifiedFiles.outputs.result}}" \
+                  '[AUTO] Committing ${{env.SETTINGS_FILE}}'  
+  

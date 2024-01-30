@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SharedFlow name="default">
+    <!-- init -->
+    <Step>
+        <Name>JS-setLogVariables</Name>
+        <Condition>(chooseFlow = "LogHookPreProxy")</Condition>
+    </Step>
+    <Step>
+        <Name>AM-assignLogVariables</Name>
+        <Condition>(chooseFlow = "LogHookPreProxy")</Condition>
+    </Step>
+    <!-- From Client -->
+    <Step>
+        <Name>JS-getRequestHeaderList</Name>
+        <Condition>(chooseFlow = "LogHookPreProxy")</Condition>
+    </Step>
+    <Step>
+        <Name>AM-assignFromClientVar</Name>
+        <Condition>(chooseFlow = "LogHookPreProxy")</Condition>
+    </Step>
+    <!-- To Target + From Target-->
+    <!-- sent -->
+    <Step>
+        <Name>JS-getRequestHeaderList</Name>
+        <Condition>(chooseFlow = "LogHookPostTarget")</Condition>
+    </Step>
+    <Step>
+        <Name>AM-assignToTargetVar</Name>
+        <Condition>(chooseFlow = "LogHookPostTarget")</Condition>
+    </Step>
+    <!-- received -->
+    <Step>
+        <Name>JS-getResponseHeaderList</Name>
+        <Condition>(chooseFlow = "LogHookPostTarget")</Condition>
+    </Step>
+    <Step>
+        <Name>AM-assignFromTargetVar</Name>
+        <Condition>(chooseFlow = "LogHookPostTarget")</Condition>
+    </Step>
+    <Step>
+        <Name>JS-setServiceLog</Name>
+        <Condition>(chooseFlow = "LogHookPostTarget")</Condition>
+    </Step>
+    <Step>
+        <Name>AM-SetStateFromTarget</Name>
+        <Condition>(chooseFlow = "LogHookPostTarget")</Condition>
+    </Step>
+    <!-- ServiceCallouts -->
+    <Step>
+        <Name>AM-assignServiceCalloutVar</Name>
+        <Condition>(chooseFlow = "LogServiceCallout")</Condition>
+    </Step>
+    <Step>
+        <Name>JS-setServiceLog</Name>
+        <Condition>(chooseFlow = "LogServiceCallout")</Condition>
+    </Step>
+    <!-- to Client -->
+    <Step>
+        <Name>JS-getResponseHeaderList</Name>
+        <Condition>(chooseFlow = "LogHookPostProxy")</Condition>
+    </Step>
+    <Step>
+        <Name>AM-assignToClientVar</Name>
+        <Condition>(chooseFlow = "LogHookPostProxy")</Condition>
+    </Step>
+    <Step>
+        <Name>FC-LoggingSetVariables</Name>
+        <Condition>(chooseFlow = "LogHookPostProxy")</Condition>
+    </Step>
+</SharedFlow>

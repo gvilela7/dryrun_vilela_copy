@@ -1,0 +1,13 @@
+<APIProxy revision="1" name="employee-bahri-poc">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1695220796685</CreatedAt>
+    <LastModifiedAt>1695220796685</LastModifiedAt>
+    <BasePaths>/employee</BasePaths>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

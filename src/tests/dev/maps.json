@@ -1,0 +1,137 @@
+[
+  {
+    "entries": {
+      "nossis__clientSecret": "nF3yeWSxQJ6aPWtBVmcaOQ",
+      "nossis__clientId": "LpyJBCFgRyy6E7aca_yrWg"
+    },
+    "name": "Auth-Northbound-ClientCredentials",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  },
+  {
+    "entries": {
+      "test.salesforce.com": "alticelabssorg2--dev.sandbox.my.salesforce.com/id/keys"
+    },
+    "name": "Auth-Northbound-JWKS-Endpoints",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  },
+  {
+    "entries": {
+      "ex": "ex"
+    },
+    "name": "Auth-Northbound-JWT-PublicKeys",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  },
+  {
+    "entries": {
+      "ex": "ex"
+    },
+    "name": "Auth-Southbound-Apikey",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  },
+  {
+    "entries": {
+      "salesforce__filenet__basic": "VVJlc3RfU0xGOkthUGRTZ1ZrWXAzczZ2OXkvQj9FKEgrTWJRZVRoV21a",
+      "acc__filenet__basic": "VVJlc3RfQUNDOnAzczZ2OHkvQj9FKEgrTWJRZVRoV21acTR0N3cheiRD",
+      "salesforce__sap__basic": "V1NfU0FMU0ZPUkNFOlNBTEVfZm8xMjM0NSE="
+    },
+    "name": "Auth-Southbound-Basic",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  },
+  {
+    "entries": {
+      "salesforce__xaf__clientId": "uT3QYPN-Mhm8h9h-pZGEag",
+      "salesforce__xaf__clientSecret": "lq-VG_fmky_-V4QUGlk4RJYYB_JBefT6fpdPvOZY58w",
+      "salesforce__xaf__grantType": "client_credentials",
+      "salesforce__xaf__scope": "agite",
+      "xaf__host": "pre-release.services.bk.sapo.pt",
+      "xaf__path": "connect/oauth2/token_endpoint/access_token"
+    },
+    "name": "Auth-Southbound-ClientCredentials",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  },
+  {
+    "entries": {
+      "nossis__salesforce__issuer": "3MVG97srI77Z1g7_n9bNu7Wabuwit4FgQGaq6jJ01E_3lFMoSeK3eEsaRnrF4L_uLw74hpmjhxrvF4ZUwNGzt",
+      "nossis__salesforce__audience": "https://test.salesforce.com",
+      "nossis__salesforce__expiresIn": "3m",
+      "nossis__salesforce__subject": "integrationuser@altice.com.alticelabssorg2"
+    },
+    "name": "Auth-Southbound-JWT",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  },
+  {
+    "entries": {
+      "acc": "jwt",
+      "sap": "basic",
+      "dokos": "oauth-jwt",
+      "id_accesss": "oauth-client-credentials",
+      "sgnum": "basic",
+      "iam": "oauth-client-credentials",
+      "nossis": "basic",
+      "netcracker": "oauth-client-credentials",
+      "polaris": "basic",
+      "rmca": "basic",
+      "isell": "jwt",
+      "sigo": "jwt",
+      "filenet": "basic",
+      "ocs": "basic",
+      "salesforce": "oauth-jwt",
+      "xaf": "oauth-client-credentials"
+    },
+    "name": "Auth-Southbound-ProducerAuthType",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  },
+  {
+    "entries": {
+      "400__reason": "Bad Request",
+      "400__00": "Invalid request",
+      "400__01": "Missing required payload field",
+      "400__02": "Missing required header",
+      "401__reason": "Unauthorized",
+      "401__00": "Invalid credentials",
+      "401__01": "Expired credentials",
+      "401__02": "Invalid auth type for given endpoint",
+      "401__03": "Unable to verify the given token",
+      "403__reason": "Forbidden",
+      "403__00": "Access Denied",
+      "404__reason": "Not Found",
+      "404__00": "Resource not found",
+      "405__reason": "Method Not Allowed",
+      "405__00": "Method is not supprted",
+      "413__reason": "Payload Too Large",
+      "413__00": "Payload cannot be bigger than 10MB",
+      "415__reason": "Unsupported Media Type",
+      "415__00": "Media type is not supported",
+      "429__reason": "To Many Requests",
+      "429_00": "You exceeded the amount of requests by hour",
+      "500__reason": "Internal Server Error",
+      "500__00": "Something went wrong. Please, try again later or contact the system administrator",
+      "502__reason": "Bad Gateway",
+      "502__00": "The proxy received an invalid response from the upstream server",
+      "503__reason": "Service Unavailable",
+      "503__00": "The server is currently unavailbale",
+      "504__reason": "Gateway Time-out",
+      "504__00": "The backend did not respond within the relevant timeframe"
+    },
+    "name": "ErrorLibrary",
+    "scope": "environment",
+    "environment": "dev",
+    "encrypted": true
+  }
+]

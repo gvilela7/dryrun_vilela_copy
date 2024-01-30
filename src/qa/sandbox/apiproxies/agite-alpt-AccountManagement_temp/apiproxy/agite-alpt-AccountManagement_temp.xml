@@ -1,0 +1,24 @@
+<APIProxy revision="4" name="agite-alpt-AccountManagement_temp">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1695133810760</CreatedAt>
+    <LastModifiedAt>1695133810760</LastModifiedAt>
+    <BasePaths>/agite-alpt-accountmanagement_temp</BasePaths>
+    <Policies>
+        <Policy>AM-SetBasicHeader</Policy>
+        <Policy>AM-SetBearerHeader</Policy>
+        <Policy>FC-AuthNorthboundIntegration</Policy>
+        <Policy>FC-AuthSouthboundNetcracker</Policy>
+        <Policy>FC-AuthSouthboundOCS</Policy>
+        <Policy>FC-AuthSouthboundRMCA</Policy>
+        <Policy>FC-SendLog</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <TargetEndpoints>
+        <TargetEndpoint>TargetNC</TargetEndpoint>
+        <TargetEndpoint>TargetOCS</TargetEndpoint>
+        <TargetEndpoint>TargetRMCA</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

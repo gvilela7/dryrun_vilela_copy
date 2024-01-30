@@ -1,0 +1,17 @@
+organizations:
+  apidev-apigeex-sandbox-d29a:
+    projects:
+      apidev-apigeex-sandbox-d29a:
+        environments:
+          default:
+            status: deploy
+kvms: []
+targetServers:
+  - OCS
+sharedflows:
+  - auth-northbound
+  - auth-southbound
+  - default-fault-handling
+  - logging-variables
+  - rest-cloud-logging
+integrations: []

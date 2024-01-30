@@ -1,0 +1,26 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: Auth-SOAP
+            encrypted: true
+            keyValueEntries:
+              - name: pwd_sim2k
+                value: value_para_DEV
+              - name: usr_sim2k
+                value: interf
+            nextPageToken: ""
+        prod:
+          data:
+            name: Auth-SOAP
+            encrypted: true
+            keyValueEntries:
+              - name: sim2k__password
+                value: XPTO11111
+              - name: sim2k__user
+                value: interf111111
+            nextPageToken: ""

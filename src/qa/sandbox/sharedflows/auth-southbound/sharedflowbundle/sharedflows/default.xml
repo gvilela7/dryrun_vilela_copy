@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SharedFlow name="default">
+    <Step>
+        <!-- Used to prevent fetching cached tokens from another resource -->
+        <Name>AM-TempToken</Name>
+    </Step>
+    <Step>
+        <Name>KVM-GetProducerAuthType</Name>
+        <Condition>(authType Is null)</Condition>
+    </Step>
+    <Step>
+        <Name>LC-SouthboundToken</Name>
+        <Condition>(ignoreCache IsNot true)</Condition>
+    </Step>
+    <Step>
+        <!-- Since lookupcache.LC-SouthboundToken.cachehit is readOnly, reassign to IsCached so value can be overridden -->
+        <Name>AM-IsCached</Name>
+        <Condition>(ignoreCache IsNot true)</Condition>
+    </Step>
+    <Step>
+        <!-- Override IsCached -->
+        <Name>AM-IgnoreCache</Name>
+        <Condition>(southbound-token = last-token)</Condition>
+    </Step>
+    <Step>
+        <Name>RF-UnknownTargetSystem</Name>
+        <Condition>(isCached IsNot true) and (authType = null)</Condition>
+    </Step>
+    <Step>
+        <Name>KVM-FetchBasicToken</Name>
+        <Condition>(isCached IsNot true) and (authType = "basic")</Condition>
+    </Step>
+    <Step>
+        <Name>KVM-FetchApiKey</Name>
+        <Condition>(isCached IsNot true) and (authType = "apikey")</Condition>
+    </Step>
+    <Step>
+        <Name>KVM-FetchClaimsJWT</Name>
+        <Condition>
+            (isCached IsNot true) and
+            ((authType = "oauth-jwt") or 
+            (authType = "jwt"))
+        </Condition>
+    </Step>
+    <Step>
+        <Name>KVM-FetchPrivateKey</Name>
+        <Condition>
+            (isCached IsNot true) and
+            ((authType = "oauth-jwt") or 
+            (authType = "jwt"))
+        </Condition>
+    </Step>
+    <Step>
+        <Name>AM-DecodeKey</Name>
+        <Condition>
+            (isCached IsNot true) and
+            ((authType = "oauth-jwt") or (authType = "jwt"))
+        </Condition>
+    </Step>
+    <Step>
+        <Name>JWT-IssueTokenGeneric</Name>
+        <Condition>
+            (isCached IsNot true) and
+            ((authType = "oauth-jwt") or (authType = "jwt"))
+        </Condition>
+    </Step>
+    <Step>
+        <Name>AM-SetRequestJWT</Name>
+        <Condition>((isCached IsNot true) and (authType = "oauth-jwt"))</Condition>
+    </Step>
+    <Step>
+        <Name>SC-GetSouthboundToken</Name>
+        <Condition>((isCached IsNot true) and (authType = "oauth-jwt"))</Condition>
+    </Step>
+    <Step>
+        <Name>FC-LogServiceCallout</Name>
+        <Condition>((isCached IsNot true) and (authType = "oauth-jwt"))</Condition>
+    </Step>
+    <Step>
+        <Name>KVM-FetchClientCredentials</Name>
+        <Condition>((isCached IsNot true) and (authType = "oauth-client-credentials"))</Condition>
+    </Step>
+    <Step>
+        <!-- Pre-defined request for a oauth client_credentials flow -->
+        <Name>AM-SetClientCredentialsReq</Name>
+        <Condition>(isCached IsNot true) and (authType = "oauth-client-credentials")</Condition>
+    </Step>
+    <Step>
+        <!-- If scope is populated append to oauth client_credentials req -->
+        <Name>AM-AppendScopeClientCredentials</Name>
+        <Condition>
+            ((isCached IsNot true and authType = "oauth-client-credentials") and 
+             (scope IsNot "" and scope IsNot null))
+        </Condition>
+    </Step>
+    <Step>
+        <Name>SC-GetSouthboundToken</Name>
+        <Condition>((isCached IsNot true) and (authType = "oauth-client-credentials"))</Condition>
+    </Step>
+    <Step>
+        <Name>FC-LogServiceCallout</Name>
+        <Condition>((isCached IsNot true) and (authType = "oauth-client-credentials"))</Condition>
+    </Step>
+    <Step>
+        <Name>EV-GetAccessToken</Name>
+        <Condition>
+            (isCached IsNot true) and
+            ((authType = "oauth-jwt") or
+            (authType = "oauth-client-credentials"))
+        </Condition>
+    </Step>
+    <Step>
+        <Name>PC-SouthboundToken</Name>
+        <Condition>(isCached IsNot true)</Condition>
+    </Step>
+</SharedFlow>

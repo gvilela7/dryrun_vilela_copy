@@ -1,0 +1,13 @@
+<APIProxy revision="1" name="shipment-bahri-poc">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1695201132504</CreatedAt>
+    <LastModifiedAt>1695201132504</LastModifiedAt>
+    <BasePaths>/shipment</BasePaths>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

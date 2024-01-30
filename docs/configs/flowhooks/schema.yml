@@ -1,0 +1,90 @@
+---
+"$schema": https://json-schema.org/draft/2020-12/schema
+"$id": https://example.com/product.schema.json
+title: Build Flow Hook yaml file
+description: Build Flow Hook yaml file
+type: object
+additionalProperties: false
+properties:
+  status:
+    type: string
+    description: Action to execute
+    enum:
+    - enable
+    - disable
+  settings:
+    type: object
+    description: Placeholder for Flow Hook settings.
+    additionalProperties: false
+    properties:
+      scope:
+        type: string
+        description: Scope of the file.
+        enum:
+        - org
+        - project
+      organizations:
+        type: object
+        description: Organization gcp scope.
+        additionalProperties: false
+        minProperties: 1
+        patternProperties:
+          "^[a-zA-Z0-9-_]+$":
+            type: object
+            description: Project in which the target server will exist.
+            additionalProperties: false
+            properties:
+              environments:
+                type: object
+                description: Environments placeholder.
+                minProperties: 1
+                additionalProperties: false
+                patternProperties:
+                  "^[a-zA-Z0-9-_]+$":
+                    type: object
+                    description: Environment data of the target server.
+                    additionalProperties: false
+                    properties:
+                      data:
+                        "$ref": "#/$defs/commonData"
+                    required:
+                    - data
+            required:
+            - environments
+    required:
+    - scope
+    - organizations
+required:
+- status
+- settings
+"$defs":
+  commonData:
+    type: object
+    additionalProperties: false
+    properties:
+      PreProxyFlowHook:
+        "$ref": "#/$defs/FLOWHOOK-INFO"
+      PostProxyFlowHook:
+        "$ref": "#/$defs/FLOWHOOK-INFO"
+      PreTargetFlowHook:
+        "$ref": "#/$defs/FLOWHOOK-INFO"
+      PostTargetFlowHook:
+        "$ref": "#/$defs/FLOWHOOK-INFO"
+    required:
+    - PreProxyFlowHook
+    - PostProxyFlowHook
+    - PreTargetFlowHook
+    - PostTargetFlowHook
+
+  FLOWHOOK-INFO:
+    type: object
+    additionalProperties: false
+    properties:
+      sharedFlow:
+        type: string
+      description:
+        type: string
+      continueOnError:
+        type: boolean
+
+

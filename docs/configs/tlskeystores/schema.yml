@@ -1,0 +1,144 @@
+---
+"$schema": https://json-schema.org/draft/2020-12/schema
+"$id": https://example.com/product.schema.json
+title: Build TLS yaml file
+description: Build Target Keystores yaml file
+type: object
+additionalProperties: false
+properties:
+  status:
+    type: string
+    description: Action to execute
+    enum:
+    - enable
+    - disable
+  settings:
+    type: object
+    description: Placeholder for Target Keystores settings.
+    additionalProperties: false
+    properties:
+      scope:
+        type: string
+        description: Scope of the file.
+        enum:
+        - org
+        - project
+      organizations:
+        type: object
+        description: Organization gcp scope.
+        additionalProperties: false
+        minProperties: 1
+        patternProperties:
+          "^[a-zA-Z0-9-_]+$":
+            type: object
+            description: Project in which the tls keystore will exist.
+            additionalProperties: false
+            properties:
+              environments:
+                type: object
+                description: Environments placeholder.
+                minProperties: 1
+                additionalProperties: false
+                patternProperties:
+                  "^[a-zA-Z0-9-_]+$":
+                    type: object
+                    description: Environment data of the tls keystore.
+                    additionalProperties: false
+                    properties:
+                      data:
+                        "$ref": "#/$defs/commonData"
+                    required:
+                    - data
+            required:
+            - environments
+    required:
+    - scope
+    - organizations
+required:
+- status
+- settings
+"$defs":
+  commonData:
+    anyOf:
+      - type: string
+      - type: object
+        additionalProperties: false
+        properties:
+          name:
+            type: string
+            pattern: ^[\S]*$
+          aliases:
+            type: array
+            items:
+              "$ref": '#/$defs/ALIAS'
+        required:
+        - name
+  ALIAS:
+    type: object
+    additionalProperties: false
+    properties:
+      alias:
+        type: string
+        pattern: ^[\S]*$
+      password:
+        type: string
+      type:
+        type: string
+        enum:
+        - ALIAS_TYPE_UNSPECIFIED
+        - CERT
+        - KEY_CERT
+      certsInfo:
+        type: object
+        additionalProperties: false
+        properties:
+          certInfo:
+            type: array
+            items:
+              type: object
+              additionalProperties: false
+              properties:
+                version: 
+                  type: integer
+                subject: 
+                  type: string
+                issuer: 
+                  type: string
+                expiryDate: 
+                  type: string
+                validFrom: 
+                  type: string
+                isValid: 
+                  type: string
+                  enum:
+                  - Yes
+                  - No
+                  - Not yet
+                sigAlgName: 
+                  type: string
+                publicKey: 
+                  type: string
+                basicConstraints: 
+                  type: string
+                serialNumber: 
+                  type: string
+                subjectAlternativeNames:         
+                  type: array
+                  items: 
+                    type: string
+              required:
+              - version
+              - subject
+              - issuer
+              - expiryDate
+              - validFrom
+              - isValid
+              - sigAlgName
+              - publicKey
+              - basicConstraints
+              - serialNumber
+        required:
+        - certInfo
+    required:
+    - alias
+    - type

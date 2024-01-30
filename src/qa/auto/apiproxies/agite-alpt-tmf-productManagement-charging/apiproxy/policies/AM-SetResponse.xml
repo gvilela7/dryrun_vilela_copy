@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-SetResponse">
+  <DisplayName>AM-SetResponse</DisplayName>
+  <Set>
+    <Headers>
+      <Header name="x-request-apim-id">{request.header.x-request-apim-id}</Header>
+    </Headers>
+    <StatusCode>{apimStatusCode:500}</StatusCode>
+    <Payload contentType="application/json">{"code":"{apimRspCode}", "reason":"{apimRspReason}", "message": "{apimRspMessage}"}</Payload>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="true" transport="http" type="response"/>
+</AssignMessage>

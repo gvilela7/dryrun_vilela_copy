@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="true" enabled="true" name="AM-assignServiceCalloutVar">
+    <DisplayName>AM-assignServiceCalloutVar</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>sc_targetResponseReceived</Name>
+        <Ref>system.timestamp</Ref>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

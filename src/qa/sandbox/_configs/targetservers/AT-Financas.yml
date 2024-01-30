@@ -1,0 +1,20 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: AT-Financas
+            host: financas.gov.qa.pt
+            port: 8855
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+              trustStore: teste-qa-nuno
+              protocols:
+                - TLSv1.2
+              ciphers:
+                - TLS_RSA_WITH_AES_128_CBC_SHA256
+            protocol: HTTP

@@ -1,0 +1,22 @@
+organizations: 
+  agite-apigee:    
+    projects:
+      agite-apigee:
+        environments:
+          dev:            
+            status: deploy 
+            region: europe-west3
+            version: 1
+            customVars:
+              _VAR: dev
+  agite-apigee-qa:    
+    projects:
+      agite-apigee-qa:
+        environments:
+          qa:            
+            status: deploy 
+            region: europe-west3
+            version: 1
+            customVars:
+              _VAR: qa
+authProfiles: []

@@ -1,0 +1,42 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    agite-apigee:
+      environments:
+        default:
+          data:
+            displayName: hellohello-QA
+            creatorEmail: apigeeops-cicd@agite-apigee.iam.gserviceaccount.com
+            createTime: "2023-09-18T09:35:27.931548Z"
+            lastModifierEmail: apigeeops-cicd@agite-apigee.iam.gserviceaccount.com
+            updateTime: "2023-09-18T09:35:27.931558Z"
+            visibility: CLIENT_VISIBLE
+            state: VALID
+            validTime: "1970-01-01T00:00:00Z"
+            uuid: a0653071-2a48-48f6-b18c-2af9a130c383
+            region: europe-west3
+            decryptedCredential:
+              credentialType: OIDC_TOKEN
+              oidcToken:
+                serviceAccountEmail: apigee-integration-poc@agite-apigee.iam.gserviceaccount.com
+                audience: agite-apigee
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        default:
+          data:
+            displayName: hellohello-QA
+            creatorEmail: apigeeops-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com
+            createTime: "2023-11-21T14:19:51.737597Z"
+            lastModifierEmail: apigeeops-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com
+            updateTime: "2023-11-21T17:59:18.373194Z"
+            visibility: CLIENT_VISIBLE
+            state: VALID
+            validTime: "1970-01-01T00:00:00Z"
+            uuid: 24daf869-a851-4ab7-91b6-1cb63bce5a65
+            region: europe-west1
+            decryptedCredential:
+              credentialType: OIDC_TOKEN
+              oidcToken:
+                serviceAccountEmail: apigeeops-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com
+                audience: agite-apigee

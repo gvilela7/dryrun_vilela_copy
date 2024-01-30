@@ -1,0 +1,914 @@
+operations:
+
+  - id: AS_SI_001
+    cmd: apigee sharedflow import
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+      optional:
+        - BUILD_NAME
+    overview: |
+      Imports a sharedflow into Apigee
+
+    scenarios:
+        - case: sharedflow doesn't exist in the organization 
+          expected: command succeeds and the sharedflow is imported into Apigee
+          payload:
+            {
+              "NAME": "cross-origin-qa",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+          result: {"code": 200 } 
+
+        - case: sharedflow already exists in the organization
+          expected: command succeeds and a new revision is created for the sharedflow in Apigee
+          payload:
+            {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+          result: {"code": 200} 
+
+        - case: ORGANIZATION not set
+          expected: command fails
+          payload:
+            {
+              "NAME": "cross-origin-qa"
+            }
+          result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+        - case: NAME not set
+          expected: command fails
+          payload:
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+          result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+        - case: organization does not exist in Apigee
+          expected: command fails
+          payload:
+            {
+              "NAME": "cross-origin-qa",
+              "ORGANIZATION": "agite-apigee"
+            }
+          result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+        - case: sharedflow doesn't exist in the organization
+          expected: command fails
+          payload:
+            {
+              "NAME": "non-existant",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+          result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AS_SE_001
+    cmd: apigee sharedflow export
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+      optional:
+        - VERSION
+        - KEEP_SHAREDFLOWBUNDLE
+    overview: |
+      Exports a sharedflow revision from an organization, or the latest if none is provided as input
+
+    scenarios:
+      - case: sharedflow exists in the organization
+        expected: command succeeds and the sharedflow's latest version is exported without settings
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+
+   
+      - case: sharedflow exists
+        expected: command fails and the right version is exported without settings
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 8
+          }
+        result: {"code": 200, "data": "Sharedflow exported!"}
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: organization does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "non-existant"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: sharedflow doesn't exist in the organization
+        expected: command fails
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: sharedflow version doesn't exist
+        expected: command fails 
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 8
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" } 
+
+  - id: AS_SD_001
+    cmd: apigee sharedflow delete
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+    overview: |
+      Deletes all sharedflow revisions from an organization, deleting the entire sharedflow
+    notes: |
+      If any revisions are deployed, they are undeployed and the sharedflow is deleted
+
+    scenarios:
+      - case: sharedflow exists and isn't deployed in any environment
+        expected: command succeeds and the sharedflow is deleted from Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200,  "data": "Sharedflow deleted!" }
+
+      - case: sharedflow exists but is deployed in one environment
+        expected: command succeeds and the sharedflow is deleted from Apigee. 
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow deleted!" }
+
+      - case: Exists API connected to sharedflow, must undeploy API early.
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: sharedflow is deployed in multiple environments
+        expected: command succeeds and the sharedflow is deleted from Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow deleted!" }
+
+      - case: ORGANIZATION not set
+        expected: command fails and sharedflow is not deleted
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: organization does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "NAME": "error-handling-qa",
+            "ORGANIZATION": "non-existant"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: sharedflow doesn't exist in the organization
+        expected: command fails
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AS_SVD_001
+    cmd: apigee sharedflow versionDelete
+    inputs:
+      required:
+        - NAME
+        - VERSION
+        - ORGANIZATION
+    overview: |
+      Deletes a sharedflow revision
+    notes: |
+      The commands will fail if that revision is deployed 
+      Will delete the entire sharedflow if no version is deployed in any environment and input VERSION is set to -1
+
+    scenarios:
+      - case: sharedflow exists and VERSION isn't deployed in any environment
+        expected: command succeeds and the revision is deleted from Apigee. 
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 8
+          }
+        result: {"code": 200, "data": "Sharedflow revision deleted!" }
+
+      - case: sharedflow exists but VERSION is deployed
+        expected: command fails and the revision is not deleted from Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 7
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: sharedflow exists and is deployed in another version
+        expected: command succeeds and the revision is deleted from Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 1
+          }
+        result: {"code": 200, "data": "Sharedflow revision deleted!"}
+
+      - case: ORGANIZATION not set
+        expected: command fails and sharedflow remains deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "VERSION": 7
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 7
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+  
+      - case: VERSION not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+    
+
+      - case: organization does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "non-existant",
+            "VERSION": 4
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: sharedflow doesn't exist in the organization
+        expected: command fails
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 4
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+
+      - case: revision number doesn't exist for the sharedflow
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 16
+          }
+        result: {"code": 500,  "data": "Internal Error – a generic error occurred" }
+
+      - case: trying to delete revision 0
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 0
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: trying to delete revision -1 when sharedflow is undeployed in all environments
+        expected: command succeeds and deletes the sharedflow from Apigee
+        payload:
+          {
+            "NAME": "hook-post-target-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": -1
+          }
+        result: {"code": 200, "data": "Sharedflow revision deleted!" }
+
+      - case: trying to delete revision -1 when sharedflow is deployed in an environment
+        expected: command fails and sharedflow is not deleted from Apigee
+        payload:
+          {
+            "NAME": "logging-set-variables-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": -1
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AS_SUO_001
+    cmd: apigee sharedflow undeployOrganization
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+    overview: |
+      Undeploys a sharedflow from all environments in an organization
+
+    scenarios:
+      - case: sharedflow exists and is deployed in one environment
+        expected: command succeeds and the sharedflow is undeployed from all environments in Apigee
+        payload:
+          {
+            "NAME": "logging-set-variables-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200,  "data": "Sharedflow Undeployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }
+
+      - case: sharedflow exists and is deployed in more than one environment
+        expected: command succeeds and the sharedflow is undeployed from all environments in Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Undeployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: sharedflow exists but is not deployed
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Undeployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: ORGANIZATION not set
+        expected: command fails and sharedflow remains deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+    
+      - case: organization does not exist in Apigee
+        expected: command fails and sharedflow remains deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "non-existant"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: sharedflow doesn't exist in the organization
+        expected: command fails
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500,  "data": "Internal Error – a generic error occurred"}
+
+  - id: AS_SU_001
+    cmd: apigee sharedflow undeploy
+    inputs:
+      required:
+        - NAME
+        - VERSION
+        - ENVIRONMENT
+        - ORGANIZATION
+    overview: |
+      undeploy a proxy in a given ENVIRONMENT from ORGANIZATION
+
+
+    scenarios:
+      - case: sharedflow is deployed
+        expected: requires the sharedflow to be deployed and will undeploy
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Sharedflow Undeployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: ORGANIZATION not set
+        expected: command fails and sharedflow remains deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500,  "data": "Internal Error – a generic error occurred"}
+
+      - case: ENVIRONMENT not set
+        expected: command fails and sharedflow remains deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: NAME not set
+        expected: command fails and sharedflow remains deployed
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: organization does not exist in Apigee
+        expected: command fails and sharedflow remains deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "non-existant",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: environment does not exist in Apigee
+        expected: command fails and sharedflow remains deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: sharedflow doesn't exist in the organization
+        expected: command fails
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AS_SD_001
+    cmd: apigee sharedflow deploy
+    inputs:
+      required:
+        - NAME
+        - ENVIRONMENT
+        - ORGANIZATION
+      optional:
+        - VERSION
+        - SERVICE_ACCOUNT
+    overview: |
+      Deploy a version of a sharedflow in an organization environment, or the latest version if none is provided as input
+      Can deploy using a specific Service Account if provided in the input
+      If already deployed in the environment, will replace the version that is deployed
+
+    scenarios:
+      - case: sharedflow exists and isn't deployed in the environment of the organization
+        expected: command succeeds and the latest version is deployed in the environment in Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: sharedflow exists and but is already deployed in the environment of the organization
+        expected: command succeeds and the latest version is deployed in the environment in Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }
+
+      - case: sharedflow exists and isn't deployed in the environment of the organization
+        expected: command succeeds and version 1 is deployed in the environment in Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": 1
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }
+
+      - case: sharedflow exists and but is already deployed in the environment of the organization
+        expected: command succeeds and version 1 is deployed in the environment in Apigee
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "VERSION": 1
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }
+
+      - case: sharedflow exists and isn't deployed, try to deploy a version that doesn't exist
+        expected: command fails and sharedflow remains undeployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": 55
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: sharedflow exists and isn't deployed in the environment of the organization
+        expected: command succeeds and deploys latest version using the service account
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "SERVICE_ACCOUNT": "proxy-cicd@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }
+
+      - case: sharedflow exists and but is already deployed in the environment of the organization
+        expected: ccommand succeeds and deploys latest version using the service account
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "SERVICE_ACCOUNT": "proxy-cicd@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }
+
+      - case: sharedflow exists and isn't deployed, try to deploy with a service account that doesn't exist
+        expected: command fails and sharedflow remains undeployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "SERVICE_ACCOUNT": "dummy@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: try to deploy version 7
+        expected: command succeeds but the latest version is deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": 7
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" }
+
+      - case: try to deploy a negative version number
+        expected: command succeeds but the latest version is deployed
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": -1
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" } 
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: organization does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "non-existant",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+
+      - case: environment does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+    
+      - case: sharedflow doesn't exist in the organization
+        expected: command fails
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AS_SV_001
+    cmd: apigee sharedflow version
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: |
+      Get the sharedflow version number that is deployed in a given ENVIRONMENT from ORGANIZATION  
+
+    scenarios:
+      - case: sharedflow exists and is deployed in the environment of the organization
+        expected: command returns version number
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "7" }
+
+      - case: sharedflow exists and is deployed in two environments of the organization
+        expected: command returns the right version number
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "prod"
+          }
+        result: {"code": 200,"data": "7" }
+
+      - case: sharedflow exists but ISN'T deployed in the environment of the organization
+        expected: command succeeds but returns 0
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "7"  }
+
+      - case: sharedflow doesn't exist in the organization
+        expected: command succeeds but returns -1
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "7"  }
+  
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"} 
+
+      - case: organization does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "non-existant",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"} 
+
+      - case: environment does not exist in Apigee
+        expected: command returns 0 #TODO: this may need to be fixed...
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "0"  }
+
+  - id: AS_SDE_001
+    cmd: apigee sharedflow deployments
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+    overview: |
+      Get the organization environments in which a sharedflow is deployed and the version that is deployed
+
+    scenarios:
+      - case: sharedflow exists and is deployed in one environment of the organization
+        expected: command returns data with deployed revision number
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" } 
+
+      - case: sharedflow exists and is deployed in two environments of the organization
+        expected: command returns both results
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" } 
+
+      - case: sharedflow exists but ISN'T deployed in any environment of the organization
+        expected: command succeeds but returns null data
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!" } 
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"} 
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"} 
+
+      - case: organization does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "non-existant"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"} 
+
+      - case: sharedflow doesn't exist in the organization
+        expected: command fails
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"} 
+
+  - id: AS_SDEP_001
+    cmd: apigee sharedflow dependencies
+    inputs:
+      required:
+        - NAME
+    overview: Get a sharedflow's dependencies on sharedflows, traget servers, and kvms
+
+    scenarios:
+      - case: sharedflow exists and doesn't have dependencies
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 200, "data": "{\"sharedflows\":[],\"kvms\":[],\"targetservers\":[],\"integrations\":[]}"} 
+
+      - case: sharedflow exists and has kvms dependencies
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 200, "data": "{\"sharedflows\":[],\"kvms\":[KeyStore],\"targetservers\":[],\"integrations\":[]}"} 
+
+      - case: sharedflow exists and has sharedflow dependencies
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 200, "data": "{\"sharedflows\":[logging-set-variables-qa],\"kvms\":[KeyStore],\"targetservers\":[],\"integrations\":[]}"}  
+
+      - case: sharedflow exists and has target server dependencies
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 200, "data": "{\"sharedflows\":[logging-set-variables-qa],\"kvms\":[KeyStore],\"targetservers\":[NetcrackerEA, Netcracker, Filenet],\"integrations\":[]}"}  
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {}
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"} 
+
+      - case: sharedflow doesn't exist locally
+        expected: command fails
+        payload:
+          {
+              "NAME": "non-existant"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"} 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-DecodePublicKeyJWT">
+    <DisplayName>AM-DecodePublicKeyJWT</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>publicKey-decoded</Name>
+        <Template>{decodeBase64(private.publicKey)}</Template>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>

@@ -1,0 +1,17 @@
+<SharedFlowBundle revision="1" name="logging-set-variables">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1694448914118</CreatedAt>
+    <LastModifiedAt>1694448914118</LastModifiedAt>
+    <Policies>
+        <Policy>AM-SetErrorMessage</Policy>
+        <Policy>JS-setEmptyFields</Policy>
+    </Policies>
+    <Resources>
+        <Resource>jsc://setEmptyFields.js</Resource>
+    </Resources>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

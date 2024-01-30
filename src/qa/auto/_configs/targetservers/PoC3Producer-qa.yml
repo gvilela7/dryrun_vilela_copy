@@ -1,0 +1,24 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: PoC3Producer-QA
+            host: 63594347ff3d7bddb99d8ea1.mockapi.io
+            port: 443
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+            protocol: HTTP
+        prod:
+          data:
+            name: PoC3Producer-QA
+            host: 63594347ff3d7bddb99d8ea1.mockapi.io
+            port: 443
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+            protocol: HTTP

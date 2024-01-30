@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-PathVariableAddon">
+  <DisplayName>AM-PathVariableAddon</DisplayName>
+  <AssignVariable>
+    <Name>target_account_id</Name>
+    <Template>acc_{req.header.account_id}</Template>
+  </AssignVariable>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+</AssignMessage>

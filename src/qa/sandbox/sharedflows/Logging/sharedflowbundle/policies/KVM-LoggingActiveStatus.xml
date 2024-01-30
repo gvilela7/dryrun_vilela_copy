@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- 
+
+    Placeholder policy, showing how a global toggle could be implemented
+    A proxy could be implemented to switch the state of the "status" flag on the "Logging" KVM between "on" and "off"
+
+-->
+<KeyValueMapOperations continueOnError="false" enabled="false" name="KVM-LoggingActiveStatus" mapIdentifier="Logging">
+    <DisplayName>KVM-LoggingActiveStatus</DisplayName>
+    <Properties/>
+    <Get assignTo="logging.status" index="1">
+        <Key>
+            <Parameter>status</Parameter>
+        </Key>
+    </Get>
+</KeyValueMapOperations>

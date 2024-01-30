@@ -1,0 +1,168 @@
+name: '[ APIGEE ] DEPLOY ALL'
+on:
+  workflow_dispatch:
+    inputs:
+      ORGANIZATION:
+        description: 'Organization/Project'
+        required: true
+        type: string
+      ENVIRONMENT:
+        description: "Environment"
+        type: string          
+      APIGEE_PATH:
+        description: "APIGEE Path"
+        type: string
+        default: src/apigee
+      GITHUB_ENVIRONMENT:
+        description: 'GITHUB Environment'
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - PROD
+          - HOTFIX
+          - STG
+          - UAT
+          - SIT
+          - DEVCI          
+
+jobs:
+    CICD:
+      environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Checkout tools repo
+          uses: actions/checkout@v4
+          with:
+            token: ${{ secrets.PIPELINE_ACCESS }}
+            repository: jrdevoteam/Dryrun_2.0
+            ref: ${{ github.ref_name }}
+            sparse-checkout: |
+                ${{ inputs.APIGEE_PATH }}/apiproxies
+                ${{ inputs.APIGEE_PATH }}/sharedflows
+                ${{ inputs.APIGEE_PATH }}/integrations
+            path: tmp
+
+        - name: Move Files 
+          env:
+            APIGEE_PATH: ${{ inputs.APIGEE_PATH }}
+          run: |
+            for dir in "$APIGEE_PATH/apiproxies" "$APIGEE_PATH/sharedflows" "$APIGEE_PATH/integrations"; do
+              if [ -d "tmp/$dir" ]; then
+                sudo mv -f "tmp/$dir" $dir
+              fi
+            done
+
+        - name: install tree
+          run: | 
+            sudo apt-get install tree
+
+        - name: check Files
+          run: |
+            cd $dir
+            tree
+
+        - name: Set Secrets Vars
+          env:
+            SERVICE_ACCOUNT: ${{ secrets.PROXY_SERVICE_ACCOUNT }}
+          run: |
+            echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+            
+        - name: Cache npm dependencies
+          uses: actions/cache@v3
+          with:
+            path: ~/.npm
+            key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+        - name: Cache other dependencies
+          uses: actions/cache@v3
+          with:
+            path: ~/.dependencies
+            key: dependencies-${{ runner.os }}
+
+        - name: cliOPS setup
+          env:
+            APIGEE_PATH: ${{ inputs.APIGEE_PATH }}  
+          run: |
+            export APIGEECLI_VERSION=v1.120
+            export APIGEECLI_NO_USAGE=true
+            export APIGEECLI_NO_ERRORS=true
+            curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
+            
+            export INTEGRATIONCLI_VERSION=v0.69
+            curl -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh -
+  
+            yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml
+  
+            npm install -g ajv-cli
+
+            sudo apt-get install jo
+
+        - name: Set Payload Vars
+          env:
+            ORGANIZATION: ${{ inputs.ORGANIZATION }}
+            ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+            CONFIGS_ENCRYPTION: ${{ secrets.CONFIGS_ENCRYPTION }}  
+          run: |
+              jq --null-input \
+                  --arg 'organization' "$ORGANIZATION" \
+                  --arg 'environment' "$ENVIRONMENT" \
+                  --arg 'configs_encryption' "$CONFIGS_ENCRYPTION" \
+                  '{"ORGANIZATION": $organization, "ENVIRONMENTS": [$environment], "CONFIGS_ENCRYPTION": $configs_encryption}' > ./contrib/cliOPS/_contrib/payload.json
+
+        - name: Deploy all
+          id: import_all          
+          run: |
+            chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee deploy all >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+        - name: Clean repo sync   
+          env:
+            APIGEE_PATH: ${{ inputs.APIGEE_PATH }}            
+          run: |
+            sudo rm -rf tmp
+            for dir in "$APIGEE_PATH/apiproxies" "$APIGEE_PATH/sharedflows" "$APIGEE_PATH/integrations"; do
+              if [ -d "$dir" ]; then
+                sudo rm -rf $dir
+              fi
+            done
+        
+        - name: Check for errors
+          if: ${{ failure() && steps.import_all.conclusion == 'failure' }}
+          run: |  
+            echo "::error title=Deploy all with failures::Please check which components failed to deploy - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+        
+        - name: Upload report
+          if: ${{ always() }}
+          uses: actions/upload-artifact@v3
+          with:
+            name: apigeeOpsReport
+            path: ./contrib/cliOPS/_contrib/tmp
+            retention-days: 30
+
+        - name: List modified files
+          if: ${{ always() }}
+          id: modifiedFiles
+          env: 
+                APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
+          run: |
+                echo "result<<EOF" >> $GITHUB_OUTPUT
+                echo "$(git ls-files -o -m --exclude-standard -- $APIGEE_PATH ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+                echo "EOF" >> $GITHUB_OUTPUT
+      
+        - name: Commit Files
+          if: ${{ steps.modifiedFiles.outputs.result != '' }}        
+          run: |
+              npm install axios
+    
+              node .github/GitVerifiedCommit/index.js \
+                    ${{secrets.GITHUB_TOKEN}} \
+                    $GITHUB_REPOSITORY_OWNER \
+                    ${{github.event.repository.name}} \
+                    $GITHUB_REF_NAME \
+                    "${{steps.modifiedFiles.outputs.result}}" \
+                    '[AUTO] Committing files updated by imports'  
+                    

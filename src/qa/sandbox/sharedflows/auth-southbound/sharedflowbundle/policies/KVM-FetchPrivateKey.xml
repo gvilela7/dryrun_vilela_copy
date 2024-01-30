@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyValueMapOperations continueOnError="false" enabled="true" name="KVM-FetchPrivateKey" mapIdentifier="KeyStore">
+    <DisplayName>KVM-FetchPrivateKey</DisplayName>
+    <Properties/>
+    <Get assignTo="private.privateKey">
+        <Key>
+            <Parameter>apigee</Parameter>
+            <Parameter>privateKey</Parameter>
+        </Key>
+    </Get>
+    <Scope>environment</Scope>
+</KeyValueMapOperations>

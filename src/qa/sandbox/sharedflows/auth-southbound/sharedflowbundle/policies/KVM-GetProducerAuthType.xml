@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyValueMapOperations continueOnError="false" enabled="true" name="KVM-GetProducerAuthType" mapIdentifier="Auth-Southbound-ProducerAuthType">
+  <DisplayName>KVM-GetProducerAuthType</DisplayName>
+  <Properties/>
+  <Get assignTo="authType">
+    <Key>
+      <Parameter ref="targetSystem"/>
+    </Key>
+  </Get>
+  <Scope>environment</Scope>
+  <ExpiryTimeInSecs>600</ExpiryTimeInSecs>
+</KeyValueMapOperations>

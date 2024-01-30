@@ -1,0 +1,24 @@
+status: disable
+settings:
+  scope: project
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      data:
+        name: TestApiProductBug
+        displayName: TestApiProductBug
+        approvalType: auto
+        attributes:
+          - name: access
+            value: private_value_key
+        description: Removing description to acess API
+        createdAt: "1694698966511"
+        lastModifiedAt: "1695221864861"
+        graphqlOperationGroup:
+          operationConfigs:
+            - apiSource: proxy2Delete2
+              operations:
+                - operationTypes:
+                    - QUERY
+                  operation: addthisname
+              quota: {}
+          operationConfigType: proxy

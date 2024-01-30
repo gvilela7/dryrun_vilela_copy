@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-UnknownTargetSystem">
+  <DisplayName>RF-UnknownTargetSystem</DisplayName>
+  <Properties/>
+  <FaultResponse>
+    <FaultResponse>
+      <AssignVariable>
+        <Name>apim.error.code</Name>
+        <Value>500.00</Value>
+      </AssignVariable>
+      <AssignVariable>
+        <Name>apim.error.mesage</Name>
+        <Value>Unable to fetch backend config</Value>
+      </AssignVariable>
+    </FaultResponse>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

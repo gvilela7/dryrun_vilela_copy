@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<IntegrationCallout continueOnError="false" enabled="true" name="IC-ProductManagement">
+  <DisplayName>IC-ProductManagement</DisplayName>
+  <AsyncExecution>false</AsyncExecution>
+  <Request clearPayload="true">requestProductManagementIntegration</Request>
+  <Response>responseProductManagementIntegration</Response>
+</IntegrationCallout>

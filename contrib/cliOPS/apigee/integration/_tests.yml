@@ -1,0 +1,213 @@
+operations:
+  - id: AI_II_001
+    cmd: apigee integration import
+    inputs:
+      required:
+        - NAME
+        - REGION
+        - PROJECT
+      optional:
+        - BUILD_NAME    
+    overview: Import an integration into APIGEE, get version imported
+    scenarios:
+      - case: The integration exist in repository and we will import to Apigee
+        expected: An integration will be created and available
+        payload: 
+          { 
+            "NAME": "integration-authprofiles-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3"          
+          }
+        result: {"code": 200, "data": "1" }   
+
+      - case: The integration exists in Apigee and in repository and we will import to Apigee
+        expected: An integration will be updated and increase the version
+        payload: 
+          { 
+            "NAME": "integration-authprofiles-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3"          
+          }
+        result: {"code": 200, "data": "2" }
+
+  - id: AI_IE_001
+    cmd: apigee integration export
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+        - REGION
+        - VERSION
+    overview: Export an integration from APIGEE to Local
+    scenarios:
+      - case: We set the required variables to perform export
+        expected: A folder with the name and a json file will be created of integration will be created inside folder integrations
+        payload: 
+          { 
+            "NAME": "integration-authprofiles-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west1",
+            "VERSION": 2      
+          }
+        result: {"code": 200, "data": "2"}
+
+  - id: AI_ID_001
+    cmd: apigee integration deploy
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+        - REGION
+        - VERSION
+    overview: Publish an integration given a PROJECT and REGION
+    scenarios:
+      - case: We set the required variables to apply the version 1 which has already published
+        expected: The integration will not publish once again
+        payload: 
+          { 
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3",
+            "VERSION": 1
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: We set the required variables to publish without dependencies installed. Removing dependencies
+        expected: The integration will not publish once again
+        payload: 
+          { 
+            "NAME": "integration-authprofiles-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3",
+            "VERSION": 1
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }      
+
+  - id: AI_IU_001
+    cmd: apigee integration undeploy
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+        - REGION
+        - VERSION
+    overview: Undeploy an integration given a PROJECT and REGION and VERSION
+    scenarios:
+      - case: An integration to undeploy. Only one version can be undeploy at any time.
+        expected: The undeploy integration with defined version will be undeploy.
+        payload: 
+          { 
+            "NAME": "integration-authprofiles-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3",
+            "VERSION": 1
+          }
+        result: {"code": 200,  "data": "Integration undeployed!" } 
+
+      - case: An integration to undeploy. The version is not exists
+        expected: command fails
+        payload: 
+          { 
+            "NAME": "integration-authprofiles-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3",
+            "VERSION": 2
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" } 
+  
+  - id: AI_ID_001
+    cmd: apigee integration delete
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+        - REGION
+    overview: Delete an integration given a PROJECT and REGION. All versions will be deleted along with integration.
+    scenarios:
+      - case: An integration is set to be delete.
+        expected: The deleted integration will not be available.
+        payload: 
+            { 
+              "NAME": "integration-generic-proxy-qa",
+              "PROJECT": "agite-apigee",
+              "REGION": "europe-west3"
+            }
+        result: {"code": 200, "data": "Integration deleted!" }
+
+      - case: An integration is set to be delete but it's already deleted
+        expected: command fails. 
+        payload: 
+            { 
+              "NAME": "integration-generic-proxy-qa",
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west3"
+            }
+        result: {"code": 200, "data": "Integration deleted!" } 
+
+      - case: An integration is set to be delete but REGION is wrong set
+        expected: command fails. 
+        payload: 
+            { 
+              "NAME": "integration-generic-proxy-qa",
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west2"
+            }
+        result: {"code": 200, "data": "Integration deleted!" } 
+
+      - case: An integration is set to be delete but PROJECT is wrong set
+        expected: command fails. 
+        payload: 
+            { 
+              "NAME": "integration-generic-proxy-qa",
+              "PROJECT": "agite-apigee",
+              "REGION": "europe-west3"
+            }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }  
+
+  - id: AI_VD_001
+    cmd: apigee integration deleteVersion
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+        - REGION
+        - VERSION
+    overview: Delete an integration given a PROJECT and REGION and VERSION. An integration version will be deleted.
+    scenarios:
+      - case: An integration version is set to be delete. The version is publish
+        expected: The deleted integration version will no longer be available.
+        payload: 
+          { 
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3",
+            "VERSION": 2
+          }
+        result: {"code": 200, "data": "Integration version deleted!" }
+
+      - case: An integration version is set to be delete. The version is not publish
+        expected: The deleted integration version will no longer be available.
+        payload: 
+          { 
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3",
+            "VERSION": 3
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }  
+
+      - case: An integration version is set to be delete but PROJECT is wrong set
+        expected: command fails. 
+        payload: 
+            { 
+              "NAME": "integration-authprofiles-qa",
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west3",
+              "VERSION": 2
+            }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }  
+
+      
+      
+
+          

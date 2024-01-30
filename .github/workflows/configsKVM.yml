@@ -1,0 +1,225 @@
+name: '[ APIGEE CONFIGS ] KVM'
+on:
+
+  workflow_call:
+    inputs:
+      OPERATION:
+        type: string
+        required: true        
+      NAME:
+        type: string
+        required: true
+      ENVIRONMENT:     
+        type: string
+        required: true 
+      ORGANIZATION:
+        type: string
+        required: true
+      APIGEE_PATH:
+        type: string
+        default: src/apigee
+      GITHUB_ENVIRONMENT:
+        type: string
+        required: false
+
+  workflow_dispatch:
+    inputs:
+      OPERATION:
+        description: 'Operation'
+        type: choice
+        required: true
+        options:
+          - EXPORT
+          - IMPORT       
+      NAME:
+        description: 'Name'
+        type: string
+        required: true
+      ENVIRONMENT:     
+        description: 'Environment'
+        type: string
+        required: true 
+      ORGANIZATION:
+        description: 'Organization'
+        type: string
+        required: true
+      APIGEE_PATH:
+        description: "Path to APIGEE"
+        type: string
+        default: src/apigee
+      GITHUB_ENVIRONMENT:
+        description: 'GITHUB Environment'
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - PROD
+          - HOTFIX
+          - STG
+          - UAT
+          - SIT
+          - DEVCI          
+
+jobs:
+
+  KVM-Export:
+    if: ${{ inputs.OPERATION == 'EXPORT' }}
+
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    env:
+      SETTINGS_FILE: ${{format('{0}/_configs/kvms/{1}.yml', inputs.APIGEE_PATH, inputs.NAME)}}
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 
+
+      - name: Set Secrets Vars
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.PROXY_SERVICE_ACCOUNT }}
+        run: |
+          echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}
+
+      - name: cliOPS setup
+        env:
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }}  
+        run: |
+          export APIGEECLI_VERSION=v1.120
+          export APIGEECLI_NO_USAGE=true
+          export APIGEECLI_NO_ERRORS=true
+          curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
+
+          yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml
+
+          npm install -g ajv-cli
+
+      - name: Set Payload Vars
+        env:
+          NAME: ${{ inputs.NAME }}
+          ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+          ORGANIZATION: ${{ inputs.ORGANIZATION }}
+          ENCRYPTED: true
+          CONFIGS_ENCRYPTION: ${{secrets.CONFIGS_ENCRYPTION}}
+        run: |
+            jq --null-input \
+                --arg 'name' "$NAME" \
+                --arg 'environment' "$ENVIRONMENT" \
+                --arg 'organization' "$ORGANIZATION" \
+                --argjson 'encrypted' "$ENCRYPTED" \
+                --arg 'configs_encryption' "$CONFIGS_ENCRYPTION" \
+                '{"ORGANIZATION": $organization, "ENVIRONMENT": $environment, "ENCRYPTED": $encrypted, "NAME": $name, "CONFIGS_ENCRYPTION": $configs_encryption}' \
+                > ./contrib/cliOPS/_contrib/payload.json
+      
+      - name: Export KVM
+        id: export_kvm
+        run: |
+          chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee configurations kvms export >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+
+      - name: Check for errors
+        if: ${{ failure() && steps.export_kvm.conclusion == 'failure' }}
+        run: |  
+            echo "::error title=KVM Export with failures::Please check what failed to export - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+      
+      - name: Upload error report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10
+      
+      - name: List modified files
+        id: modifiedFiles
+        env: 
+              APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
+        run: |
+                  echo "result<<EOF" >> $GITHUB_OUTPUT
+                  echo "$(git ls-files -o -m --exclude-standard -- $APIGEE_PATH ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+                  echo "EOF" >> $GITHUB_OUTPUT
+    
+      - name: Commit Files
+        if: ${{ steps.modifiedFiles.outputs.result != ''}}        
+        run: |      
+            npm install axios
+  
+            node .github/GitVerifiedCommit/index.js \
+                  ${{secrets.GITHUB_TOKEN}} \
+                  $GITHUB_REPOSITORY_OWNER \
+                  ${{github.event.repository.name}} \
+                  $GITHUB_REF_NAME \
+                  "${{steps.modifiedFiles.outputs.result}}" \
+                  '[AUTO] Committing ${{env.SETTINGS_FILE}}'
+
+  KVM-Import:
+    if: ${{ inputs.OPERATION == 'IMPORT' }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 
+      
+      - name: Set Secrets Vars
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.PROXY_SERVICE_ACCOUNT }}
+        run: |
+          echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+      - name: cliOPS setup
+        env:
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }}  
+        run: |
+          export APIGEECLI_VERSION=v1.120
+          export APIGEECLI_NO_USAGE=true
+          export APIGEECLI_NO_ERRORS=true
+          curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
+
+          yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml
+
+          npm install -g ajv-cli
+
+      - name: Set Payload Vars
+        env:
+          NAME: ${{ inputs.NAME }}
+          ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+          ORGANIZATION: ${{ inputs.ORGANIZATION }}
+          CONFIGS_ENCRYPTION: ${{secrets.CONFIGS_ENCRYPTION}}
+        run: |
+            jq --null-input \
+                --arg 'organization' "$ORGANIZATION" \
+                --arg 'environment' "$ENVIRONMENT" \
+                --arg 'name' "$NAME" \
+                --arg 'configs_ecryption' "$CONFIGS_ENCRYPTION" \
+                '{"ORGANIZATION": $organization, "ENVIRONMENT": $environment, "NAME": $name, "CONFIGS_ENCRYPTION": $configs_ecryption}' \
+                > ./contrib/cliOPS/_contrib/payload.json
+    
+      - name: Import KVM
+        id: import_kvm
+        run: |
+          chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee configurations kvms import >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+
+      - name: Check for errors
+        if: ${{ failure() && steps.import_kvm.conclusion == 'failure' }}
+        run: |  
+            echo "::error title=KVM Import with failures::Please check what failed to import - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+      
+      - name: Upload error report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10    

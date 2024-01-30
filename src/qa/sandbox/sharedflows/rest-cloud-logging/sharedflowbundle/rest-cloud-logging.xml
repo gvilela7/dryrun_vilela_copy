@@ -1,0 +1,14 @@
+<SharedFlowBundle revision="18" name="rest-cloud-logging">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1695055531269</CreatedAt>
+    <LastModifiedAt>1695055531269</LastModifiedAt>
+    <Policies>
+        <Policy>SC-ServiceRestCall</Policy>
+        <Policy>SC-ServiceRestCallObservability</Policy>
+    </Policies>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

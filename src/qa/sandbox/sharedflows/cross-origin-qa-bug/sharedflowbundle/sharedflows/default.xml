@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SharedFlow name="default">
+    <Step>
+        <Name>AM-cors-targetA-headers</Name>
+        <Condition>request.header.origin == "https://dinochiesa.github.io"</Condition>
+    </Step>
+    <Step>
+        <Name>AM-cors-targetB-headers</Name>
+        <Condition>request.header.origin == "https://www.test-cors.org"</Condition>
+    </Step>
+    <Step>
+        <Name>AM-cors-default-headers</Name>
+        <Condition>access_control_allow_headers is null</Condition>
+    </Step>
+    <Step>
+        <Name>cors-enforceCors</Name>
+    </Step>
+</SharedFlow>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-Mock">
+    <DisplayName>AM-Mock</DisplayName>
+    <Properties/>
+    <Set>
+        <Headers>
+            <Header name="response-header">Header-value</Header>
+            <Header name="Content-type">application/json</Header>
+        </Headers>
+        <Payload>
+            {"this":"is a mock response"}
+        </Payload>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>

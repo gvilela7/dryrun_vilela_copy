@@ -1,0 +1,43 @@
+---
+operations:
+  - id: CREATE_USER
+    cmd: apigeeOPS createUser
+    inputs:
+      required:
+        - email
+        - firstName
+        - lastName
+      optionals: []
+    notes: This operation creates a new user in Apigee.
+    overview: This test will create a new user in Apigee and verify that the user was created successfully.
+    scenarios:
+      - case: Create user with valid input
+        excepted:
+          status: 200
+          data:
+            id: 1234567890
+            email: user@example.com
+            firstName: John
+            lastName: Doe
+        payload:
+          email: user@example.com
+          firstName: John
+          lastName: Doe
+        result: PASS
+        
+  - id: DELETE_USER
+    cmd: apigeeOPS deleteUser 
+    inputs:
+      required:
+        - userId
+      optionals: []
+    notes: This operation deletes a user from Apigee.
+    overview: This test will delete a user from Apigee and verify that the user was deleted successfully.
+    scenarios:
+      - case: Delete user with valid input
+        excepted:
+          status: 200
+          data: {}
+        payload:
+          userId: 1234567890
+        result: PASS

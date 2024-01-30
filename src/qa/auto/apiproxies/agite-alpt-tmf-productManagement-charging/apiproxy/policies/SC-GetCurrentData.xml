@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout async="false" continueOnError="true" enabled="true" name="SC-GetCurrentData">
+  <DisplayName>SC-GetCurrentData</DisplayName>
+  <Properties/>
+  <Request clearPayload="false" variable="calloutRequest">
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  </Request>
+  <Response>calloutResponse</Response>
+  <Timeout>20000</Timeout>
+  <HTTPTargetConnection>
+    <LoadBalancer>
+      <Server name="OCS"/>
+    </LoadBalancer>
+    <Path>/ocs-rfb/customer-accounts/{sc_accountId}/agreements/{sc_productId}</Path>
+  </HTTPTargetConnection>
+</ServiceCallout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-LogServiceGetCurrData">
+  <DisplayName>FC-LogServiceGetCurrData</DisplayName>
+  <FaultRules/>
+  <Properties/>
+  <Parameters>
+    <Parameter name="chooseFlow">LogServiceCallout</Parameter>
+    <Parameter name="sc_policyName">SC-ChargingGetCurrentData</Parameter>
+    <Parameter name="sc_requestVarName">request</Parameter>
+    <Parameter name="sc_responseVarName">calloutResponse</Parameter>
+    <Parameter name="sc_targetRequestSent">{sc_targetRequestSent}</Parameter>
+    <Parameter name="sc_targetResponseReceived">{system.timestamp}</Parameter>
+  </Parameters>
+  <SharedFlowBundle>logging-variables</SharedFlowBundle>
+</FlowCallout>

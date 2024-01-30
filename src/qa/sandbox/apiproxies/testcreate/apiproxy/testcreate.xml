@@ -1,0 +1,10 @@
+<APIProxy revision="1" name="testcreate">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1687794319562</CreatedAt>
+    <LastModifiedAt>1687794319562</LastModifiedAt>
+    <BasePaths>/testcreate</BasePaths>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+</APIProxy>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyValueMapOperations continueOnError="false" enabled="true" name="KVM-FetchClaimsJWT" mapIdentifier="Auth-Southbound-JWT">
+    <DisplayName>KVM-FetchClaimsJWT</DisplayName>
+    <Properties/>
+    <Get assignTo="audience">
+        <Key>
+            <Parameter ref="flow.system.name"/>
+            <Parameter ref="targetSystem"/>
+            <Parameter>audience</Parameter>
+        </Key>
+    </Get>
+    <Get assignTo="issuer">
+        <Key>
+            <Parameter ref="flow.system.name"/>
+            <Parameter ref="targetSystem"/>
+            <Parameter>issuer</Parameter>
+        </Key>
+    </Get>
+    <Get assignTo="subject">
+        <Key>
+            <Parameter ref="flow.system.name"/>
+            <Parameter ref="targetSystem"/>
+            <Parameter>subject</Parameter>
+        </Key>
+    </Get>
+    <Get assignTo="expiresIn">
+        <Key>
+            <Parameter ref="flow.system.name"/>
+            <Parameter ref="targetSystem"/>
+            <Parameter>expiresIn</Parameter>
+        </Key>
+    </Get>
+    <Get assignTo="targetSystem.host">
+        <Key>
+            <Parameter ref="targetSystem"/>
+            <Parameter>host</Parameter>
+        </Key>
+    </Get>
+    <Get assignTo="targetSystem.path">
+        <Key>
+            <Parameter ref="targetSystem"/>
+            <Parameter>path</Parameter>
+        </Key>
+    </Get>
+    <Scope>environment</Scope>
+</KeyValueMapOperations>

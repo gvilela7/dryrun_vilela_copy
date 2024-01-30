@@ -1,0 +1,183 @@
+name: '[ APIGEE ] Integration Export (Web to Repo)'
+on:
+  workflow_dispatch:
+    inputs:
+      NAME:
+        description: "Name"
+        required: true
+        type: string
+      PROJECT:
+        description: "Project"
+        required: true
+        type: string
+      REGION:
+        description: "Region"
+        required: true
+        type: string
+      VERSION:
+        description: "Version"
+        required: true
+        type: number             
+      GITHUB_ENVIRONMENT:
+        description: 'GITHUB Environment'
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - PROD
+          - HOTFIX
+          - STG
+          - UAT
+          - SIT
+          - DEVCI
+      APIGEE_PATH:
+        description: "APIGEE Path"
+        type: string
+        default: src/apigee  
+      AUTO_COMMIT:
+        description: 'Open new branch - AUTO/integration_<NAME>'
+        type: boolean
+        default: false                            
+
+  workflow_call:
+    inputs:
+      NAME:
+        required: true
+        type: string
+      PROJECT:
+        required: true
+        type: string
+      REGION:
+        required: true
+        type: string
+      VERSION:
+        required: true
+        type: number        
+      APIGEE_PATH:
+        type: string
+        default: src/apigee
+      AUTO_COMMIT:
+        type: boolean
+        default: false                   
+
+jobs:
+  integrationExport:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+
+    steps:
+      - name: Repository checkout    
+        uses: actions/checkout@v3
+        with:
+          ref: ${{github.ref}}
+          token: ${{ secrets.GITHUB_TOKEN }}
+        
+
+      - name: Validate Target Branch
+        run: |
+          if [[ ${{inputs.AUTO_COMMIT}} == 'true' ]]; then 
+            BRANCH_NAME=${{ format('AUTO/integration_{0}', inputs.NAME) }}
+          else 
+            BRANCH_NAME=$GITHUB_REF_NAME
+          fi;
+
+          TARGET_NAME=$(basename $BRANCH_NAME)
+          if [[ $TARGET_NAME == "master" || $TARGET_NAME == "main" || $TARGET_NAME == "development" ]]; then
+            echo "Protected Branch - Please run a different branch"; 
+            exit 1;
+          fi
+
+          echo "branchName=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Set secrets vars
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.INTEGRATION_SERVICE_ACCOUNT }}
+        run: |
+          echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}
+
+      - name: Install cliOPS dependencies
+        env:
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }}        
+        run: |
+          export INTEGRATIONCLI_VERSION=v0.69
+          curl -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh -
+           
+          yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml          
+
+          sudo apt-get install jo
+
+      - name: Set cliOPS payload vars
+        env:
+          NAME: ${{ inputs.NAME }}
+          PROJECT: ${{ inputs.PROJECT }}
+          REGION: ${{ inputs.REGION }}
+          VERSION: ${{ inputs.VERSION }}
+        run: |
+            jq --null-input \
+                --arg 'name' "$NAME" \
+                --arg 'project' "$PROJECT" \
+                --arg 'region' "$REGION" \
+                --arg 'version' "$VERSION" \
+                '{"NAME": $name, "PROJECT": $project, "REGION": $region, "VERSION": $version}' > ./contrib/cliOPS/_contrib/payload.json
+
+      - name: Export Integration
+        id: export_integration
+        run: |
+          chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee integration settings export >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+
+      - name: Check for errors
+        if: ${{ failure() && steps.export_integration.conclusion == 'failure' }}
+        run: |  
+            echo "::error title=Integration Export with failures::Please check what failed to export - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+
+      - name: all modified files
+        id: modifiedFiles
+        env: 
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
+        run: |
+            echo "result<<EOF" >> $GITHUB_OUTPUT
+            echo "$(git ls-files -o -m --exclude-standard -- $APIGEE_PATH ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+  
+      - uses: peterjgrainger/action-create-branch@v2.2.0
+        if: ${{ inputs.AUTO_COMMIT && steps.modifiedFiles.outputs.result != ''}}
+        name: 'Open AUTOMATIC branch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: ${{env.branchName}}     
+    
+      - name: Upload error report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10
+
+        
+      - name: Commit Files
+        if: ${{ steps.modifiedFiles.outputs.result != ''}}        
+        run: |
+          npm install axios
+                      
+          node .github/GitVerifiedCommit/index.js \
+                          ${{secrets.GITHUB_TOKEN}} \
+                          $GITHUB_REPOSITORY_OWNER \
+                          ${{github.event.repository.name}} \
+                          ${{env.branchName}} \
+                          "${{steps.modifiedFiles.outputs.result}}" \
+                          '[AUTO] Export ${{inputs.NAME}} to git.'    

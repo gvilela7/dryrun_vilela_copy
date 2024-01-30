@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<VerifyJWT continueOnError="false" enabled="true" name="JWT-VerifyJWKS">
+    <DisplayName>JWT-VerifyJWKS</DisplayName>
+    <Algorithm>RS256</Algorithm>
+    <Source>googleToken</Source>
+    <PublicKey>
+        <JWKS ref="publicKeys.content"/>
+    </PublicKey>
+    <Audience>agite-apigee</Audience>
+    <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+</VerifyJWT>

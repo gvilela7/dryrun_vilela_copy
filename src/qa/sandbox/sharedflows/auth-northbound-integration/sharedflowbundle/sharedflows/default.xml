@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SharedFlow name="default">
+    <Step>
+        <Name>JWT-Decode</Name>
+    </Step>
+    <Step>
+        <Name>EV-GetAccessToken</Name>
+    </Step>
+    <Step>
+        <Name>SC-FetchPublicKeysJWKS</Name>
+    </Step>
+    <Step>
+        <Name>JWT-VerifyJWKS</Name>
+    </Step>
+</SharedFlow>

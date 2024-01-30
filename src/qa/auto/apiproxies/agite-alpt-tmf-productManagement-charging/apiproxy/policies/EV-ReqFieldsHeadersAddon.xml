@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="true" enabled="true" name="EV-ReqFieldsHeadersAddon">
+  <DisplayName>EV-ReqFieldsHeadersAddon</DisplayName>
+  <Header name="X-ProductRef-Id">
+    <Pattern ignoreCase="true">{header.account_id}</Pattern>
+  </Header>
+  <Source clearPayload="false">request</Source>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  <VariablePrefix>req</VariablePrefix>
+</ExtractVariables>

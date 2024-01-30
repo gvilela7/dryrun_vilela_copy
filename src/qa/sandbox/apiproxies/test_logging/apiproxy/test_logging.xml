@@ -1,0 +1,20 @@
+<APIProxy revision="11" name="test_logging">
+    <DisplayName></DisplayName>
+    <Description>Proxy to test logging flwos</Description>
+    <CreatedAt>1688034899633</CreatedAt>
+    <LastModifiedAt>1688034899633</LastModifiedAt>
+    <BasePaths>/test_logging</BasePaths>
+    <Policies>
+        <Policy>AM-RedirectURL</Policy>
+        <Policy>AM-ChangeResponse</Policy>
+        <Policy>SC-IntermediateCallout</Policy>
+        <Policy>FC-LoggingCallout</Policy>
+        <Policy>FC-LogError</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

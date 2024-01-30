@@ -1,0 +1,19 @@
+<SharedFlowBundle revision="10" name="auth-northbound-integration">
+    <DisplayName></DisplayName>
+    <Description>Manages authZ and authN flows</Description>
+    <CreatedAt>1695055506958</CreatedAt>
+    <LastModifiedAt>1695055506958</LastModifiedAt>
+    <Policies>
+        <Policy>EV-GetAccessToken</Policy>
+        <Policy>JWT-Decode</Policy>
+        <Policy>JWT-VerifyJWKS</Policy>
+        <Policy>SC-FetchPublicKeysJWKS</Policy>
+    </Policies>
+    <Resources>
+        <Resource>jsc://splitPathJWKS.js</Resource>
+    </Resources>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

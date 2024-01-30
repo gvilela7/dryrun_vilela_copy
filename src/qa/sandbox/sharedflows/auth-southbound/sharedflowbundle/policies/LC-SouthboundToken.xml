@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<LookupCache continueOnError="false" enabled="true" name="LC-SouthboundToken">
+  <DisplayName>LC-SouthboundToken</DisplayName>
+  <Properties/>
+  <CacheKey>
+    <Prefix/>
+    <KeyFragment ref="flow.system.name"/>
+    <KeyFragment ref="targetSystem"/>
+    <KeyFragment ref="authType"/>
+  </CacheKey>
+  <CacheResource>southbound-auth</CacheResource>
+  <Scope>Application</Scope>
+  <AssignTo>southbound-token</AssignTo>
+</LookupCache>

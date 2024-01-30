@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<GenerateJWT continueOnError="false" enabled="true" name="JWT-IssueTokenGeneric">
+  <DisplayName>JWT-IssueTokenGeneric</DisplayName>
+  <Algorithm>RS256</Algorithm>
+  <PrivateKey>
+    <Value ref="private.decodedKey"/>
+  </PrivateKey>
+  <ExpiresIn ref="expiresIn"/>
+  <Subject ref="subject"/>
+  <Issuer ref="issuer"/>
+  <Audience ref="audience"/>
+  <OutputVariable>southbound-token</OutputVariable>
+</GenerateJWT>

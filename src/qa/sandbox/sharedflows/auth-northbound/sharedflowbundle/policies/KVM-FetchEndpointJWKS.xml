@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyValueMapOperations continueOnError="false" enabled="true" name="KVM-FetchEndpointJWKS" mapIdentifier="Auth-Northbound-JWKS-Endpoints">
+    <DisplayName>KVM-FetchEndpointJWKS</DisplayName>
+    <Properties/>
+    <Get assignTo="jwks-endpoint">
+        <Key>
+            <Parameter ref="issuer-encoded"/>
+        </Key>
+    </Get>
+    <ExpiryTimeInSecs>60</ExpiryTimeInSecs>
+    <Scope>environment</Scope>
+</KeyValueMapOperations>

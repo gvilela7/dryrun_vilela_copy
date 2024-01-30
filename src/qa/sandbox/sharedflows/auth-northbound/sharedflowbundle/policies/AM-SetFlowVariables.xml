@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-SetFlowVariables">
+    <DisplayName>AM-SetFlowVariables</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>flow.client_id</Name>
+        <Ref>clientId</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>flow.system.name</Name>
+        <Ref>verifyapikey.VAK-VerifyClientId.app.system.name</Ref>
+    </AssignVariable>
+    <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>

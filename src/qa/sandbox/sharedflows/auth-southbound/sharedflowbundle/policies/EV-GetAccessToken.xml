@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="false" enabled="true" name="EV-GetAccessToken">
+    <DisplayName>EV-GetAccessToken</DisplayName>
+    <Properties/>
+    <JSONPayload>
+        <Variable name="southbound-token">
+            <JSONPath>$.access_token</JSONPath>
+        </Variable>
+    </JSONPayload>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <Source clearPayload="false">tokenCalloutResponse.content</Source>
+</ExtractVariables>

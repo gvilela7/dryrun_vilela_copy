@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-BadRequest">
+  <DisplayName>RF-BadRequest</DisplayName>
+  <FaultResponse>
+    <AssignVariable>
+      <Name>apim.error.code</Name>
+      <Value>400.01</Value>
+    </AssignVariable>
+    <AssignVariable>
+      <Name>apim.error.message</Name>
+      <Value>Invalid request schema</Value>
+    </AssignVariable>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

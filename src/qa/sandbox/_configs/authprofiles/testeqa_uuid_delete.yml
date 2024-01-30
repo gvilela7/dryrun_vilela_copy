@@ -1,0 +1,24 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        default:
+          data:
+            displayName: testeqa_uuid_delete
+            description: testeqa_uuid_delete
+            decryptedCredential:
+              credentialType: AUTH_TOKEN
+              authToken:
+                type: sddsds
+                token: sddsds123
+            creatorEmail: apigeeops-integration-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com
+            createTime: "2023-09-21T11:24:03.728464Z"
+            lastModifierEmail: apigeeops-integration-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com
+            updateTime: "2023-09-21T11:24:03.728467Z"
+            visibility: CLIENT_VISIBLE
+            state: VALID
+            validTime: "1970-01-01T00:00:00Z"
+            uuid: caf91d9d-7b24-4fdb-8080-aa683b07418b
+            region: europe-west3

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-GatewayTimeout">
+  <AssignVariable>
+    <Name>apim.error.code</Name>
+    <Value>504.00</Value>
+  </AssignVariable>
+  <AssignVariable>
+    <Name>apim.error.message</Name>
+    <Value>Proxy request timeout</Value>
+  </AssignVariable>
+</AssignMessage>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SharedFlow name="default">
+    <Step>
+        <Name>SC-ServiceRestCall</Name>
+        <Condition>(onlyLogEvents != "true")</Condition>
+    </Step>
+    <Step>
+        <Name>SC-ServiceRestCallObservability</Name>
+        <Condition>(onlyLogEvents = "true")</Condition>
+    </Step>
+</SharedFlow>

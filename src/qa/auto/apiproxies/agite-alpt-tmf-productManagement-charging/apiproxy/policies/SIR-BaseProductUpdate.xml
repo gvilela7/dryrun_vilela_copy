@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SetIntegrationRequest continueOnError="false" enabled="true" name="SIR-BaseProductUpdate">
+  <DisplayName>SIR-BaseProductUpdate</DisplayName>
+  <ProjectId ref="verifyapikey.VAK-VerifyClientId.apiproduct.integrationOrg"/>
+  <IntegrationRegion>europe-west3</IntegrationRegion>
+  <IntegrationName>agite-alpt-tmf-productManagement-charging</IntegrationName>
+  <ApiTrigger>api_trigger/agite-alpt-tmf-productManagement-charging-update</ApiTrigger>
+  <Request>requestProductManagementIntegration</Request>
+  <Parameters>
+    <!-- Logging Data -->
+    <Parameter name="loggingLogName" type="string" ref="log.name"/>
+    <Parameter name="environment" type="string" ref="environment.name"/>
+    <Parameter name="clientId" type="string" ref="client_id"/>
+    <Parameter name="clientIp" type="string" ref="client.ip"/>
+    <Parameter name="authIsCached" type="boolean" ref="logging.sb.isCached"/>
+    <!-- Technical Data -->
+    <Parameter name="auth" type="string" ref="southbound-token"/>
+    <Parameter name="xRequestApimID" type="string" ref="request.header.x-request-apim-id"/>
+    <Parameter name="apimHost" type="string" ref="verifyapikey.VAK-VerifyClientId.apiproduct.apimHost_integrations"/>
+    <Parameter name="apimOrigin" type="string" ref="verifyapikey.VAK-VerifyClientId.apiproduct.apimOrigin"/>
+    <!-- Functional Data -->
+    <Parameter name="clientRequestPayload" type="string" ref="apimRequest"/>
+    <Parameter name="targetRequestPayloadPR3" type="string" ref="request.content"/>
+    <Parameter name="headerBillingAccountId" type="string" ref="req.header.account_id"/>
+    <Parameter name="bodyBillingAccountId" type="string" ref="req.body.billingAccount.id"/>
+    <Parameter name="productId" type="string" ref="req.path.id"/>
+  </Parameters>
+</SetIntegrationRequest>

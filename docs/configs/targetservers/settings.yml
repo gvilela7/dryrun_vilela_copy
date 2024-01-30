@@ -1,0 +1,25 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    Ylc_U:
+      environments:
+        b3USYF1ZCk:
+          data:
+            host: sunt
+            name: ipsum Lorem amet do incididunt
+            port: 45479
+            protocol: PROTOCOL_UNSPECIFIED
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+              protocols:
+                - incididunt in Ut dolor minim
+              keyAlias: ut
+              commonName:
+                value: sunt dolore incididunt mollit ullamco
+                wildcardMatch: false
+              ignoreValidationErrors: false
+              keyStore: aliquip consectetur veniam
+              trustStore: sint irure sunt consectetur mollit
+            description: exercitation quis

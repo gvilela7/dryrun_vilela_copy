@@ -1,0 +1,52 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    agite-apigee:
+      environments:
+        default:
+          data:
+            displayName: test2fail-QA
+            description: Profile used por CoE Poc
+            decryptedCredential:
+              credentialType: OAUTH2_RESOURCE_OWNER_CREDENTIALS
+              oauth2ResourceOwnerCredentials:
+                clientId: 3MVG904d7VkkD2aOBYGHB5022.NS4.YmmtOmrkIWOn8w9HrLico4tPP3GY4_RS_n.kNwfqZF0_
+                clientSecret: 7CDB67C8FFD7E24EB7F03E01E983C7E82C032BC48FEF5C1F
+                username: apigee@salesforce.com.coe.integration
+                password: '%a777'
+                tokenEndpoint: https://alticelabssorg2--coe.sandbox.my.salesforce.com/services/oauth2/token
+                tokenParams: {}
+                accessToken:
+                  accessToken: 00D7a0000005Ces!AQ0AQIEjU7O5BDevsO.XGo_daM9p9GbN6VgHPBBxgJvNUqNq.i18nDwysKUOWuu1NXAXQu78DbZB0TbrQaiQqOKp
+                  tokenType: Bearer
+                requestType: REQUEST_BODY
+            visibility: CLIENT_VISIBLE
+            state: VALID
+            validTime: "1970-01-01T00:00:00Z"
+            uuid: f03a07b1-afd1-4a69-b919-37391d895931
+            region: europe-west3
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        default:
+          data:
+            displayName: test2fail-QA
+            description: Profile used por CoE Poc
+            decryptedCredential:
+              credentialType: OAUTH2_RESOURCE_OWNER_CREDENTIALS
+              oauth2ResourceOwnerCredentials:
+                clientId: 3MVG904d7VkkD2aOBYGHB5022.NS4.YmmtOmrzoDdYLrLico4tPP3GY4_RS_n.kNwfqZF0_
+                clientSecret: 7CDB67C8FFD7E24EB01D010B6743EDA4C7E82C032BC48FEF5C1F
+                username: apigee@salesforce.com.coe.integration
+                password: '%a777'
+                tokenEndpoint: https://alticelabssorg2--coe.sandbox.my.salesforce.com/services/oauth2/token
+                tokenParams: {}
+                accessToken:
+                  accessToken: 00D7a0000005Ces!AQ07O5BDevsO.XGo_daM9p9GbN6VgHPBBxgJvNUqNq.i18nDwysKUOWuu1NXAXQu78DbZB0TbrQaiQqOKp
+                  tokenType: Bearer
+                requestType: REQUEST_BODY
+            visibility: CLIENT_VISIBLE
+            state: VALID
+            validTime: "1970-01-01T00:00:00Z"
+            uuid: f03a07b1-afd1-4a69-b919-37391d895931
+            region: europe-west3

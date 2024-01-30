@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-EmptyResponse">
+  <DisplayName>AM-EmptyResponse</DisplayName>
+  <Copy source="response">
+    <StatusCode>true</StatusCode>
+  </Copy>
+  <Set>
+    <Headers>
+      <Header name="x-request-apim-id">{response.header.X-QNT-Rqid}</Header>
+    </Headers>
+    <Payload contentType="application/json;charset=utf-8"/>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="true" transport="http" type="response"/>
+</AssignMessage>

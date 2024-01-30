@@ -1,0 +1,83 @@
+name: 'Quality Assurance'
+on:
+  workflow_dispatch:
+    inputs:
+      VAR_1:
+        description: Var 1
+        type: string
+        default: Var 1
+
+      VAR_2:
+        description: Var 2
+        type: string
+        default: Var 2
+
+      GITHUB_ENVIRONMENT:
+        description: Github Environment
+        type: string
+        default: default
+
+      OPERATION:
+        description: Available Operations
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - TEST_1
+          - TEST_2      
+
+jobs:
+    TEST_1:
+      if: ${{ INPUTS.OPERATION == 'TEST_1' }}
+      environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+      runs-on: ubuntu-latest
+      permissions:
+        packages: write
+        contents: read
+
+      steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+
+          - name: Build image
+            run: docker build . --file contrib/cliOPS/_contrib/github/Dockerfile --tag apigee-ops-quality-config
+
+          - name: Login to GitHub Container Registry
+            uses: docker/login-action@v3
+            with:
+              registry: ghcr.io
+              username: ${{ github.actor }}
+              password: ${{ secrets.GH_TOKEN }}
+
+          - name: Push image
+            run: |
+              IMAGE_ID=ghcr.io/${{ github.actor }}/apigee-ops
+              IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+              VERSION=1.1.0
+
+              # tag name
+              echo "IMAGE_ID=$IMAGE_ID"
+              echo "VERSION=$VERSION"
+
+              docker tag apigee-ops-quality-config $IMAGE_ID:$VERSION
+
+              echo "{\"auths\": {\"ghcr.io\": {\"username\": \"${{ github.actor }}\", \"password\": \"${{ secrets.GH_TOKEN }}\", \"email\": \"pedro.andre.dias@altice.com\"}}}" > $HOME/.docker/config.json
+
+              docker push $IMAGE_ID:$VERSION
+          
+    TEST_2:
+      if: ${{ INPUTS.OPERATION == 'TEST_2' }}
+
+      environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+  
+        - id: step_2
+          name: Things to do
+          env:
+            VAR_2: ${{ INPUTS.VAR_2 }}
+          run: |
+            echo '$VAR_2'            

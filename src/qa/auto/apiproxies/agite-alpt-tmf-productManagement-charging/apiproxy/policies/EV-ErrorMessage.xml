@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="true" enabled="true" name="EV-ErrorMessage">
+  <DisplayName>EV-ErrorMessage</DisplayName>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <XMLPayload stopPayloadProcessing="false">
+    <Namespaces/>
+    <Variable name="message" type="string">
+      <XPath>//message</XPath>
+    </Variable>
+  </XMLPayload>
+  <Source clearPayload="false">response</Source>
+  <VariablePrefix>resp</VariablePrefix>
+</ExtractVariables>

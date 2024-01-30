@@ -1,0 +1,20 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    orgExample:
+      data:
+        email: example@gmail.com
+        firstName: John
+        lastName: Doe
+        userName: johnDoe
+        developerId: aa0a00a-a000-00a0-aa0a-00a0000a000a
+        organizationName: orgExample
+        status: active
+        createdAt: "1685089293208"
+        lastModifiedAt: "1692366796702"
+        apps:
+          - TestApp
+        attributes:
+          - name: attribute
+            value: value

@@ -1,0 +1,156 @@
+---
+"$schema": https://json-schema.org/draft/2020-12/schema
+"$id": https://example.com/product.schema.json
+title: Build Apps yaml file
+description: Build Apps yaml file
+type: object
+additionalProperties: false
+properties:
+  status:
+    type: string
+    description: Action to execute
+    enum:
+    - enable
+    - disable
+  settings:
+    type: object
+    description: Placeholder for App settings.
+    additionalProperties: false
+    properties:
+      scope:
+        type: string
+        description: Scope of the file.
+        enum:
+        - org
+        - project
+      organizations:
+        type: object
+        description: Organization gcp scope.
+        additionalProperties: false
+        minProperties: 1
+        patternProperties:
+          "^[a-zA-Z0-9-_]+$":
+            type: object
+            description: Project in wich the App will exist.
+            additionalProperties: false
+            properties:
+              data:
+                "$ref": "#/$defs/commonData"
+            required:
+            - data
+    required:
+    - scope
+    - organizations
+required:
+- status
+- settings
+"$defs":
+  commonData:
+    type: object
+    additionalProperties: false
+    properties:
+      appId:
+        type: string
+        description: ID of the developer app
+      callbackUrl:
+        type: string
+        description: "Callback URL used by OAuth 2.0 authorization servers to communicate authorization codes back to developer apps."
+      developerId:
+        type: string
+        description: "ID or email of the developer."
+      lastModifiedAt:
+        type: string
+        description: "Output only. Time the developer app was modified in milliseconds since epoch."
+      name:
+        type: string
+        description: "Name of the developer app."
+      status:
+        type: string
+        description: "Status of the credential. Valid values include approved or revoked."
+      appFamily:
+        type: string
+        description: "Developer app family."
+      createdAt:
+        type: string
+        description: "Output only. Time the developer app was created in milliseconds since epoch."
+      keyExpiresIn:
+        type: string
+        description: "Expiration time, in milliseconds, for the consumer key that is generated for the developer app. If not set or left to the default value of -1, the API key never expires. The expiration time can't be updated after it is set."
+      attributes:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+              description: API key of the attribute.
+            value:
+              type: string
+              description: "Value of the attribute."
+          required:
+          - name
+          - value
+      apiProducts:
+        type: array
+        description: "List of API products associated with the developer app."
+        items:
+          type: string
+      credentials:
+        type: array
+        description: "Output only. Set of credentials for the developer app consisting of the consumer key/secret pairs associated with the API products."
+        items:
+          type: object
+          properties:
+            consumerKey:
+              type: string
+              description: "Consumer key."
+            consumerSecret:
+              type: string
+              description: "Secret key."
+            expiresAt:
+              type: string
+              description: "Time the credential will expire in milliseconds since epoch."
+            issuedAt:
+              type: string
+              description: "Time the credential was issued in milliseconds since epoch."
+            status:
+              type: string
+              description: "Status of the credential. Valid values include approved or revoked."
+            apiProducts:
+              type: array
+              description: "List of API products this credential can be used for."
+              items:
+                type: object
+                properties:
+                  apiproduct:
+                    type: string
+                    description: "Name of the API product."
+                  status:
+                    type: string
+                    description: "Status of the API product. Valid values are approved or revoked."
+            attributes:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: string
+                required:
+                - name
+                - value
+            scopes:
+              type: array
+              description: "Scopes to apply to the developer app. The specified scopes must already exist for the API product that you associate with the developer app."
+              items:
+                type: string
+          required:
+          - apiProducts
+    required:
+    - name
+    - developerId
+            
+      
+
+      

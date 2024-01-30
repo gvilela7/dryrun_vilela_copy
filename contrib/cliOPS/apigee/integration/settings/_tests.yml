@@ -1,0 +1,84 @@
+operations:
+  - id: TEST_AIS_001
+    cmd: apigee integration settings apply
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+    overview: |
+      Based on settings.yml sets integration status on APIGEE
+      STATUS:
+        - disable (delete from APIGEE)
+        - enable (create or add new revision when not exist)
+        - deploy 
+
+    scenarios:             
+      - case: status is enable
+        expected: will import an integration and create a first version, if integration does not exist on apigee. It will not deploy
+        payload:
+          { 
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a"  
+          }
+        result: {"code": 200, "data": "Integrations settings applied!"}
+      
+      - case: status is deploy
+        expected: will import an integration, can create and increament a new version. The integration is publish
+        payload:
+          { 
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Integrations settings applied!"}
+
+      - case: status is disable and set with unpublished version
+        expected: will delete an integration
+        payload:
+          { 
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Integrations settings applied!"}                        
+
+  - id: TEST_AIS__002
+    cmd: apigee integration settings export
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+        - REGION
+        - VERSION
+    overview: Download integration JSON from APIGEE and add settings files with configurations
+    scenarios:
+      - case: integration exists in APIGEE within an PROJECT, REGION and given VERSION
+        expected: An integration will be CREATED/UPDATED locally and settings.yml will be CREATED/UPDATED with PROJECT, REGION and VERSION
+        payload: 
+          {
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west1",
+            "VERSION": "1"
+          }
+        result: {"code": 200,  "data": "1" } # the settings file doesn't export
+
+      - case: the integration exists in APIGEE within an PROJECT, but doesn't exist in this REGION
+        expected: command fails
+        payload: 
+          {
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west2",
+            "VERSION": "1"
+          }
+        result: {"code": 500,   "data": "Internal Error – a generic error occurred"}
+      
+      - case: the integration exists in APIGEE within an PROJECT, but doesn't exist in this REGION or ORGANIZATION
+        expected: command fails
+        payload: 
+          {
+            "NAME": "integration-generic-proxy-qa",
+            "PROJECT": "agite-apigee",
+            "REGION": "europe-west2",
+            "VERSION": "1"
+          }
+        result: {"code": 500,   "data": "Internal Error – a generic error occurred"}

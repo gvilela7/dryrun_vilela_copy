@@ -1,0 +1,1009 @@
+openapi: 3.0.2
+info:
+  title: "ProductManagement - MVP_API_ID_21_CR3 (v2)" 
+  description: |-
+    This integration exposes TMF 637 in APIM and is triggered by Order Management system. HLD defined by II_PROD_MANAG_01.
+  version: 1.0.0
+
+externalDocs:
+  description: "Product Instance Management"
+  url: https://alticegroupit.atlassian.net/wiki/spaces/AA/pages/253624438
+
+servers:
+  - url: https://devci.apim.prv.alpt.alticelabs.cloud/tmf-api/productManagement/v2/product/addon/charging/
+  - url: https://devci.apim.pub.alpt.alticelabs.cloud/tmf-api/productManagement/v2/product/addon/charging/
+
+tags:
+  - name: "productManagement (Charging)"
+    description: "Manage product instantiation (MVP_API_ID_21_CR3)"
+
+paths:    
+  /charging/:
+    post:
+      tags:
+        - "productManagement (Addon Charging)"
+      summary: "Create Addon Product"
+      description: "This operation creates an addon product entity"
+      operationId: "createChargingAddonProduct"
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/x-request-apim-id'
+        - $ref: '#/components/parameters/x-request-sync'
+        - $ref: '#/components/parameters/origin'
+        - $ref: '#/components/parameters/x-productref-id'
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestCreateAddonProductCharging'
+                
+      responses:
+        '200':
+          description: Successful create
+          headers:
+            x-request-apim-id:
+              description: UUID used for tracing
+              required: true
+              schema:
+                type: string
+                example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+            Cache-Control:
+              description: no-cache, no-store, must-revalidate, max-age=0, s-maxage=0
+              required: false
+              schema:
+                type: string
+                example: "no-cache"
+
+        '400':
+          $ref: '#/components/responses/http400'
+        '401':
+          $ref: '#/components/responses/http401'
+        '403':
+          $ref: '#/components/responses/http403'
+        '404':
+          $ref: '#/components/responses/http404'
+        '405':
+          $ref: '#/components/responses/http405'
+        '413':
+          $ref: '#/components/responses/http413'
+        '415':
+          $ref: '#/components/responses/http415'
+        '429':
+          $ref: '#/components/responses/http429'
+        '500':
+          $ref: '#/components/responses/http500'
+        '502':
+          $ref: '#/components/responses/http502'
+        '503':
+          $ref: '#/components/responses/http503'
+        '504':
+          $ref: '#/components/responses/http504'
+               
+  /charging/{id}:
+    get:
+      tags:
+        - "productManagement (Addon Charging)"
+      summary: "Query Addon Product"
+      description:  "This operation query an addon product entity"
+      operationId: "queryChargingAddonProduct"
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/x-request-apim-id'
+        - $ref: '#/components/parameters/x-request-sync'
+        - $ref: '#/components/parameters/origin'
+        - $ref: '#/components/parameters/x-productref-id'
+        - name: id
+          description: "Product ID"
+          required: true
+          schema: 
+            type: string
+          in: path
+
+      responses:
+        '200':
+          description: Successful query
+          headers:
+            x-request-apim-id:
+              description: UUID used for tracing
+              schema:
+                type: string
+                example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+            Cache-Control:
+              description: no-cache, no-store, must-revalidate, max-age=0, s-maxage=0
+              required: false
+              schema:
+                type: string
+                example: "no-cache"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseQueryAddonProductCharging'
+
+        '400':
+          $ref: '#/components/responses/http400'
+        '401':
+          $ref: '#/components/responses/http401'
+        '403':
+          $ref: '#/components/responses/http403'
+        '404':
+          $ref: '#/components/responses/http404'
+        '405':
+          $ref: '#/components/responses/http405'
+        '413':
+          $ref: '#/components/responses/http413'
+        '415':
+          $ref: '#/components/responses/http415'
+        '429':
+          $ref: '#/components/responses/http429'
+        '500':
+          $ref: '#/components/responses/http500'
+        '502':
+          $ref: '#/components/responses/http502'
+        '503':
+          $ref: '#/components/responses/http503'
+        '504':
+          $ref: '#/components/responses/http504'
+
+    put:
+      tags:
+        - "productManagement (Addon Charging)"
+      summary: "Update Addon Product"
+      description:  "This operation updates an addon product entity"
+      operationId: "updateChargingAddonProduct"
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/x-request-apim-id'
+        - $ref: '#/components/parameters/x-request-sync'
+        - $ref: '#/components/parameters/origin'
+        - $ref: '#/components/parameters/x-productref-id'
+        - name: id
+          description: "Product ID"
+          required: true
+          schema: 
+            type: string
+          in: path
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUpdateAddonProductCharging'
+                
+      responses:
+        '200':
+          description: Successful update
+          headers:
+            x-request-apim-id:
+              description: UUID used for tracing
+              schema:
+                type: string
+                example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+            Cache-Control:
+              description: no-cache, no-store, must-revalidate, max-age=0, s-maxage=0
+              required: false
+              schema:
+                type: string
+                example: "no-cache"
+
+        '400':
+          $ref: '#/components/responses/http400'
+        '401':
+          $ref: '#/components/responses/http401'
+        '403':
+          $ref: '#/components/responses/http403'
+        '404':
+          $ref: '#/components/responses/http404'
+        '405':
+          $ref: '#/components/responses/http405'
+        '413':
+          $ref: '#/components/responses/http413'
+        '415':
+          $ref: '#/components/responses/http415'
+        '429':
+          $ref: '#/components/responses/http429'
+        '500':
+          $ref: '#/components/responses/http500'
+        '502':
+          $ref: '#/components/responses/http502'
+        '503':
+          $ref: '#/components/responses/http503'
+        '504':
+          $ref: '#/components/responses/http504' 
+
+    delete:
+      tags:
+        - "productManagement (Addon Charging)"
+      summary: "Delete Addon Product"
+      description: "This operation deletes an addon product entity" 
+      operationId: "deleteChargingAddonProduct"
+      parameters:
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/x-request-apim-id'
+        - $ref: '#/components/parameters/x-request-sync'
+        - $ref: '#/components/parameters/origin'
+        - $ref: '#/components/parameters/x-productref-id'
+        - name: id
+          description: "Product ID"
+          required: true
+          schema: 
+            type: string
+          in: path
+
+      responses:
+        '200':
+          description: Successful delete
+          headers:
+            x-request-apim-id:
+              description: UUID used for tracing
+              schema:
+                type: string
+                example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+            Cache-Control:
+              description: no-cache, no-store, must-revalidate, max-age=0, s-maxage=0
+              required: false
+              schema:
+                type: string
+                example: "no-cache"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseDeleteProductCharging'
+                    
+        '400':
+          $ref: '#/components/responses/http400'
+        '401':
+          $ref: '#/components/responses/http401'
+        '403':
+          $ref: '#/components/responses/http403'
+        '404':
+          $ref: '#/components/responses/http404'
+        '405':
+          $ref: '#/components/responses/http405'
+        '413':
+          $ref: '#/components/responses/http413'
+        '415':
+          $ref: '#/components/responses/http415'
+        '429':
+          $ref: '#/components/responses/http429'
+        '500':
+          $ref: '#/components/responses/http500'
+        '502':
+          $ref: '#/components/responses/http502'
+        '503':
+          $ref: '#/components/responses/http503'
+        '504':
+          $ref: '#/components/responses/http504'
+
+
+components:
+  parameters:
+      authorization:
+        in: header
+        name: Authorization
+        description: |-
+          Header used to provide credentials that authenticate a user agent with a server
+        required: true
+        schema:
+          type: string
+
+      x-request-apim-id:
+        in: header
+        name: x-request-apim-id
+        description: UUID used for request tracing
+        required: true
+        schema:
+          type: string
+          example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      
+      x-request-sync:
+        in: header
+        name: x-request-sync
+        description: Epoch timestamp used to understand message ordering
+        required: false
+        schema:
+          type: string
+          example: "1675530127478"
+      
+      origin:
+        in: header
+        name: Origin
+        description: Indicates the origin that caused the request.
+        required: false
+        schema: 
+          type: string
+          example: "<scheme>://<hostname>:<port>"
+          
+      x-billing-account-id:
+        in: header
+        name: X-Billing-Account-Id
+        description: "Current Account Identifier"
+        required: true
+        schema:
+          type: string
+          
+      x-billing-account-id-op:
+        in: header
+        name: X-Billing-Account-Id
+        description: "Current Account Identifier"
+        required: false
+        schema:
+          type: string
+          
+      x-productref-id  :
+        in: header
+        name: X-ProductRef-Id
+        description: "Base Product Identifier"
+        required: true
+        schema:
+          type: string
+
+  responses:
+
+    http400:
+      description: Bad Request
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/error_400_00'
+              - $ref: '#/components/schemas/error_400_01'        
+    http401:
+      description: Unauthorized
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_401_00'
+    http403:
+      description: Forbidden
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_403_00'
+    http404:
+      description: Not Found
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_404_00'
+    http405:
+      description: Method Not Allowed
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+        Allow:
+          description: Lists the set of methods supported by a resource
+          schema:
+            type: string
+            example: "GET, POST"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_405_00'
+    http413:
+      description: Payload Too Large
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_413_00'
+    http415:
+      description: Unsupported Media Type
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_415_00'
+    http429:
+      description: Too Many Requests
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_429_00'             
+    http500:
+      description: Internal Server error
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_500_00'        
+    http502:
+      description: Bad Gateway
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_502_00'        
+    http503:
+      description: Service Unavailable
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_503_00'           
+    http504:
+      description: Gateway Time-out
+      headers:
+        x-request-apim-id:
+          description: UUID used for tracing
+          schema:
+            type: string
+            example: "db7886d1-2abc-47db-acfc-46b8eeb6d50f"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_504_00'
+  
+  schemas:
+    Any: {}
+                  
+    requestCreateAddonProductCharging:
+      type: object
+      description: A product offering procured by a customer or other interested party playing a party role. A product is realized as one or more service(s) and / or resource(s).
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+          example: "557809-1"
+          description: Unique identifier of the product (master product Id)
+        status:
+          type: string
+          example: "Active"
+          description: Lifecycle status of the product
+        name:
+          type: string
+          example: "product 557809-1"
+          description: Name of the product
+        validFor:
+          type: object
+          description: The period for which this product is valid.
+          properties:
+            startDateTime:
+              type: string
+              example: "2022-08-05T00:00:00.000Z"
+            endDateTime:
+              type: string
+              example: "2022-08-05T00:00:00.000Z"
+        productOffering:
+          type: object
+          description: Product Offering reference.
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              example: "Offer Spec A"
+              description: Unique identifier of a related entity.
+            name:
+              type: string
+              description: Name of the related entity.
+        productRef:
+          type: array
+          description: A list of product ref or values
+          items:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+                example: "323198-0"
+              productRefOffering:
+                type: object
+                description: A product offering reference
+                required:
+                  - id
+                properties:
+                  id:
+                    type: string
+                    example: Offer Spec B
+                    description: Unique identifier of a related entity.
+                  name:
+                    type: string
+                    description: Name of the related entity.
+        productPrice:
+          type: array
+          description: Represents a list of product offering price charges entities, allowances and other charging entities
+          items:
+            type: object
+            required:
+              - priceType
+              - id
+              - specId
+            properties:
+              priceType:
+                type: string
+                example: "Usage Charge"
+                description: A category that describes the price type
+              id:
+                type: string
+                example: "176fbbe3-de08-4f2c-bf7e-fd9ecd16b374"
+                description: Unique identifier of the productPrice
+              specId:
+                type: string
+                example: "63373617ac152df381fde819"
+                description: Identifies the unique identifier on the external system owner of this entity specification
+              status:
+                type: string
+                example: "ACTIVE"
+                description: Identifies the administrative status of the productPrice entity
+              validFor:
+                type: object
+                description: The period for which this productPrice is valid
+                properties:
+                  startDateTime:
+                    type: string
+                    example: "2022-08-05T00:00:00.000Z"
+                  endDateTime:
+                    type: string
+                    example: "2022-08-05T00:00:00.000Z"
+              scopeId:
+                type: string
+                example: "4"
+                description: Identifies the scopeId of this entity
+              productCharacteristic:
+                type: array
+                items:
+                  type: object
+                  description: Describes a given characteristic of an object or entity through a name/value pair.
+                  required:
+                    - name
+                    - value
+                  properties:
+                    name:
+                      type: string
+                      example: "communicationProduct"
+                      description: Name of the characteristic
+                    value:
+                      allOf:
+                        - $ref: '#/components/schemas/Any'
+                        - example: 960001122
+                        - description: The value of the characteristic
+              
+    responseQueryAddonProductCharging:
+      type: object
+      description: A product offering procured by a customer or other interested party playing a party role. A product is realized as one or more service(s) and / or resource(s).
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+          example: "557809-1"
+          description: Unique identifier of the product (master product Id)
+        status:
+          type: string
+          example: "Active"
+          description: Lifecycle status of the product
+        name:
+          type: string
+          example: "product 557809-1"
+          description: Name of the product
+        validFor:
+          type: object
+          description: The period for which this product is valid.
+          properties:
+            startDateTime:
+              type: string
+              example: "2022-08-05T00:00:00.000Z"
+            endDateTime:
+              type: string
+              example: "2022-08-05T00:00:00.000Z"
+        productOffering:
+          type: object
+          description: Product Offering reference.
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              example: "Offer Spec A"
+              description: Unique identifier of a related entity.
+            name:
+              type: string
+              description: Name of the related entity.
+        productRef:
+          type: array
+          description: A list of product ref or values
+          items:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+                example: "323198-0"
+              productRefOffering:
+                type: object
+                description: A product offering reference
+                required:
+                  - id
+                properties:
+                  id:
+                    type: string
+                    example: Offer Spec B
+                    description: Unique identifier of a related entity.
+                  name:
+                    type: string
+                    description: Name of the related entity.
+        productPrice:
+          type: array
+          description: Represents a list of product offering price charges entities, allowances and other charging entities
+          items:
+            type: object
+            required:
+              - priceType
+              - id
+              - specId
+            properties:
+              priceType:
+                type: string
+                example: "Usage Charge"
+                description: A category that describes the price type
+              id:
+                type: string
+                example: "176fbbe3-de08-4f2c-bf7e-fd9ecd16b374"
+                description: Unique identifier of the productPrice
+              specId:
+                type: string
+                example: "63373617ac152df381fde819"
+                description: Identifies the unique identifier on the external system owner of this entity specification
+              status:
+                type: string
+                example: "ACTIVE"
+                description: Identifies the administrative status of the productPrice entity
+              validFor:
+                type: object
+                description: The period for which this productPrice is valid
+                properties:
+                  startDateTime:
+                    type: string
+                    example: "2022-08-05T00:00:00.000Z"
+                  endDateTime:
+                    type: string
+                    example: "2022-08-05T00:00:00.000Z"
+              scopeId:
+                type: string
+                example: "4"
+                description: Identifies the scopeId of this entity
+              productCharacteristic:
+                type: array
+                items:
+                  type: object
+                  description: Describes a given characteristic of an object or entity through a name/value pair.
+                  required:
+                    - name
+                    - value
+                  properties:
+                    name:
+                      type: string
+                      example: "communicationProduct"
+                      description: Name of the characteristic
+                    value:
+                      allOf:
+                        - $ref: '#/components/schemas/Any'
+                        - example: 960001122
+                        - description: The value of the characteristic       
+
+    requestUpdateAddonProductCharging:
+      type: object
+      description: A product offering procured by a customer or other interested party playing a party role. A product is realized as one or more service(s) and / or resource(s).
+      required:
+        - id
+        - status
+      properties:
+        id:
+          type: string
+          example: "557809-1"
+          description: Unique identifier of the product (master product Id)
+        status:
+          type: string
+          example: "Active"
+          description: Lifecycle status of the product
+        name:
+          type: string
+          example: "product 557809-1"
+          description: Name of the product
+        validFor:
+          type: object
+          description: The period for which this product is valid.
+          properties:
+            startDateTime:
+              type: string
+              example: "2022-08-05T00:00:00.000Z"
+            endDateTime:
+              type: string
+              example: "2022-08-05T00:00:00.000Z"
+        productOffering:
+          type: object
+          description: Product Offering reference.
+          required:
+            - id
+          properties:
+            id:
+              type: string
+              example: "Offer Spec A"
+              description: Unique identifier of a related entity.
+            name:
+              type: string
+              description: Name of the related entity.
+        productRef:
+          type: array
+          description: A list of product ref or values
+          items:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+                example: "323198-0"
+              productRefOffering:
+                type: object
+                description: A product offering reference
+                required:
+                  - id
+                properties:
+                  id:
+                    type: string
+                    example: Offer Spec B
+                    description: Unique identifier of a related entity.
+                  name:
+                    type: string
+                    description: Name of the related entity.
+        productPrice:
+          type: array
+          description: Represents a list of product offering price charges entities, allowances and other charging entities
+          items:
+            type: object
+            required:
+              - priceType
+              - id
+              - specId
+            properties:
+              priceType:
+                type: string
+                example: "Usage Charge"
+                description: A category that describes the price type
+              id:
+                type: string
+                example: "176fbbe3-de08-4f2c-bf7e-fd9ecd16b374"
+                description: Unique identifier of the productPrice
+              specId:
+                type: string
+                example: "63373617ac152df381fde819"
+                description: Identifies the unique identifier on the external system owner of this entity specification
+              status:
+                type: string
+                example: "ACTIVE"
+                description: Identifies the administrative status of the productPrice entity
+              validFor:
+                type: object
+                description: The period for which this productPrice is valid
+                properties:
+                  startDateTime:
+                    type: string
+                    example: "2022-08-05T00:00:00.000Z"
+                  endDateTime:
+                    type: string
+                    example: "2022-08-05T00:00:00.000Z"
+              scopeId:
+                type: string
+                example: "4"
+                description: Identifies the scopeId of this entity
+              productCharacteristic:
+                type: array
+                items:
+                  type: object
+                  description: Describes a given characteristic of an object or entity through a name/value pair.
+                  required:
+                    - name
+                    - value
+                  properties:
+                    name:
+                      type: string
+                      example: "communicationProduct"
+                      description: Name of the characteristic
+                    value:
+                      allOf:
+                        - $ref: '#/components/schemas/Any'
+                        - example: 960001122
+                        - description: The value of the characteristic
+
+    responseDeleteProductCharging:
+      type: object
+      description: desc
+      required:
+        - code
+        - reason
+        - message
+      properties:
+        code:
+          type: string
+          example: "2000"
+        reason:
+          type: string
+          example: "ERR_SUCCESS"
+        message:
+          type: string
+          example: "string"
+
+    error:
+      type: object
+      properties:
+        code: 
+          type: string
+        reason: 
+          type: string
+        message: 
+          type: string
+
+    error_400_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-400.00
+        reason: Bad Request
+        message: "Invalid request"
+        
+    error_400_01:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-400.01
+        reason: Bad Request
+        message: "Field {field} cannot be empty"
+          
+    error_401_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-401.00
+        reason: Unauthorized
+        message: "Invalid user credentials"
+          
+    error_403_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-403.00
+        reason: Forbidden
+        message: "You don't have access to this page"   
+          
+    error_404_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-404.00
+        reason: Not Found
+        message: "Resource not found"
+
+    error_405_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-405.00
+        reason: Method Not Allowed
+        message: "{Method} is not supported"
+
+    error_413_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-413.00
+        reason: Payload Too Large
+        message: "Payload cannot be bigger than 10MB" 
+
+    error_415_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-415.00
+        reason: Unsupported Media Type
+        message: "Media type is not supported"
+    
+    error_429_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-429.00
+        reason: Too Many Requests
+        message: "You exceeded the amount of requests by hour"
+        
+    error_500_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-500.00
+        reason: Internal Server error
+        message: "Something went wrong on our side"
+        
+    error_502_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-502.00
+        reason: Bad Gateway
+        message: "The proxy received an invalid response from the upstream server"    
+        
+    error_503_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-503.00
+        reason: Service Unavailable
+        message: "The server is currently unavailbale"          
+    
+    error_504_00:
+      allOf:
+         - $ref: '#/components/schemas/error'
+      example:
+        code: APIM-504.00
+        reason: Gateway Time-out
+        message: "The backend did not respond within the relevant timeframe"
+        
+      
+      
+      

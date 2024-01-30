@@ -1,0 +1,17 @@
+organizations: 
+  agite-apigee:
+    projects:
+      agite-apigee:
+        environments:
+          dev:            
+            status: deploy
+            version: 2
+            serviceAccountDeploy: proxy-cicd@agite-apigee.iam.gserviceaccount.com
+          cicd-dev:            
+            status: enable
+            serviceAccountDeploy: apigeeops-cicd@agite-apigee.iam.gserviceaccount.com
+kvms: []
+targetServers:
+  - proxyA
+sharedflows: []
+integrations: []

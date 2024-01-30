@@ -1,0 +1,393 @@
+operations:
+
+  - id: AC_DL_001
+    cmd: apigee configurations developers list
+    inputs:
+      required:
+        - ORGANIZATION
+      optional:
+        - EXPAND
+    overview: |
+      Lists developers from Apigee orgnaization
+      Flag EXPAND allows the user to decide whether to show the complete data about each developer or just their emails
+
+    scenarios:
+      - case: organization exists and S.A. has permissions, expand not set
+        expected: lists only the emails of the developers available in the organization
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "[{\"email\":\"nuno.pereira@devoteam.com\"},{\"email\":\"pedro-andre-dias-qa@alticelabs.com\"},{\"email\":\"ana-r-goncalves-qa@alticelabs.com\"}" }
+      
+      - case: organization exists and S.A. has permissions, expand set to true
+        expected: lists developers available in the organization and their complete data
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "EXPAND": true
+          }
+        result: { "code": 200, "data": "[{\"email\":\"nuno.pereira@devoteam.com\",\"firstName\":\"nuno\",\"lastName\":\"pereira\",\"userName\":\"nunopereira\",\"attributes\":" }
+      
+      - case: organization exists and S.A. has permissions, expand set to false
+        expected: lists only the emails of the developers available in the organization
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "EXPAND": false
+          }  
+        result: { "code": 200, "data": "[{\"email\":\"nuno.pereira@devoteam.com\"},{\"email\":\"pedro-andre-dias-qa@alticelabs.com\"},{\"email\":\"ana-r-goncalves-qa@alticelabs.com\"},{\"email\":\"bruno.selistre@devoteam.com\"}]" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "EXPAND": false
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AC_DG_001
+    cmd: apigee configurations developers get
+    inputs:
+      required:
+        - ORGANIZATION
+        - DEVELOPER_ID
+    overview: Get all information by a developer_id input
+
+    scenarios:
+      - case: get by email
+        expected: command returns the data from the developer identified by the email
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 200, "data": "{\n \"email\": \"ana-r-goncalves-qa@alticelabs.com\",\n \"firstName\": \"Ana\",\n \"lastName\": \"Gonçalves\",\n \"userName\": \"anaG\",\n \"attributes\": [\n {\n \"name\": \"country\",\n \"value\": \"Portugal\"\n }\n ],\n \"developerId\": \"d50b1fd9-05f9-4b57-992f-828c2688b5f6\",\n \"organizationName\": \"apidev-apigeex-sandbox-d29a\",\n \"status\": \"active\",\n \"createdAt\": \"1697279212707\",\n \"lastModifiedAt\": \"1697283741050\"\n" }
+        
+      - case: get by developer ID
+        expected: command returns the data from the developer identified by the developer ID
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "a4ddf3e2-11c0-41ca-a38b-dcef55611e57"
+          }
+        result: { "code": 200, "data": "{\n \"email\": \"pedro-andre-dias-qa@alticelabs.com\",\n \"firstName\": \"Pedro\",\n \"lastName\": \"Dias\",\n \"userName\": \"PedroD\",\n \"developerId\": \"a4ddf3e2-11c0-41ca-a38b-dcef55611e57\",\n \"organizationName\": \"apidev-apigeex-sandbox-d29a\",\n \"status\": \"active\",\n \"createdAt\": \"1697279217754\",\n \"lastModifiedAt\": \"1697283746328\"\n}" }
+        
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }  
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"  }
+      
+      - case: developer with email does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "xpto@alticelabs.com"
+          } 
+        result: { "code": 500 , "data": "Internal Error – a generic error occurred" }
+
+      - case: developer with ID does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "ac8f68a8-b955-49e1-bf9f-49a3697a805a"
+          } 
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: DEVELOPER_ID not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          } 
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AC_DE_001
+    cmd: apigee configurations developers export
+    inputs:
+      required:
+        - ORGANIZATION
+        - DEVELOPER_ID
+    overview: Exports a single developer from an organization
+
+    scenarios:
+      - case: export by email
+        expected: command succeeds and developer is exported
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 200, "data": "Developer exported!" }
+        
+      - case: export by developer ID
+        expected: command succeeds and developer is exported
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "bc8f68a8-b955-49e1-bf9f-49a3697a805a"
+          }
+        result: { "code": 200, "data": "Developer exported!" }
+        
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }  
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "DEVELOPER_ID": "ana-r-goncalves@alticelabs.com"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: developer with ID does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "ac8f68a8-b955-49e1-bf9f-49a3697a805a"
+          } 
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: DEVELOPER_ID not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          } 
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AC_DEAL_001
+    cmd: apigee configurations developers exportAll
+    inputs:
+      required:
+        - ORGANIZATION
+    overview: Exports all developers from an organization
+
+    scenarios:
+      - case: organization is set and exists
+        expected: All developers are exported
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200,  "data": "Developers exported!" }
+        
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite"
+          }  
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+              "EXPAND": true
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"  }
+
+  - id: AC_DI_001
+    cmd: apigee configurations developers import
+    inputs:
+      required:
+        - ORGANIZATION
+        - EMAIL
+    overview: |
+      Import a developer into an organization in Apigee
+    note: |
+       The custom attribute limit is 18.
+    scenarios:
+      - case: import developer for the first time
+        expected: command succeeds and developer is created in Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "EMAIL": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 200, "data": "Developer imported!" }
+
+      - case: import developer that already exists in Apigee
+        expected: command succeeds and developer is updated in Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "EMAIL": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 200, "data": "Developer imported!" }
+
+      - case: organization does not exist, but is set in settings file
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "EMAIL": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "EMAIL": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+      
+      - case: developer settings file does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "EMAIL": "xpto@alticelabs.com"
+          } 
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: EMAIL not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          } 
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AC_DIAL_001
+    cmd: apigee configurations developers importAll
+    inputs:
+      required:
+        - ORGANIZATION
+    overview: |
+      Import all developers into an organization in Apigee
+    note: |
+      The custom attribute limit is 18.
+    scenarios:
+      - case: organization is set and exists
+        expected: command succeeds and all developers are imported for organization defined
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200,  "data": "Developers imported!" }
+        
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite"
+          }  
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+              "EXPAND": true
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"  }
+
+  - id: AC_DD_001
+    cmd: apigee configurations developers delete
+    inputs:
+      required:
+        - ORGANIZATION
+        - DEVELOPER_ID
+    overview: Delete developer created in organization with email or developer_id (easier with email)
+    scenarios:
+      - case: delete by email
+        expected: command succeeds and developer is deleted from Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 200, "data": "Developer deleted!" }
+        
+      - case: delete by developer ID
+        expected: command succeeds and developer is deleted from Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "bc8f68a8-b955-49e1-bf9f-49a3697a805a"
+          }
+        result: { "code": 200, "data": "Developer deleted!" }
+
+      - case: delete developer with apps
+        expected: command succeeds, developer is deleted from Apigee, and apps are deleted from Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 200, "data": "Developer deleted!" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }  
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "DEVELOPER_ID": "ana-r-goncalves-qa@alticelabs.com"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+      
+      - case: developer with email does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "xpto@alticelabs.com"
+          } 
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred" }
+
+      - case: developer with ID does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER_ID": "ac8f68a8-b955-49e1-bf9f-49a3697a805a"
+          } 
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: DEVELOPER_ID not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          } 
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }

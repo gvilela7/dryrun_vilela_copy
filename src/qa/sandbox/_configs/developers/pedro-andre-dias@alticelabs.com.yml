@@ -1,0 +1,15 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      data:
+        email: pedro-andre-dias@alticelabs.com
+        firstName: Pedro
+        lastName: Dias
+        userName: PedroD
+        developerId: aa904a80-617f-4804-a36b-cb2a67fe45b2
+        organizationName: apidev-apigeex-sandbox-d29a
+        status: active
+        createdAt: "1695313371576"
+        lastModifiedAt: "1695314048961"

@@ -1,0 +1,35 @@
+<SharedFlowBundle revision="6" name="auth-northbound">
+    <DisplayName></DisplayName>
+    <Description>Manages authZ and authN flows for proxy</Description>
+    <CreatedAt>1695391187726</CreatedAt>
+    <LastModifiedAt>1695391187726</LastModifiedAt>
+    <Policies>
+        <Policy>AM-DecodePublicKeyJWT</Policy>
+        <Policy>AM-EncodeIssuerB64</Policy>
+        <Policy>AM-SetFlowVariables</Policy>
+        <Policy>AM-SetStartTimeSC</Policy>
+        <Policy>BA-DecodeCredentials</Policy>
+        <Policy>EV-RemoveProtocolFromIssUrl</Policy>
+        <Policy>FC-LogServiceCallout</Policy>
+        <Policy>JS-SetAuthType</Policy>
+        <Policy>JS-SplitPathJWKS</Policy>
+        <Policy>JWT-Decode</Policy>
+        <Policy>JWT-VerifyJWKS</Policy>
+        <Policy>JWT-VerifyJWT</Policy>
+        <Policy>KVM-FetchEndpointJWKS</Policy>
+        <Policy>KVM-FetchPublicKeyById</Policy>
+        <Policy>RF-InvalidAuthMethod</Policy>
+        <Policy>RF-InvalidCredentials</Policy>
+        <Policy>RF-UnknownToken</Policy>
+        <Policy>SC-FetchPublicKeysJWKS</Policy>
+        <Policy>VAK-VerifyClientId</Policy>
+    </Policies>
+    <Resources>
+        <Resource>jsc://setAuthType.js</Resource>
+        <Resource>jsc://splitPathJWKS.js</Resource>
+    </Resources>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

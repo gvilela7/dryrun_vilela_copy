@@ -1,0 +1,318 @@
+{
+	"info": {
+		"_postman_id": "ecb4a013-001c-449f-b7c5-afefd2bd9540",
+		"name": "Agite_SRA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23793042"
+	},
+	"item": [
+		{
+			"name": "agite-alpt-rmca-billingAverage",
+			"item": [
+				{
+					"name": "JWKS - Salesforce",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token = pm.response.json().access_token;\r",
+									"pm.collectionVariables.set(\"sf_token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableCookies": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{Managment_key}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "x-api-key",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "clientId",
+									"value": "{{Salesforce_key}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host-pub}}/auth/test/jwks",
+							"host": [
+								"{{host-pub}}"
+							],
+							"path": [
+								"auth",
+								"test",
+								"jwks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API 301 - Billing Average",
+					"protocolProfileBehavior": {
+						"disableCookies": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{sf_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-request-apim-id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "Origin",
+								"value": "ApigeeTest",
+								"type": "text"
+							},
+							{
+								"key": "x-request-sync",
+								"value": "20231120123925",
+								"description": "YYYYMMDDhhmmss this is the date format por SAP/RMCA, only digits/numbers",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"VKONT\": \"B600004276\",\r\n\t\"DATA_INI\": \"20230101120012\",\r\n\t\"DATA_FIM\": \"20231231120012\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host-pub}}/agite/rmca/v1/billings/average",
+							"host": [
+								"{{host-pub}}"
+							],
+							"path": [
+								"agite",
+								"rmca",
+								"v1",
+								"billings",
+								"average"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "agite-alpt-tmf-accountManagement-financialAccount",
+			"item": [
+				{
+					"name": "JWKS - Salesforce",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var token = pm.response.json().access_token;\r",
+									"pm.collectionVariables.set(\"sf_token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableCookies": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{Managment_key}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "x-api-key",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "clientId",
+									"value": "{{Salesforce_key}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host-pub}}/auth/test/jwks",
+							"host": [
+								"{{host-pub}}"
+							],
+							"path": [
+								"auth",
+								"test",
+								"jwks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API 300 - Query Balance",
+					"protocolProfileBehavior": {
+						"disableCookies": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{sf_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-request-apim-id",
+								"value": "{{$guid}}",
+								"type": "text"
+							},
+							{
+								"key": "x-request-sync",
+								"value": "20231107163524",
+								"description": "YYYYMMDDhhmmss this is the date format por SAP/RMCA, only digits/numbers",
+								"type": "text"
+							},
+							{
+								"key": "Origin",
+								"value": "ApigeeTests",
+								"type": "text"
+							},
+							{
+								"key": "apigee-test",
+								"value": "C000002136",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{host-pub}}/tmf-api/accountManagement/v1/financialAccount/:id",
+							"host": [
+								"{{host-pub}}"
+							],
+							"path": [
+								"tmf-api",
+								"accountManagement",
+								"v1",
+								"financialAccount",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "C000002136"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host-pub",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "host-priv",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "Managment_key",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "Salesforce_key",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "sf_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

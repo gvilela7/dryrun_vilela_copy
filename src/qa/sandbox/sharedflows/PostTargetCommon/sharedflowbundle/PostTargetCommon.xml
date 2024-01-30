@@ -1,0 +1,13 @@
+<SharedFlowBundle revision="1" name="PostTargetCommon">
+    <DisplayName></DisplayName>
+    <Description>shared flow to attach to post-target flow hook</Description>
+    <CreatedAt>1685704516319</CreatedAt>
+    <LastModifiedAt>1685704537942</LastModifiedAt>
+    <Policies>
+        <Policy>FC-Logging</Policy>
+    </Policies>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

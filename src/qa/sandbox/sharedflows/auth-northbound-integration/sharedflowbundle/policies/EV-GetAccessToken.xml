@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="false" enabled="true" name="EV-GetAccessToken">
+    <DisplayName>EV-GetAccessToken</DisplayName>
+    <Properties/>
+    <Header name="Authorization">
+        <Pattern ignoreCase="false">Bearer {googleToken}</Pattern>
+    </Header>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <Source clearPayload="false">request</Source>
+</ExtractVariables>

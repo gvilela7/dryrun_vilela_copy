@@ -1,0 +1,175 @@
+operations:
+  - id: A_C_001
+    cmd: apigee deploy all
+    inputs:
+      required: 
+        - ORGANIZATION
+      optionals:
+        - ENVIRONMENTS
+        - SERVICE_ACCOUNT
+        - CONFIGS_ENCRYPTION
+        - IGNORE_EXPIRY
+
+    overview: |
+      will manage all imports and deployments for the APIGEE ecosystem
+
+    notes:
+      - make sure all components are available in repository
+
+      - deploy all makes use of already available functions, make sure to read the notes
+
+    scenarios:
+      - id: A_C_001A
+        case: we define organization
+        expected: All components will be deployed in any ENVIRONMENT for the ORGANIZATION              
+        payload:
+        {
+          "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+        }
+        result: { "code": 200 }
+      - id: A_C_001B
+        case: we define ORGANIZATION and ENVIRONMENT
+        expected: All components will be deployed in ENVIRONMENT for the ORGANIZATION              
+        payload:
+        {
+          "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+          "ENVIRONMENTS": ["dev"]
+        }
+        result: { "code": 200 }           
+
+  - id: apigee_deploy_integrations
+    refID: A0001
+    cmd: apigee deploy integrations
+    inputs:
+      required: 
+        - ORGANIZATION
+        - REGION        
+      optionals:
+        - NAME
+        - ENVIRONMENT
+        - CONFIGS_ENCRYPTION
+    overview: |
+      deploy integrations with its dependencies described in settings.yml
+    
+    notes:
+      - every time a NEW Auth Profile is imported will be generated a new UUID, 
+        which means that all other integrations using the same Auth Profile will
+        UPDATE AUTOMATIC     
+
+    features:
+      - scenarios:
+          - case: we want to deploy all available integrations and dependencies
+            expected: should be available in Integration Aplication
+            payload:
+            {
+              "ORGANIZATION":"apidev-apigeex-sandbox-d29a"
+            }
+            result: { "code": 200 }
+
+  - id: A_C_003
+    cmd: apigee deploy authProfiles
+    inputs:
+      required: []        
+      optionals:
+        - ORGANIZATION 
+        - ENVIRONMENT
+        - CONFIGS_ENCRYPTION
+    overview: |
+      deploy integrations with its dependencies described in settings.yml
+      NOTES:
+      - every time a Auth Profile is imported will be generated a new UUID, 
+        which means that all other integrations using the same Auth Profile will stop working
+        unless running from this command and a particular integration NAME is not defined
+
+    features:
+      - description: integration NAME is used so only handle the specificied integration
+        scenarios:
+          - case: NAME, PROJECT and ENVIRONMENT are set
+            expected: should only
+            payload:
+            {              
+              "ORGANIZATION": "to do"
+            }
+            result: { "code": 200 }
+
+  - id: A_C_004
+    cmd: apigee deploy developers
+    inputs:
+      required: 
+        - ORGANIZATION
+      optionals:
+        - NAME 
+    overview: |
+      import developers to a new or existing organization
+
+    notes:
+      - developers can create apps
+
+      - when developer moves to new new organization a new UUID is generated,
+        and apps related to him are update with new UUID
+
+      - when exporting a developer and app, make sure the ID match to maintain
+        correlaction
+
+    features:
+      - description: will import developers to a new organization
+        scenarios:
+          - case: all developers will be imported to an organization
+            expected: | 
+                  a) any new developer is created and apps settings related to developer are updated
+                      in the repository
+                  b) if any of developers already exist, only data is updated
+            payload:
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+            result: { "code": 200 }     
+
+          - case: a specified developer will be imported to an organization
+            expected: | 
+                  a) a new developer is created and apps settings related to developer are updated
+                      in the repository
+                  b) if developer already exist, only data is updated
+            payload:
+            {
+              "EMAIL": "ana-r-goncalves@alticelabs.com",         
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+            }
+            result: { "code": 200 }
+
+  - id: A_C_005
+    cmd: apigee deploy sharedflows
+    inputs:
+      required: 
+        - ORGANIZATION       
+      optionals:
+        - ENVIRONMENTS
+    overview: |
+      deploy sharedflow with its dependencies described in settings.yml
+      For a sucessufull deploy:
+        A) no version should be present in setting file
+        B) the status must be deploy
+        C) all dependencies must be imported and deployed
+      NOTES:
+      - every time a sharedflow is imported will be generated a new version
+
+    features:
+      - description: deploy all environments
+        scenarios:
+          - case: ENVIRONMENTS are not set
+            expected: should only
+            payload:
+            {              
+              "ORGANIZATION":"apidev-apigeex-sandbox-d29a"
+            }
+            result: { "code": 200 }
+      - description: deploy a set of environments
+        scenarios:
+          - case: ENVIRONMENTS is filled with a list of environments to deploy sharedflow
+            expected: should only
+            payload:
+            {              
+              "ORGANIZATION":"apidev-apigeex-sandbox-d29a",
+              "ENVIRONMENTS": ["dev"]
+            }
+            result: { "code": 200 }

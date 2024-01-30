@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="true" enabled="true" name="AM-assignFromTargetVar">
+    <DisplayName>AM-assignFromTargetVar</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>fromTarget.status.code</Name>
+        <Ref>response.status.code</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromTarget.body</Name>
+        <Ref>response.content</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromTarget.bodysize</Name>
+        <Ref>response.header.Content-Length</Ref>
+        <Value>0</Value>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromTarget.reason.phrase</Name>
+        <Ref>response.reason.phrase</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromTarget.headers</Name>
+        <Ref>jsresheaders</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromTargetBody</Name>
+        <Template>{escapeJSON(fromTarget.body)}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>fromTargetheaders</Name>
+        <Template>{escapeJSON(fromTarget.headers)}</Template>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

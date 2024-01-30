@@ -1,0 +1,18 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      data:
+        email: ana-r-goncalves@alticelabs.com
+        firstName: Ana
+        lastName: Gonçalves
+        userName: anaG
+        attributes:
+          - name: country
+            value: Portugal
+        developerId: c4e03a40-1d54-4a04-8da9-94e1b7437b55
+        organizationName: apidev-apigeex-sandbox-d29a
+        status: active
+        createdAt: "1695312420843"
+        lastModifiedAt: "1695312420843"

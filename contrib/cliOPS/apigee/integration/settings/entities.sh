@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#GLOBAL VARS
+
+# always add preffix -> apigeeINTEGRATIONSETTINGS_
+# access vars using GET/SET functions
+
+apigeeINTEGRATIONSETTINGS_DEFAULT_PATH=$(apigeeINTEGRATIONS_DEFAULT_PATH_GET)
+
+apigeeINTEGRATIONSETTINGS_INTEGRATION_DEPLOYED=false
+
+function apigeeINTEGRATIONSETTINGS_GET()
+{
+    local var=$(printf '%s%s%s' $apigeeINTEGRATIONSETTINGS_DEFAULT_PATH $1 "/settings.yml")
+    echo "$var"
+}
+
+function apigeeINTEGRATIONSETTINGS_INTEGRATION_DEPLOYED_GET()
+{
+    echo "$apigeeINTEGRATIONSETTINGS_INTEGRATION_DEPLOYED"
+}
+
+function apigeeINTEGRATIONSETTINGS_INTEGRATION_DEPLOYED_SET()
+{
+    local VAR=$1
+    $apigeeINTEGRATIONSETTINGS_INTEGRATION_DEPLOYED=$VAR
+}

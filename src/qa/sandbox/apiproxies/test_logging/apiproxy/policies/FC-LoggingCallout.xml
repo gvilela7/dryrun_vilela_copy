@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-LoggingCallout">
+    <DisplayName>FC-LoggingCallout</DisplayName>
+    <FaultRules/>
+    <Properties/>
+    <Parameters>
+        <Parameter name="flow">callout</Parameter>
+        <Parameter name="callout.req">myTestRequest</Parameter>
+        <Parameter name="callout.res">myTestResponse</Parameter>
+        <Parameter name="callout.name">SC-IntermediateCallout</Parameter>
+    </Parameters>
+    <SharedFlowBundle>Logging</SharedFlowBundle>
+</FlowCallout>

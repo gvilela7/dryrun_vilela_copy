@@ -1,0 +1,13 @@
+<SharedFlowBundle revision="1" name="PostProxyCommon">
+    <DisplayName></DisplayName>
+    <Description>shared flow to attach to post-proxy flow hook</Description>
+    <CreatedAt>1685704570406</CreatedAt>
+    <LastModifiedAt>1685704599537</LastModifiedAt>
+    <Policies>
+        <Policy>FC-Logging</Policy>
+    </Policies>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

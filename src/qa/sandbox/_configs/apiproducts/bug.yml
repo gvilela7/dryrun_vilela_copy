@@ -1,0 +1,24 @@
+status: disable
+settings:
+  scope: project
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      data:
+        name: bug
+        displayName: bug
+        approvalType: manual
+        attributes:
+          - name: access
+            value: private
+        description: Removing description
+        createdAt: "1695078891002"
+        lastModifiedAt: "1695132073451"
+        graphqlOperationGroup:
+          operationConfigs:
+            - apiSource: proxy2Delete2
+              operations:
+                - operationTypes:
+                    - QUERY
+                  operation: addthisname
+              quota: {}
+          operationConfigType: proxy

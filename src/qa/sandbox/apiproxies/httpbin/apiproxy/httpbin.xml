@@ -1,0 +1,13 @@
+<APIProxy revision="1" name="httpbin">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1692956449269</CreatedAt>
+    <LastModifiedAt>1692956449269</LastModifiedAt>
+    <BasePaths>/httpbin</BasePaths>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

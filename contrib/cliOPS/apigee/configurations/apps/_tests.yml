@@ -1,0 +1,286 @@
+operations:
+  - id: AC_APPI_001
+    cmd: apigee configurations apps import
+    inputs:
+      required:
+       - ORGANIZATION
+       - NAME
+    overview: Import an app to Apigee
+
+    scenarios:
+      - case: Given the app name doesn't exist in Apigee and organization is set
+        expected: creates a new app in Apigee with the given data and updates settings file with new id, createdAt and lastModifiedAt values
+        payload:
+          {
+            "NAME": "InternalApp-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "App imported!" }
+      
+      - case: App already exists in Apigee, given the app name already exists in repository and organization is set
+        expected: updates the app's configuration in Apigee and updates settings file with new id, createdAt and lastModifiedAt values
+        payload:
+          {
+            "NAME": "InternalApp-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "App imported!" }
+
+      - case: Given the app name when settings file doesn't exist in repository
+        expected: command fails and return error
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "Test"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred" }
+
+      - case: Given the app name when the organization input isn't set
+        expected: command fails
+        payload:
+          {
+            "NAME": "InternalApp-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set, given the app name when the name input isn't set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: Give the organization name when the organization name doesn't exist in Apigee but is defined in the settings file
+        expected: command fails and return 401 (code 401)
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "NAME": "InternalApp-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_APPE_001
+    cmd: apigee configurations apps export
+    inputs:
+      required:
+        - ORGANIZATION
+        - NAME
+    overview: Export an app in Apigee to repository
+    scenarios:
+      - case: Give the app name and organization name when first time exporting (and directory does not exist)
+        expected: creates new directory and a file with the app's configuration
+        payload:
+          {
+            "NAME": "TestApp-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "App exported!" }
+      
+      - case: Given the app name when the app config file already exists locally
+        expected: updates the app's configuration file and successful
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "InternalApp-QA"
+          }
+        result: { "code": 200, "data": "App exported!" }
+
+      - case: Given the app name when the organization input isn't set
+        expected: command fails 
+        payload:
+          {  "NAME": "InternalApp-QA" }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: Given the organization when the name isn't set
+        expected: command fails
+        payload:
+          { "ORGANIZATION": "apidev-apigeex-sandbox-d29a" }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: Given the name when the organization doesn't exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "NAME": "InternalApp-QA"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: Given the name when the app doesn't exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "Test"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AC_APPL_001
+    cmd: apigee configurations apps list
+    inputs:
+      required:
+        - ORGANIZATION
+        - EXPAND
+    overview: List all apps created in Apigee 
+
+    scenarios:
+      - case: Given the organization exists when the service account has permissions and the expand not set
+        expected: lists only the names of the apps available in the organization
+        payload:
+          { "ORGANIZATION": "apidev-apigeex-sandbox-d29a" }
+        result: { "code": 200, "data": "( { \"appId\": \"c825216c-831c-4482-9c91-b5b921da1887\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"TestImport\" }" }
+      
+      - case: Given the organization exists when the service account has permissions and the expand set to true
+        expected: lists apps available in the organization and their complete data and return 200
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "EXPAND": true
+          }
+        result: { "code": 200, "data": "( { \"appId\": \"068e98b9-f6df-469d-a57d-03b70c9db75b\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"ChangeThis\" } { \"name\": \"system.name\" \"value\": \"netcracker\" } { \"name\": \"uuid\" \"value\": \"cceb6e5c-6fa2-4b05-81ae-16af2a80fc0a\" } ) \"createdAt\": \"1685714778833\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"TestApiProduct\" \"status\": \"pending\" } ) \"consumerKey\": \"bePubjhFRAqYzTN26ClLIfAcdEvOYAtEA1FMGUWGvJWpbuWA\" \"consumerSecret\": \"Kijg28fjgdu3mVXHBi05jSSb0GNRBQZwkea6iTq6v2TDxCJt4nU3OMp1rdMZL1SQ\" \"expiresAt\": \"-1\" \"issuedAt\": \"1685714780406\" \"status\": \"approved\" } { \"apiProducts\": ( { \"apiproduct\": \"Internal\" \"status\": \"approved\" } { \"apiproduct\": \"Product2\" \"status\": \"revoked\" } ) \"consumerKey\": \"cjhrCqDnp4yBAiWZjSGIowO6rI7XeCU9JBVGm3Xai8OQOfDX\" \"consumerSecret\": \"MldN4tYmu82ki2FphkGcBPDodGEonL84yYEA7gkzreJ0hRvCvsm6HAktzqHtx1X9\" \"expiresAt\": \"-1\" \"issuedAt\": \"1685714783191\" \"status\": \"revoked\" } ) \"developerId\": \"bc8f68a8-b955-49e1-bf9f-49a3697a805a\" \"lastModifiedAt\": \"1685714778833\" \"name\": \"TestImport\" \"status\": \"approved\" } { \"appId\": \"07137daf-64e4-4e18-a1c0-d104b3dc472b\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"InternalApp\" } { \"name\": \"Notes\" \"value\": \"Allow access to internal APIs\" } { \"name\": \"uuid\" \"value\": \"4bc7f0f0-5a06-4d28-98f3-52ef53403a9b\" } ) \"createdAt\": \"1669645250346\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"Internal\" \"status\": \"approved\" } ) \"consumerKey\": \"k5p9ba5a4L5Y4y00tg97v3HMmpgLzVGGOBBew4PVfbUbf5nj\" \"consumerSecret\": \"o6xY6TEuCciTmAuCUCVYXaoQTHk5gEe9TRq6PKvhB32dEHcPt4mWFAOke95iYtef\" \"expiresAt\": \"-1\" \"issuedAt\": \"1669645250408\" \"status\": \"approved\" } ) \"developerId\": \"0aefc233-6ddc-461d-8a4d-9901349914b7\" \"lastModifiedAt\": \"1673282288463\" \"name\": \"InternalApp\" \"status\": \"approved\" } { \"appId\": \"2d45c65e-6087-4025-bd28-3c1ee68bb624\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"ScopeTestApp\" } { \"name\": \"uuid\" \"value\": \"23786092-9560-4fa1-88f0-f1ce9cce2749\" } ) \"createdAt\": \"1668441116755\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"ScopeAccessControl\" \"status\": \"approved\" } ) \"consumerKey\": \"QwdT0gusvDANKf04Jmslic2lAVfDckriOxWX2Ggh0HbsGhbD\" \"consumerSecret\": \"Rs4MWtRAJWrKLAglP4mPZHuVJ5vN3DZhQ96xAXuLDTAgr8L3Bku66sJYB0ABJXoj\" \"expiresAt\": \"-1\" \"issuedAt\": \"1668441116792\" \"status\": \"approved\" } ) \"developerId\": \"0aefc233-6ddc-461d-8a4d-9901349914b7\" \"lastModifiedAt\": \"1679664608931\" \"name\": \"ScopeTestApp\" \"status\": \"approved\" } { \"appId\": \"c48c4698-af63-40fb-89cc-b1579c6d6414\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"SalesforceApp\" } { \"name\": \"uuid\" \"value\": \"f7be1d40-ca1e-4168-a7fc-c8adebffa39b\" } ) \"createdAt\": \"1667404535201\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"TestProduct\" \"status\": \"approved\" } { \"apiproduct\": \"Product2\" \"status\": \"approved\" } ) \"consumerKey\": \"m1jgOxsm77epUfhP0NSHGwfqRZbDlGJKaEMkHBtLja1dC32y\" \"consumerSecret\": \"SWY20Tw1gI7qQZfTUhHueaGGNdhIMpZacorLrJI3GV6V1X7pjQkgAXAOArwItmaA\" \"expiresAt\": \"1692889279399\" \"issuedAt\": \"1677254490561\" \"status\": \"approved\" } { \"apiProducts\": ( { \"apiproduct\": \"TestProduct\" \"status\": \"approved\" } { \"apiproduct\": \"Product2\" \"status\": \"approved\" } ) \"consumerKey\": \"rT6EMCLztoruNRMMCGH49VNNwhjZD8oanaZzJH5roRsMKinv\" \"consumerSecret\": \"m1V9p39gmsEljN4A6myv2ChAT6SruVRQHZm9oVpGdvtGLXYAiM9FFtbWHUPqqbVd\" \"expiresAt\": \"-1\" \"issuedAt\": \"1679476521405\" \"status\": \"approved\" } ) \"developerId\": \"0aefc233-6ddc-461d-8a4d-9901349914b7\" \"lastModifiedAt\": \"1679476555103\" \"name\": \"SalesforceApp\" \"status\": \"approved\" } { \"appId\": \"746eea66-a612-4acb-b540-33d05fb165d0\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"TestApp\" } { \"name\": \"system.name\" \"value\": \"netcracker\" } { \"name\": \"uuid\" \"value\": \"cceb6e5c-6fa2-4b05-81ae-16af2a80fc0a\" } ) \"createdAt\": \"1666779204468\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"Internal\" \"status\": \"approved\" } { \"apiproduct\": \"Product2\" \"status\": \"approved\" } ) \"consumerKey\": \"31890c54-6524-4dac-9c71-589291306733\" \"consumerSecret\": \"AKm8UsRBzGcv6D4BtqSMhkcoCbzU7BJJU2HQCP3gggPdEU21mk5E8tlS6EW2scnf\" \"expiresAt\": \"-1\" \"issuedAt\": \"1680174499076\" \"status\": \"approved\" } { \"apiProducts\": ( { \"apiproduct\": \"TestProduct\" \"status\": \"approved\" } ) \"consumerKey\": \"AOoRQ6Qlu3boV7YHw34wSFAj09144O8dltu36T2n9X59XFj6\" \"consumerSecret\": \"YKNGBb7A5Y5F5vcpOXSkUADyQAKXyw18b6S7xGbocrQ3rz4K6sjuO3Y8TRi7sWgj\" \"expiresAt\": \"-1\" \"issuedAt\": \"1668529679026\" \"status\": \"approved\" } ) \"developerId\": \"0aefc233-6ddc-461d-8a4d-9901349914b7\" \"lastModifiedAt\": \"1682065212326\" \"name\": \"TestApp\" \"status\": \"approved\" } )" }
+      
+      - case: Given the organization exists when the service account has permissions and the EXPAND set to false
+        expected: lists only the names of the apps available in the organization
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "EXPAND": false
+          }
+        result: { "code": 200,"data": "( { \"appId\": \"068e98b9-f6df-469d-a57d-03b70c9db75b\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"ChangeThis\" } { \"name\": \"system.name\" \"value\": \"netcracker\" } { \"name\": \"uuid\" \"value\": \"cceb6e5c-6fa2-4b05-81ae-16af2a80fc0a\" } ) \"createdAt\": \"1685714778833\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"TestApiProduct\" \"status\": \"pending\" } ) \"consumerKey\": \"bePubjhFRAqYzTN26ClLIfAcdEvOYAtEA1FMGUWGvJWpbuWA\" \"consumerSecret\": \"Kijg28fjgdu3mVXHBi05jSSb0GNRBQZwkea6iTq6v2TDxCJt4nU3OMp1rdMZL1SQ\" \"expiresAt\": \"-1\" \"issuedAt\": \"1685714780406\" \"status\": \"approved\" } { \"apiProducts\": ( { \"apiproduct\": \"Internal\" \"status\": \"approved\" } { \"apiproduct\": \"Product2\" \"status\": \"revoked\" } ) \"consumerKey\": \"cjhrCqDnp4yBAiWZjSGIowO6rI7XeCU9JBVGm3Xai8OQOfDX\" \"consumerSecret\": \"MldN4tYmu82ki2FphkGcBPDodGEonL84yYEA7gkzreJ0hRvCvsm6HAktzqHtx1X9\" \"expiresAt\": \"-1\" \"issuedAt\": \"1685714783191\" \"status\": \"revoked\" } ) \"developerId\": \"bc8f68a8-b955-49e1-bf9f-49a3697a805a\" \"lastModifiedAt\": \"1685714778833\" \"name\": \"TestImport\" \"status\": \"approved\" } { \"appId\": \"07137daf-64e4-4e18-a1c0-d104b3dc472b\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"InternalApp\" } { \"name\": \"Notes\" \"value\": \"Allow access to internal APIs\" } { \"name\": \"uuid\" \"value\": \"4bc7f0f0-5a06-4d28-98f3-52ef53403a9b\" } ) \"createdAt\": \"1669645250346\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"Internal\" \"status\": \"approved\" } ) \"consumerKey\": \"k5p9ba5a4L5Y4y00tg97v3HMmpgLzVGGOBBew4PVfbUbf5nj\" \"consumerSecret\": \"o6xY6TEuCciTmAuCUCVYXaoQTHk5gEe9TRq6PKvhB32dEHcPt4mWFAOke95iYtef\" \"expiresAt\": \"-1\" \"issuedAt\": \"1669645250408\" \"status\": \"approved\" } ) \"developerId\": \"0aefc233-6ddc-461d-8a4d-9901349914b7\" \"lastModifiedAt\": \"1673282288463\" \"name\": \"InternalApp\" \"status\": \"approved\" } { \"appId\": \"2d45c65e-6087-4025-bd28-3c1ee68bb624\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"ScopeTestApp\" } { \"name\": \"uuid\" \"value\": \"23786092-9560-4fa1-88f0-f1ce9cce2749\" } ) \"createdAt\": \"1668441116755\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"ScopeAccessControl\" \"status\": \"approved\" } ) \"consumerKey\": \"QwdT0gusvDANKf04Jmslic2lAVfDckriOxWX2Ggh0HbsGhbD\" \"consumerSecret\": \"Rs4MWtRAJWrKLAglP4mPZHuVJ5vN3DZhQ96xAXuLDTAgr8L3Bku66sJYB0ABJXoj\" \"expiresAt\": \"-1\" \"issuedAt\": \"1668441116792\" \"status\": \"approved\" } ) \"developerId\": \"0aefc233-6ddc-461d-8a4d-9901349914b7\" \"lastModifiedAt\": \"1679664608931\" \"name\": \"ScopeTestApp\" \"status\": \"approved\" } { \"appId\": \"c48c4698-af63-40fb-89cc-b1579c6d6414\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"SalesforceApp\" } { \"name\": \"uuid\" \"value\": \"f7be1d40-ca1e-4168-a7fc-c8adebffa39b\" } ) \"createdAt\": \"1667404535201\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"TestProduct\" \"status\": \"approved\" } { \"apiproduct\": \"Product2\" \"status\": \"approved\" } ) \"consumerKey\": \"m1jgOxsm77epUfhP0NSHGwfqRZbDlGJKaEMkHBtLja1dC32y\" \"consumerSecret\": \"SWY20Tw1gI7qQZfTUhHueaGGNdhIMpZacorLrJI3GV6V1X7pjQkgAXAOArwItmaA\" \"expiresAt\": \"1692889279399\" \"issuedAt\": \"1677254490561\" \"status\": \"approved\" } { \"apiProducts\": ( { \"apiproduct\": \"TestProduct\" \"status\": \"approved\" } { \"apiproduct\": \"Product2\" \"status\": \"approved\" } ) \"consumerKey\": \"rT6EMCLztoruNRMMCGH49VNNwhjZD8oanaZzJH5roRsMKinv\" \"consumerSecret\": \"m1V9p39gmsEljN4A6myv2ChAT6SruVRQHZm9oVpGdvtGLXYAiM9FFtbWHUPqqbVd\" \"expiresAt\": \"-1\" \"issuedAt\": \"1679476521405\" \"status\": \"approved\" } ) \"developerId\": \"0aefc233-6ddc-461d-8a4d-9901349914b7\" \"lastModifiedAt\": \"1679476555103\" \"name\": \"SalesforceApp\" \"status\": \"approved\" } { \"appId\": \"746eea66-a612-4acb-b540-33d05fb165d0\" \"attributes\": ( { \"name\": \"DisplayName\" \"value\": \"TestApp\" } { \"name\": \"system.name\" \"value\": \"netcracker\" } { \"name\": \"uuid\" \"value\": \"cceb6e5c-6fa2-4b05-81ae-16af2a80fc0a\" } ) \"createdAt\": \"1666779204468\" \"credentials\": ( { \"apiProducts\": ( { \"apiproduct\": \"Internal\" \"status\": \"approved\" } { \"apiproduct\": \"Product2\" \"status\": \"approved\" } ) \"consumerKey\": \"31890c54-6524-4dac-9c71-589291306733\" \"consumerSecret\": \"AKm8UsRBzGcv6D4BtqSMhkcoCbzU7BJJU2HQCP3gggPdEU21mk5E8tlS6EW2scnf\" \"expiresAt\": \"-1\" \"issuedAt\": \"1680174499076\" \"status\": \"approved\" } { \"apiProducts\": ( { \"apiproduct\": \"TestProduct\" \"status\": \"approved\" } ) \"consumerKey\": \"AOoRQ6Qlu3boV7YHw34wSFAj09144O8dltu36T2n9X59XFj6\" \"consumerSecret\": \"YKNGBb7A5Y5F5vcpOXSkUADyQAKXyw18b6S7xGbocrQ3rz4K6sjuO3Y8TRi7sWgj\" \"expiresAt\": \"-1\" \"issuedAt\": \"1668529679026\" \"status\": \"approved\" } ) \"developerId\": \"0aefc233-6ddc-461d-8a4d-9901349914b7\" \"lastModifiedAt\": \"1682065212326\" \"name\": \"TestApp\" \"status\": \"approved\" } )" }
+
+      - case: Given the organization exists when the organization input isn't set
+        expected: the command fails
+        payload:
+          {
+            "ORGANIZATION": " ",
+            "NAME": "Test"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AC_APPG_001
+    cmd: apigee configurations apps get
+    inputs:
+      required:
+        - ORGANIZATION
+        - NAME
+    overview: Get all information about an app 
+
+    scenarios:
+      - case: Given the organization and app name where the app name exists
+        expected: command returns the data from an existing app
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "InternalApp-QA"
+          }
+        result: { "code": 200, "data": "{ \"appId\": \"068e98b9-f6df-469d-a57d-03b70c9db75b\", \"attributes\": [ { \"name\": \"DisplayName\", \"value\": \"ChangeThis\" }, { \"name\": \"system.name\", \"value\": \"netcracker\" }, { \"name\": \"uuid\", \"value\": \"cceb6e5c-6fa2-4b05-81ae-16af2a80fc0a\" } ], \"createdAt\": \"1685714778833\", \"credentials\": [ { \"apiProducts\": [ { \"apiproduct\": \"TestApiProduct\", \"status\": \"pending\" } ], \"consumerKey\": \"bePubjhFRAqYzTN26ClLIfAcdEvOYAtEA1FMGUWGvJWpbuWA\", \"consumerSecret\": \"Kijg28fjgdu3mVXHBi05jSSb0GNRBQZwkea6iTq6v2TDxCJt4nU3OMp1rdMZL1SQ\", \"expiresAt\": \"-1\", \"issuedAt\": \"1685714780406\", \"status\": \"approved\" }, { \"apiProducts\": [ { \"apiproduct\": \"Internal\", \"status\": \"approved\" }, { \"apiproduct\": \"Product2\", \"status\": \"revoked\" } ], \"consumerKey\": \"cjhrCqDnp4yBAiWZjSGIowO6rI7XeCU9JBVGm3Xai8OQOfDX\", \"consumerSecret\": \"MldN4tYmu82ki2FphkGcBPDodGEonL84yYEA7gkzreJ0hRvCvsm6HAktzqHtx1X9\", \"expiresAt\": \"-1\", \"issuedAt\": \"1685714783191\", \"status\": \"revoked\" } ], \"developerId\": \"bc8f68a8-b955-49e1-bf9f-49a3697a805a\", \"lastModifiedAt\": \"1685714778833\", \"name\": \"TestImport\", \"status\": \"approved\" }" }
+
+      - case: Given the organization doesn't exist and the app name exists
+        expected: The command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "NAME": "TestImport"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+      
+      - case: Given the app doesn't exist where the app name when searching by name
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "Test"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: Given the organization not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "TestImport",
+            "ID": 068e98b9-f6df-469d-a57d-03b70c9db75b
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+      
+      - case: Given the organization name when the NAME isn't set
+        expected: command fails
+        payload:
+          { "ORGANIZATION": "apidev-apigeex-sandbox-d29a" }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AC_APPD_001
+    cmd: apigee configurations apps delete
+    inputs:
+      required:
+        - ORGANIZATION
+        - NAME
+        - DEVELOPER
+    overview: Delete an app in Apigee
+
+    scenarios:         
+      - case: Given the organization name and the app name when you set the developer with developer email
+        expected: deletes the app from Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "InternalApp-QA",
+            "DEVELOPER": "ana-r-goncalves@alticelabs.com"
+          }
+        result: { "code": 200, "data": "App deleted!" }
+      
+      - case: Given the organization doesn't exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "NAME": "InternalApp-QA"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+      
+      - case: Given the organization name and the app name when the app doesn't exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "Test",
+            "DEVELOPER": "bc8f68a8-b955-49e1-bf9f-49a3697a805a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+      
+      - case: Given the organization name and the app name when the app exists but does not belong to developer
+        expected: command fails
+        payload:
+          {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "NAME": "TestApp-QA",
+              "DEVELOPER": "0aefc233-6ddc-461d-8a4d-9901349914b7"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: Given the app name when the organization not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "TestApp-QA",
+            "DEVELOPER": "bc8f68a8-b955-49e1-bf9f-49a3697a805a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+      
+      - case: Given the organization name and developer id when the name not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "DEVELOPER": "bc8f68a8-b955-49e1-bf9f-49a3697a805a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: Given the organization name and the app name when the developer not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "TestApp-QA"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}

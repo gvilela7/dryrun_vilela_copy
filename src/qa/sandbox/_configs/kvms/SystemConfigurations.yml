@@ -1,0 +1,14 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: SystemConfigurations
+            encrypted: true
+            keyValueEntries:
+              - name: netcracker__header__origin
+                value: http://testexpto744552.alticelabs.com
+            nextPageToken: ""

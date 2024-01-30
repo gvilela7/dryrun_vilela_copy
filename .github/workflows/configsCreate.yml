@@ -1,0 +1,126 @@
+name: '[ APIGEE CONFIGS ] Generate Settings Documentation'
+on:
+
+  workflow_call:
+    inputs:
+      NAME:
+        description: 'Schemma file name'
+        type: string
+        required: false
+        default: schema
+      CONFIG_TYPE:
+        description: 'Type configuration'
+        type: string
+        required: true
+      
+  workflow_dispatch:
+    inputs:
+      NAME:
+        description: 'Schemma file name'
+        type: string
+        required: false
+        default: schema
+      CONFIG_TYPE:
+        description: 'Type configuration'
+        type: choice
+        required: true 
+        options:
+          - authprofiles
+          - apiproducts
+          - apps          
+          - integrations
+          - kvms
+          - proxies
+          - sharedflows          
+          - targetservers
+          - tlskeystores   
+          - flowhooks   
+          
+env:
+  base_path: 'docs/configs/'
+
+jobs:
+
+  generateDocumentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create variables
+        run: |
+          base_template="${{format('{0}{1}/{2}.yml',env.base_path,inputs.CONFIG_TYPE,inputs.NAME)}}"
+          base_settings="${{format('{0}{1}/settings.yml',env.base_path,inputs.CONFIG_TYPE)}}"
+          schema_file="${{format('{0}.json',inputs.NAME)}}"
+          
+          if [[ "${{inputs.NAME}}" == "schema" ]]; then
+            doc_folder="${{format('{0}{1}/default/', env.base_path,inputs.CONFIG_TYPE)}}"
+          else
+            doc_folder="${{format('{0}{1}/{2}/', env.base_path,inputs.CONFIG_TYPE,inputs.NAME)}}"
+          fi;       
+
+          echo "base_template=$base_template" >> $GITHUB_ENV
+          echo "base_settings=$base_settings" >> $GITHUB_ENV
+          echo "schema_file=$schema_file" >> $GITHUB_ENV
+          echo "doc_folder=$doc_folder" >> $GITHUB_ENV          
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3 
+
+      - name: Search for schema json file to create template
+        run: |          
+          [ -f ${{env.base_template}} ] && echo "FILE exist." || (echo "FILE does not exist." ; exit 1;)
+
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt install python3-pip       
+          pip install json-schema-for-humans
+          npm install -g fake-schema-cli
+          npm install jsonlint -g
+
+      - name: Generate documentation
+        run: |
+        
+          #convert yml to json for internal use 
+          yq -o=json eval '.' ${{env.base_template}} > ${{env.base_path}}${{env.schema_file}}
+
+          #check if valid json file
+          jsonlint ${{env.base_path}}${{env.schema_file}}
+
+          #store absolute path inside runner
+          root_path=$(pwd)
+
+          # create a folder for this configuration schema documentation
+          mkdir -p ${{env.doc_folder}}
+
+          # change folder to schema folder and generate documentation
+          cd ${{env.base_path}}
+          /home/runner/.local/bin/generate-schema-doc ${{env.schema_file}}
+
+          # move documentation to correct folder
+          mv schema_doc.* $root_path/${{env.doc_folder}}
+         
+      - name: Generate example
+        run: |
+          root_path=$(pwd)
+          cd ${{env.base_path}}
+          (fake-schema -i 1 ${{env.schema_file}} | yq eval -P) > $root_path/${{env.base_settings}}
+          rm ${{env.schema_file}}
+
+      - name: Push to TARGET branch
+        uses: EndBug/add-and-commit@v9.1.1
+        with:
+          add: '.'
+          message: ${{ format('Create {0} documentation for user', inputs.NAME) }}
+          push: true
+          pull: '--rebase --autostash'  

@@ -1,0 +1,21 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    H018sGK4u7:
+      environments:
+        yTmjwSP0:
+          data:
+            displayName: amet anim ipsum deserunt cupidatat
+            description: labore nisi veniam irure non
+            uuid: exercitation
+            region: europe-west3
+            credentials:
+              clientId: in enim eiusmod Duis
+              clientSecret: culpa aliquip velit
+              scope: ut irure dolor sunt
+              authEndpoint: ex officia
+              tokenEndpoint: officia sed
+              type: OAUTH2_AUTHORIZATION_CODE
+            creatorEmail: labore deserunt
+            createTime: officia anim voluptate laborum sed

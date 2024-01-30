@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step>
+                <Name>FC-AuthNorthboundIntegration</Name>
+            </Step>
+        </Request>
+        <Response/>
+    </PreFlow>
+    <Flows>
+        <Flow name="FlowOCS">
+            <Request/>
+            <Response/>
+            <Condition>proxy.pathsuffix MatchesPath "/ocs-gcc/**"</Condition>
+        </Flow>
+        <Flow name="FlowNC">
+            <Request/>
+            <Response/>
+            <Condition>proxy.pathsuffix MatchesPath "/tmf-api/**"</Condition>
+        </Flow>
+        <Flow name="FlowRMCA">
+            <Request/>
+            <Response/>
+            <Condition>proxy.pathsuffix MatchesPath "/RMCA_API/**"</Condition>
+        </Flow>
+    </Flows>
+    <PostFlow name="PostFlow">
+        <Request/>
+        <Response/>
+    </PostFlow>
+    <PostClientFlow>
+        <Request/>
+        <Response>
+            <Step>
+                <!-- Call Shared Flow to send the Logging -->
+                <Name>FC-SendLog</Name>
+            </Step>
+        </Response>
+    </PostClientFlow>
+    <HTTPProxyConnection>
+        <BasePath>/agite-alpt-accountmanagement_temp</BasePath>
+    </HTTPProxyConnection>
+    <RouteRule name="TargetRMCA">
+        <Condition>proxy.pathsuffix MatchesPath "/RMCA_API/**"</Condition>
+        <TargetEndpoint>TargetRMCA</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="TargetNC">
+        <Condition>proxy.pathsuffix MatchesPath "/tmf-api/**"</Condition>
+        <TargetEndpoint>TargetNC</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="TargetOCS">
+        <TargetEndpoint>TargetOCS</TargetEndpoint>
+    </RouteRule>
+</ProxyEndpoint>

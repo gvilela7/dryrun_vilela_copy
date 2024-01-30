@@ -1,0 +1,68 @@
+name: '[ QA ] Sharedflow Linter PR dev-main'
+on:
+  pull_request:
+    branches:
+      - dev-main
+    paths:
+      - 'src/main/apigee/sharedflows/**'
+
+jobs:
+  updatesGet:
+    runs-on: ubuntu-latest
+    outputs:
+      SHAREDFLOW_LIST: ${{ steps.sharedflowGet.outputs.sharedflows }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: sharedflowUpdated
+        name: Get sharedflow name with changes to deploy        
+        uses: tj-actions/changed-files@v37
+        with:
+          dir_names: true
+          dir_names_max_depth: 5
+          files: |
+            src/main/apigee/sharedflows/**
+
+      - id: sharedflowGet
+        name: Get the current sharedflow change
+        run: |
+          sharedflowList=""
+          for sharedflow in ${{ steps.sharedflowUpdated.outputs.all_modified_files }}; do              
+              [ ! -z "$sharedflowList" ] && sharedflowList+=","
+              sharedflowList+="'$(basename $sharedflow)'"
+          done
+        
+          echo "$sharedflowList"
+          echo "sharedflows=[$sharedflowList]" >> $GITHUB_OUTPUT
+
+  shareflows-preCheck:
+    needs: updatesGet
+    environment: DEVCI
+    runs-on: ubuntu-latest        
+    if: ${{ needs.updatesGet.outputs.SHAREDFLOW_LIST != '[]' }}
+    strategy:
+        max-parallel: 5
+        matrix:
+            NAME: ${{ fromJSON(needs.updatesGet.outputs.SHAREDFLOW_LIST) }}
+    env:
+      COMPONENT_PATH: ${{ format('{0}/sharedflows/{1}/sharedflowbundle/', 'src/apigee' , matrix.NAME) }}
+
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install apigeelint
+        run: |
+          npm install -g apigeelint
+
+      - name: Run apigee linter
+        continue-on-error: true
+        run: |   
+          apigeelint -s ${{env.COMPONENT_PATH}} -f table.js --profile apigeex

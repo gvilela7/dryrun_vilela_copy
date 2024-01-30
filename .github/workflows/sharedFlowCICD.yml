@@ -1,0 +1,169 @@
+name: '[ APIGEE ] Sharedflow CICD'
+on:
+  workflow_call:
+    inputs:
+      NAME: 
+        required: true
+        type: string     
+      ENVIRONMENT:
+        required: true
+        type: string
+      ORGANIZATION:
+        required: true
+        type: string
+      APIGEE_PATH:
+        default: 'src/apigee'
+        type: string
+      GITHUB_ENVIRONMENT:
+        type: string
+        required: false 
+      RUNNER:
+        type: string
+        default: ubuntu-latest                            
+
+  workflow_dispatch:
+    inputs:
+      NAME: 
+        description: 'Name'
+        required: true
+        type: string     
+      ENVIRONMENT:
+        description: 'Environment'
+        required: true
+        type: string
+      ORGANIZATION:
+        description: 'Organization'
+        required: true
+        type: string
+      APIGEE_PATH:
+        description: 'Apigee Path'
+        default: 'src/apigee'
+        type: string
+      GITHUB_ENVIRONMENT:
+        description: 'GITHUB Environment'
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - PROD
+          - HOTFIX
+          - STG
+          - UAT
+          - SIT
+          - DEVCI
+      RUNNER:
+        description: "Container Image"        
+        type: string
+        default: ubuntu-latest    
+
+jobs:
+  preCheck:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    env:
+      COMPONENT_PATH: ${{ format('{0}/sharedflows/{1}/sharedflowbundle/', inputs.APIGEE_PATH, inputs.NAME) }}
+
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Install apigeelint
+        run: |
+          npm install -g apigeelint
+
+      - name: Run apigee linter
+        continue-on-error: true
+        run: |   
+          apigeelint -s ${{env.COMPONENT_PATH}} -f table.js --profile apigeex
+
+  sharedflowSettings:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 
+
+      - name: Set Secrets Vars
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.PROXY_SERVICE_ACCOUNT }}
+        run: |
+          echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}
+
+      - name: Check Settings YML File
+        working-directory: ${{format('{0}/sharedflows/{1}', inputs.APIGEE_PATH, inputs.NAME)}}
+        run: |
+          if [ ! -f settings.yml ]
+          then
+            echo "No settings file. Please use template located @ docs/configs/proxies/settings.yml" 
+            exit 1
+          fi
+
+      - name: cliOPS dependencies install
+        env:
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }}        
+        run: |
+          export APIGEECLI_VERSION=v1.120
+          export APIGEECLI_NO_USAGE=true
+          export APIGEECLI_NO_ERRORS=true
+          curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
+
+          sudo apt-get install jo
+
+          yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml  
+
+      - name: Set Payload Vars
+        env:
+          NAME: ${{ inputs.NAME }}
+          ORGANIZATION: ${{ inputs.ORGANIZATION }}
+          ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+        run: |
+            jq --null-input \
+                --arg 'name' "$NAME" \
+                --arg 'organization' "$ORGANIZATION" \
+                --arg 'environment' "$ENVIRONMENT" \
+                '{"NAME": $name, "ORGANIZATION": $organization, "ENVIRONMENT": $environment}' > ./contrib/cliOPS/_contrib/payload.json
+      
+      - name: Run ApigeeOPS Operation
+        id: apply_shared
+        run: |
+          chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee sharedflow settings apply >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+
+      - name: Check for errors
+        if: ${{ failure() && steps.apply_shared.conclusion == 'failure' }}
+        run: |  
+            echo "::error title=SharedFlow Import with failures::Please check what failed to import - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+
+      - name: Upload error report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10
+
+  postCheck:
+    runs-on: ${{ inputs.RUNNER }}
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    
+    env:
+      COMPONENT_PATH: ${{ format('{0}/sharedflows/{1}/sharedflowbundle/', inputs.APIGEE_PATH, inputs.NAME) }}
+
+    steps:
+      
+      - name: Execute post-checks
+        run: |
+          echo "No post-checks to execute for sharedflows"

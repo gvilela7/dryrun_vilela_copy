@@ -1,0 +1,205 @@
+name: '[ APIGEE ] Proxy Export (Web to Repo)'
+on:
+  workflow_dispatch:
+    inputs:   
+      PROXY_NAME:
+        description: 'Name'
+        required: true
+        type: string
+      ORGANIZATION:
+        description: 'Organization'
+        required: true
+        type: string
+      VERSION:
+        description: 'Version'
+        type: number
+      SERVICE_ACCOUNT:
+        description: 'Service Account'
+        type: string
+      ENVIRONMENT:
+        description: 'Environment'
+        required: true
+        type: string
+      GITHUB_ENVIRONMENT:
+        description: 'GITHUB Environment'
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - PROD
+          - HOTFIX
+          - STG
+          - UAT
+          - SIT
+          - DEVCI
+      APIGEE_PATH:
+        description: "APIGEE Path"
+        type: string
+        default: src/apigee
+      AUTO_COMMIT:
+        description: 'Open new branch - AUTO/proxy_<NAME>'        
+        type: boolean
+        default: false
+
+  workflow_call:
+    inputs:
+      PROXY_NAME:
+        required: true
+        type: string
+      ORGANIZATION:
+        required: true
+        type: string
+      VERSION:
+        type: number
+      SERVICE_ACCOUNT:
+        type: string
+      ENVIRONMENT:
+        required: false
+        type: string
+      GITHUB_ENVIRONMENT:
+        type: string
+        required: false 
+      APIGEE_PATH:
+        type: string
+        default: src/apigee
+      AUTO_COMMIT:
+        type: boolean
+        default: false
+
+jobs:          
+  proxyExport:
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      repository-projects: write
+    steps: 
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Validate target branch
+        run: |
+          if [[ ${{inputs.AUTO_COMMIT}} == 'true' ]]; then 
+            BRANCH_NAME=${{ format('AUTO/proxy_{0}', inputs.PROXY_NAME) }}
+          else 
+            BRANCH_NAME=$GITHUB_REF_NAME
+          fi;
+
+          TARGET_NAME=$(basename $BRANCH_NAME)
+          if [[ $TARGET_NAME == "master" || $TARGET_NAME == "main" || $TARGET_NAME == "development" ]]; then
+            echo "Protected Branch - Please run a different branch"; 
+            exit 1;
+          fi
+
+          echo "branchName=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Set secrets vars
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.PROXY_SERVICE_ACCOUNT }}
+        run: |
+          echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}
+
+      - name: Install cliOPS dependencies
+        env:
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }}        
+        run: |
+          export APIGEECLI_VERSION=v1.120
+          export APIGEECLI_NO_USAGE=true
+          export APIGEECLI_NO_ERRORS=true
+          curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
+
+          sudo apt-get install jo
+          sudo apt -y install libxml2-utils
+
+          yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml
+
+      - name: Set cliOPS payload vars
+        env:
+          ORGANIZATION: ${{ inputs.ORGANIZATION }}
+          PROXY_NAME: ${{ inputs.PROXY_NAME }}
+          VERSION: ${{ inputs.VERSION }}
+          SERVICE_ACCOUNT: ${{ inputs.SERVICE_ACCOUNT }}
+          ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+        run: |
+            jq --null-input \
+                --arg 'name' "$PROXY_NAME" \
+                --arg 'organization' "$ORGANIZATION" \
+                --arg 'version' "$VERSION" \
+                --arg 'service_account' "$SERVICE_ACCOUNT" \
+                --arg 'environment' "$ENVIRONMENT" \
+                '{"NAME": $name, "ORGANIZATION": $organization, "VERSION": $version, "SERVICE_ACCOUNT": $service_account, "ENVIRONMENT": $environment}' \
+                > ./contrib/cliOPS/_contrib/payload.json
+
+      - name: Export proxy
+        id: export_proxy
+        run: |
+          chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee proxy settings export >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+
+      - name: Check for errors
+        if: ${{ failure() && steps.export_proxy.conclusion == 'failure' }}
+        run: |  
+            echo "::error title=Proxy Export with failures::Please check what failed to export - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+
+      - name: Upload error report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10
+
+      - name: List modified files
+        id: modifiedFiles
+        env: 
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }} 
+        run: |
+            INVALID_FILES=false
+            while read -r VARIABLE; do
+              if [[ "$VARIABLE" == *" "* ]]; then
+                echo "Invalid File name: $VARIABLE"
+                INVALID_FILES=true
+              fi
+            done < <(git ls-files -o -m --exclude-standard -- "$APIGEE_PATH" ':!:contrib/*' ':!node_modules/*')
+            if [[ "$INVALID_FILES" == true ]]; then
+              exit 1
+            fi
+            echo "result<<EOF" >> $GITHUB_OUTPUT
+            echo "$(git ls-files -o -m --exclude-standard -- $APIGEE_PATH ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+
+
+
+      - name: 'Open AUTOMATIC branch'
+        uses: peterjgrainger/action-create-branch@v2.2.0
+        if: ${{ inputs.AUTO_COMMIT && steps.modifiedFiles.outputs.result != ''}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: ${{ env.branchName }}
+
+      - name: Commit Files
+        if: ${{ steps.modifiedFiles.outputs.result != ''}}        
+        run: |
+            npm install axios
+                        
+            node .github/GitVerifiedCommit/index.js \
+                            ${{secrets.GITHUB_TOKEN}} \
+                            $GITHUB_REPOSITORY_OWNER \
+                            ${{github.event.repository.name}} \
+                            ${{env.branchName}} \
+                            "${{steps.modifiedFiles.outputs.result}}" \
+                            '[AUTO] Export ${{inputs.PROXY_NAME}} to git.'   

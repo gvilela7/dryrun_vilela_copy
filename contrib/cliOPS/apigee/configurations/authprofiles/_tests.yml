@@ -1,0 +1,211 @@
+operations:
+  - id: AC_AE_001
+    cmd: apigee configurations authprofiles export
+    inputs:
+      required:
+       - NAME
+       - PROJECT
+       - ENVIRONMENT
+       - REGION
+    overview: Export an authprofile by organization, environment and name
+
+    scenarios:
+      - case: export an auth profile successfully with all parameters
+        expected: auth profile file named "hellohello-QA" created inside the repository
+        payload:
+          {              
+              "NAME": "hellohello-QA",
+              "REGION": "europe-west3",
+              "PROJECT": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "Auth Profile exported!" }
+
+      - case: authprofile does not exist (wrong name)
+        expected: action or framework fails
+        payload:
+          {              
+            "NAME": "nonexistingprofile",
+            "REGION": "europe-west3",
+            "PROJECT": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: authprofile does not exist (wrong region)
+        expected: action or framework fails
+        payload:
+          {              
+            "NAME": "hellohello-QA",
+            "REGION": "europe-west1",
+            "PROJECT": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: authprofile does not exist (wrong project)
+        expected: action or framework fails
+        payload:
+          {              
+            "NAME": "hellohello-QA",
+            "REGION": "europe-west1",
+            "PROJECT": "agite23"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: authprofile does not exist (wrong environment)
+        expected: action or framework fails
+        payload:
+          {              
+            "NAME": "hellohello-QA",
+            "REGION": "europe-west3",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "env1dev-pub"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" } 
+
+  - id: AC_AI_001
+    cmd: apigee configurations authprofiles import
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+        - ENVIRONMENT
+      optionals:
+        - REGION
+
+    overview: |
+      Import Auth Profile to Apigee
+
+    notes:
+      - Indexed by UUID
+
+      - Creates NEW or UPDATE existing one
+
+      - Service Account do not have permissions to update, delete, must be the creator    
+
+      - | 
+        If you want to import AUTH PROFILES of Type OAUTH2_RESOURCE_OWNER_CREDENTIALS
+        and the credentials are wrong it gives an output of:
+
+        Failed to fetch access token. Reason: HTTP Response Errors: 400 Bad Request 
+      
+        Do not confuse with GCP Token!
+
+    scenarios:
+      - case: import an auth profile successfully with all parameters
+        expected: An auth profile with the file named 'testauthprof-QA' from the repository has been created in Apigee.
+        payload:
+          {              
+              "NAME": "testauthprof-QA",
+              "PROJECT": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "e492068f-de16-4946-9cdc-2b27d2457216" }
+
+      - case: OAUTH2_RESOURCE_OWNER_CREDENTIALS have wrong credentials
+        expected: can't import and create auth profile                   
+        payload:
+          {              
+            "NAME": "test2fail-QA",
+            "PROJECT": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500 }
+
+  - id: AC_AD_001
+    cmd: apigee configurations authprofiles delete
+    inputs:
+      required:
+        - REGION
+        - PROJECT
+        - NAME
+    overview: |
+      Delete an Auth Profile from Apigee
+      NOTES: Service Account do not have permissions to update, delete, must be the creator
+ 
+    scenarios:
+      - case: delete an auth profile successfully
+        expected: auth profile file named "hellohello-QA" will be removed from Apigee
+        payload:
+          {              
+              "NAME": "hellohello-QA",
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west3"
+          }
+        result: { "code": 200,  "data": "Auth Profile deleted!"}
+  
+      - case: delete an auth profile  with error
+        expected: auth profile file named "testeqa_to_delete-QA" won't be removed from Apigee because it's not exist
+        payload:
+          {              
+              "NAME": "testeqa_to_delete-QA",
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west3"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}
+  
+      - case: delete an auth profile in other organization which SA isn't auth access
+        expected: auth profile file named "testeqa_to_delete-QA" won't be removed from Apigee because SA isn't auth access
+        payload:
+          {              
+              "NAME": "teste-QA",
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west3"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}
+
+  - id: AC_AL_001
+    cmd: apigee configurations authprofiles list
+    inputs:
+      required:
+        - REGION
+        - PROJECT
+      optional:
+        - FILTER_TYPE
+        - FILTER_VALUE
+    overview: List Auth Profiles from Apigee and all information about authprofile
+
+    scenarios:
+      - case: we set INPUT correct
+        refID: AC_AL_001
+        expected: list all of auth profiles for the region and project
+        payload:
+          {              
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west3"
+          }
+        result: { "code": 200, "data": "( { \"uuid\": \"09328c13-a9f0-467a-8e2c-a35ada430a12\" \"displayName\": \"integrationsaas\ )}" }
+
+      - case: we set INPUT correct
+        expected: list all information about of auth profiles given in FILTER_VALUE, for the region and project
+        payload:
+          {
+            "FILTER_VALUE": "testCICD",
+            "PROJECT": "apidev-apigeex-sandbox-d29a",
+            "REGION": "europe-west3"
+          }
+        result: { "code": 200, "data": "( { \"uuid\": \"09328c13-a9f0-467a-8e2c-a35ada430a12\" \"displayName\": \"testCICD\ )}" }
+
+  - id: AC_AG_001
+    cmd: apigee configurations authprofiles get
+    inputs:
+      required:
+        - NAME
+        - PROJECT
+        - REGION
+    overview: List Auth Profiles from Apigee
+    scenarios:
+      - case: we aren't INPUT NAME wrongly
+        expected: command fails
+        payload:
+          {              
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west3"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+        
+      - case: we set INPUT correct
+        expected: getting all information about of auth profiles for the name, region and project 
+        payload:
+          {              
+              "NAME": "testauthprof-QA",
+              "PROJECT": "apidev-apigeex-sandbox-d29a",
+              "REGION": "europe-west3"
+          }
+        result: { "code": 200, "data": "{\n \"name\": \"projects/373045393923/locations/europe-west3/authConfigs/","\n \"displayName\": \"testauthprof-QA" }

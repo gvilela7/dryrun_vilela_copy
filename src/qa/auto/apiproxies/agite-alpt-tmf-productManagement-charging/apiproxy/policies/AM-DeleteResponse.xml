@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-DeleteResponse">
+  <DisplayName>AM-DeleteResponse</DisplayName>
+  <Copy source="response">
+    <StatusCode>true</StatusCode>
+  </Copy>
+  <Set>
+    <Headers>
+      <Header name="x-request-apim-id">{response.header.X-QNT-Rqid}</Header>
+    </Headers>
+    <Payload contentType="application/json;charset=utf-8">{
+            "code": "{response.header.X-QNT-Error}",
+            "reason": "{response.header.X-QNT-Error-Str}",
+            "message": "{response.content.message}"
+        }</Payload>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="true" transport="http" type="response"/>
+</AssignMessage>

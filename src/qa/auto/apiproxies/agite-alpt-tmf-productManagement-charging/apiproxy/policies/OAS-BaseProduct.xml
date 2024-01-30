@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OASValidation continueOnError="false" enabled="true" name="OAS-BaseProduct">
+  <DisplayName>OAS-BaseProduct</DisplayName>
+  <Properties/>
+  <Options>
+    <ValidateMessageBody>true</ValidateMessageBody>
+  </Options>
+  <Source>request</Source>
+  <OASResource>oas://API_021_base_swagger_validation.yaml</OASResource>
+</OASValidation>

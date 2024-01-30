@@ -1,0 +1,19 @@
+<SharedFlowBundle revision="30" name="Logging">
+    <DisplayName></DisplayName>
+    <Description>Used for general logging purposes</Description>
+    <CreatedAt>1687948941658</CreatedAt>
+    <LastModifiedAt>1690537317873</LastModifiedAt>
+    <Policies>
+        <Policy>SC-LogInfo</Policy>
+        <Policy>JS-CommonLogging</Policy>
+        <Policy>KVM-LoggingActiveStatus</Policy>
+        <Policy>ML-LogInfo</Policy>
+    </Policies>
+    <Resources>
+        <Resource>jsc://commonLogging.js</Resource>
+    </Resources>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

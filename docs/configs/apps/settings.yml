@@ -1,0 +1,28 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    agite-apigee:
+      data:
+        appId: ea8356bc-9a72-4d42-bc69-243f0bab44f0
+        attributes:
+          - name: DisplayName
+            value: InternalApp
+          - name: Notes
+            value: Allow access to internal APIs
+          - name: uuid
+            value: 4bc7f0f0-5a06-4d28-98f3-52ef53403a9b
+        createdAt: "1692713081877"
+        credentials:
+          - apiProducts:
+              - apiproduct: Internal
+                status: approved
+            consumerKey: k5p9ba5a4L5Y4y00tg97v3HMmpgLzVGGOBBew4PVfbUbf5nj
+            consumerSecret: o6xY6TEuCciTmAuCUCVYXaoQTHk5gEe9TRq6PKvhB32dEHcPt4mWFAOke95iYtef
+            expiresAt: "-1"
+            issuedAt: "1669645250408"
+            status: approved
+        developerId: 0aefc233-6ddc-461d-8a4d-9901349914b7
+        lastModifiedAt: "1692713081877"
+        name: InternalApp
+        status: approved

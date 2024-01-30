@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-AuthSouthboundRMCA">
+    <DisplayName>FC-AuthSouthboundRMCA</DisplayName>
+    <FaultRules/>
+    <Parameters>
+        <Parameter name="flow.system.name">salesforce</Parameter>
+        <Parameter name="targetSystem">rmca</Parameter>
+    </Parameters>
+    <SharedFlowBundle>auth-southbound</SharedFlowBundle>
+</FlowCallout>

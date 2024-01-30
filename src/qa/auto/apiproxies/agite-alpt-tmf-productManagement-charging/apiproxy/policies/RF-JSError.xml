@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-JSError">
+  <DisplayName>RF-JSError</DisplayName>
+  <FaultResponse>
+    <AssignVariable>
+      <Name>apim.error.code</Name>
+      <Value>500.00</Value>
+    </AssignVariable>
+    <!-- <AssignVariable>
+    <Name>apim.error.message</Name>
+    <Value>{js.errorMsg}</Value>
+  </AssignVariable> -->
+</FaultResponse>
+<IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

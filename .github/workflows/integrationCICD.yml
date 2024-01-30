@@ -1,0 +1,154 @@
+name: '[ APIGEE ] Integration CICD'
+on:
+  workflow_call:
+    inputs:
+      NAME:
+        required: true
+        type: string
+      PROJECT:
+        description: "Project"
+        required: true
+        type: string
+      GITHUB_ENVIRONMENT:
+        type: string
+        required: false
+      APIGEE_PATH:        
+        type: string
+        default: src/apigee
+      RUNNER:
+        type: string
+        default: ubuntu-latest                      
+  
+  workflow_dispatch:
+    inputs:
+      NAME:
+        description: "Name"
+        required: true
+        type: string
+      PROJECT:
+        description: "Project"
+        required: true
+        type: string
+      REGION:
+        description: "Region"
+        required: true
+        type: string
+      GITHUB_ENVIRONMENT:
+        description: 'GITHUB Environment'
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - PROD
+          - HOTFIX
+          - STG
+          - UAT
+          - SIT
+          - DEVCI
+      APIGEE_PATH:
+        description: "APIGEE Path"
+        type: string
+        default: src/apigee    
+      RUNNER:
+        description: "Container Image"        
+        type: string
+        default: ubuntu-latest                  
+
+jobs:
+  preCheck:
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    runs-on: ubuntu-latest
+
+    env:
+      COMPONENT_PATH: ${{ format('{0}/integrations/{1}/', inputs.APIGEE_PATH, inputs.NAME) }}
+
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Execute pre-checks
+        run: |
+          echo "No pre-checks to execute for integrations"
+
+  integrationSettings:
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+    
+    - name: Set Payload Vars
+      env:
+        NAME: ${{ inputs.NAME }}
+        PROJECT: ${{ inputs.PROJECT }}
+      run: |
+          jq --null-input \
+              --arg 'name' "$NAME" \
+              --arg 'project' "$PROJECT" \
+              '{"NAME": $name, "PROJECT": $project}' \
+              > ./contrib/cliOPS/_contrib/payload.json
+
+    - name: Set secrets vars
+      env:
+        SERVICE_ACCOUNT: ${{ secrets.INTEGRATION_SERVICE_ACCOUNT }}
+      run: |
+        echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v3
+      with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+    - name: Cache other dependencies
+      uses: actions/cache@v3
+      with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}
+
+    
+
+    - name: Install cliOPS dependencies
+      env:
+        APIGEE_PATH: ${{ inputs.APIGEE_PATH }}        
+      run: |
+        export INTEGRATIONCLI_VERSION=v0.69
+        curl -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh -
+
+        sudo apt-get install jo
+        
+        yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml
+  
+    - name: Apply settings to Integration
+      id: apply_integrations
+      run: |
+        chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee integration settings apply >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+    - name: Check for errors
+      if: ${{ failure() && steps.apply_integrations.conclusion == 'failure' }}
+      run: |  
+            echo "::error title=Integration Import with failures::Please check what failed to import - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+
+    - name: Upload error report
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10
+
+  postCheck:
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    runs-on: ${{ inputs.RUNNER }}
+
+    env:
+      COMPONENT_PATH: ${{ format('{0}/integrations/{1}/', inputs.APIGEE_PATH, inputs.NAME) }}
+
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+              
+      - name: Execute pre-checks
+        run: |
+          echo "No post checks to execute for integrations"

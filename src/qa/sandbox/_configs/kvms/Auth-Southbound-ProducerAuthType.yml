@@ -1,0 +1,58 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: Auth-Southbound-ProducerAuthType
+            encrypted: true
+            keyValueEntries:
+              - name: sap
+                value: basic
+              - name: sgnum
+                value: oauth-client-credentials
+              - name: nossis
+                value: basic
+              - name: netcracker
+                value: testexpto852
+              - name: rmca
+                value: basic
+              - name: xaf
+                value: oauth-client-credentials
+              - name: filenet
+                value: testexpto741
+              - name: ocs
+                value: basic
+            nextPageToken: ""
+        prod:
+          data:
+            name: Auth-Southbound-ProducerAuthType
+            encrypted: true
+            keyValueEntries:
+              - name: sap
+                value: basic
+              - name: id_accesss
+                value: oauth-client-credentials
+              - name: sgnum
+                value: oauth-client-credentials
+              - name: nossis
+                value: basic
+              - name: netcracker
+                value: oauth-client-credentials
+              - name: polaris
+                value: oauth-client-credentials
+              - name: rmca
+                value: basic
+              - name: sgp
+                value: basic
+              - name: xaf
+                value: oauth-client-credentials
+              - name: filenet
+                value: basic
+              - name: ocs
+                value: basic
+              - name: salesforce
+                value: oauth-jwt
+            nextPageToken: ""

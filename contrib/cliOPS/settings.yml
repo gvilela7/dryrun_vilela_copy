@@ -1,0 +1,46 @@
+framework:
+  logging: 
+    status: true #false
+    verbosity: error
+  services: prod #local #prod
+  dependencies:
+    - ubuntu@22:os
+    - software-properties-common@0:app
+    - gpg-agent@0:app
+    - wget@0:app
+    - zip@0:app
+    - unzip@0:app
+    - yq@4.34.1:app
+    - jq@1.6:app
+    - curl@7.81:app
+    - python3-pip@0:app
+    - libxml2-utils@20913:app
+    - jo@0:app
+    - json-schema-for-humans@0:pip
+    - fake-schema-cli@0:node
+    - ajv-cli@0:node
+    - jsonlint@0:node
+googleCloud:
+  authentication:
+    method: jsonKey #manual (INPUT in function) | settings |jsonKey 
+    token: change authentication method to settings and run in gcp <gcloud auth print-access-token> to generate a token to add here
+    logging: false
+  apigee:
+    default_path: src/qa/auto
+    dependencies:
+      apigeecli:
+        default_location: HOME
+        download:
+          script:
+            - APIGEECLI_VERSION=v1.120
+            - curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
+        configurations:
+          - "APIGEECLI_NO_USAGE=true"
+          - "APIGEECLI_NO_ERRORS=true"
+      integrationcli:
+        default_location: HOME
+        download:
+          script:
+            - curl -L https://raw.githubusercontent.com/GoogleCloudPlatform/application-integration-management-toolkit/main/downloadLatest.sh | sh -
+        configurations:
+          - "INTEGRATIONCLI_VERSION=v0.70"

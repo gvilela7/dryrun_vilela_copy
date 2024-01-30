@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-LogServiceCallout">
+    <DisplayName>FC-LogServiceCallout</DisplayName>
+    <FaultRules/>
+    <Parameters>
+        <Parameter name="chooseFlow">LogServiceCallout</Parameter>
+        <Parameter name="sc_policyName">SC-GetSouthboundToken</Parameter>
+        <Parameter name="sc_requestVarName">serviceCalloutReq</Parameter>
+        <Parameter name="sc_responseVarName">tokenCalloutResponse</Parameter>
+        <Parameter name="sc_targetRequestSent">{sc_targetRequestSent}</Parameter>
+        <Parameter name="sc_targetResponseReceived">{system.timestamp}</Parameter>
+    </Parameters>
+    <SharedFlowBundle>logging-variables</SharedFlowBundle>
+</FlowCallout>

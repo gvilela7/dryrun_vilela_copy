@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="true" enabled="true" name="SC-ServiceRestCall">
+    <DisplayName>SC-ServiceRestCall</DisplayName>
+    <Properties/>
+    <Request clearPayload="true">
+        <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+        <Set>
+            <Verb>POST</Verb>
+            <Payload>{
+    "logName": "{log.name}",
+    "resource": {"type": "gce_instance"},
+    "entries": [{errorMessagePart1}
+			"proxyResponseSentStart": "{client.sent.start.timestamp}",
+			"proxyResponseSentEnd": "{client.sent.end.timestamp}",
+{errorMessagePart2}
+    ],
+    "partialSuccess": true
+}</Payload>
+        </Set>
+    </Request>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>https://logging.googleapis.com/v2/entries:write</URL>
+        <Authentication>
+            <GoogleAccessToken>
+                <Scopes>
+                    <Scope>https://www.googleapis.com/auth/logging.write</Scope>
+                </Scopes>
+            </GoogleAccessToken>
+        </Authentication>
+    </HTTPTargetConnection>
+</ServiceCallout>

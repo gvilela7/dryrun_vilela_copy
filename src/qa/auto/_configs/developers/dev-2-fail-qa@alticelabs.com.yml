@@ -1,0 +1,20 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    agite-apigee:
+      data:
+        email: dev-2-fail-qa@alticelabs.com
+        firstName: Dev
+        lastName: Fail
+        userName: dev2fail
+        attributes:
+          - name: country
+            value: Moon
+        apps:
+          - TestApp
+        developerId: bc8fa8-b955-49e1-bf9f-49a3697a805a
+        organizationName: none
+        status: active
+        createdAt: "1685089293208"
+        lastModifiedAt: "1692712932894"

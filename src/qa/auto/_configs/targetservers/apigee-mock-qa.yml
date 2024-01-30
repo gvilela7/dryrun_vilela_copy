@@ -1,0 +1,17 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: apigee-mock-qa
+            host: mocktarget.apigee.net
+            port: 80
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+              protocols:
+                - TLSv1.2
+            protocol: HTTP

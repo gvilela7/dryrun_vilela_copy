@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SharedFlow name="default">
+    <Step>
+        <Name>JWT-Decode</Name>
+    </Step>
+    <Step>
+        <Name>KVM-FetchPublicKeyById</Name>
+        <Condition>(JWT.failed != true)</Condition>
+    </Step>
+    <Step>
+        <Name>JS-SetAuthType</Name>
+    </Step>
+    <Step>
+        <Name>RF-InvalidAuthMethod</Name>
+        <Condition>(flow.error = true)</Condition>
+    </Step>
+    <Step>
+        <Name>AM-DecodePublicKeyJWT</Name>
+        <Condition>(flow.northbound.authType = "jwt")</Condition>
+    </Step>
+    <Step>
+        <Name>JWT-VerifyJWT</Name>
+        <Condition>(flow.northbound.authType = "jwt")</Condition>
+    </Step>
+    <Step>
+        <Name>RF-InvalidCredentials</Name>
+        <Condition>(flow.northbound.authType = "jwt") and (JWT.failed = true)</Condition>
+    </Step>
+    <Step>
+        <Name>EV-RemoveProtocolFromIssUrl</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>AM-EncodeIssuerB64</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>KVM-FetchEndpointJWKS</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>JS-SplitPathJWKS</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>RF-UnknownToken</Name>
+        <Condition>(flow.northbound.authType = "jwks") and (flow.error = true)</Condition>
+    </Step>
+    <Step>
+        <Name>AM-SetStartTimeSC</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>SC-FetchPublicKeysJWKS</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>FC-LogServiceCallout</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>JWT-VerifyJWKS</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>JWT-VerifyJWKS</Name>
+        <Condition>(flow.northbound.authType = "jwks")</Condition>
+    </Step>
+    <Step>
+        <Name>RF-InvalidCredentials</Name>
+        <Condition>(flow.northbound.authType = "jwks") and (JWT.failed = true)</Condition>
+    </Step>
+    <Step>
+        <Name>BA-DecodeCredentials</Name>
+        <Condition>(flow.northbound.authType = "basic")</Condition>
+    </Step>
+    <Step>
+        <Name>VAK-VerifyClientId</Name>
+    </Step>
+    <Step>
+        <!-- Client secret validation credentials and method-->
+        <Name>RF-InvalidCredentials</Name>
+        <Condition>
+            (oauthV2.VAK-VerifyClientId.failed = true) or ((flow.northbound.authType = "basic") and (verifyapikey.VAK-VerifyClientId.client_secret != clientSecret))
+        </Condition>
+    </Step>
+    <Step>
+        <Name>RF-InvalidAuthMethod</Name>
+        <Condition>(verifyapikey.VAK-VerifyClientId.app.system.authentication.northbound != flow.northbound.authType)</Condition>
+    </Step>
+    <Step>
+        <Name>AM-SetFlowVariables</Name>
+    </Step>
+</SharedFlow>

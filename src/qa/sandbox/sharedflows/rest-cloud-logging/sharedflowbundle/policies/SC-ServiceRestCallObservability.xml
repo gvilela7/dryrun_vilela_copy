@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="true" enabled="true" name="SC-ServiceRestCallObservability">
+    <DisplayName>SC-ServiceRestCallObservability</DisplayName>
+    <Properties/>
+    <Request clearPayload="true">
+        <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+        <Set>
+            <Verb>POST</Verb>
+            <Payload>{
+    "logName": "{log.name}",
+    "resource": {"type": "gce_instance"},
+    "entries": [
+    {errorMessagePart3}
+    ],
+    "partialSuccess": true
+}</Payload>
+        </Set>
+    </Request>
+    <Response>logCalloutResponse</Response>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>https://logging.googleapis.com/v2/entries:write</URL>
+        <Authentication>
+            <GoogleAccessToken>
+                <Scopes>
+                    <Scope>https://www.googleapis.com/auth/logging.write</Scope>
+                </Scopes>
+            </GoogleAccessToken>
+        </Authentication>
+    </HTTPTargetConnection>
+</ServiceCallout>

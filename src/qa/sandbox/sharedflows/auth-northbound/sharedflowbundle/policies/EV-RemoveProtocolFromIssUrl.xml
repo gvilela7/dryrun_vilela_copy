@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="false" enabled="true" name="EV-RemoveProtocolFromIssUrl">
+    <DisplayName>EV-RemoveProtocolFromIssuerUrl</DisplayName>
+    <Properties/>
+    <Variable name="jwt.JWT-Decode.claim.issuer">
+        <Pattern ignoreCase="true">https://{issuer}</Pattern>
+        <Pattern ignoreCase="true">http://{issuer}</Pattern>
+        <Pattern ignoreCase="true">{issuer}</Pattern>
+    </Variable>
+    <Source clearPayload="false">request</Source>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</ExtractVariables>

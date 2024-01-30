@@ -1,0 +1,60 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: pedro-teste-qa
+            aliases:
+              - alias: Aliasteste
+                certsInfo:
+                  certInfo:
+                    - version: 1
+                      subject: CN=Nuno,OU=CT,O=Devoteam,L=Ilhavo,ST=Aveiro,C=PT,1.2.840.113549.1.9.1=#0c196e756e6f2e70657265697261406465766f7465616d2e636f6d
+                      issuer: CN=Nuno,OU=CT,O=Devoteam,L=Ilhavo,ST=Aveiro,C=PT,1.2.840.113549.1.9.1=#0c196e756e6f2e70657265697261406465766f7465616d2e636f6d
+                      expiryDate: "1726332174000"
+                      validFrom: "1694796174000"
+                      isValid: Yes
+                      sigAlgName: SHA256-RSA
+                      publicKey: RSA Public Key, 2048 bits
+                      basicConstraints: CA:FALSE
+                      serialNumber: 43:56:9a:cc:69:b3:f7:33:a0:16:e0:5c:2c:36:7a:be:64:0b:7d:bd
+                type: CERT
+                password: ""
+        prod:
+          data:
+            name: pedro-teste-qa
+            aliases:
+              - alias: Aliasteste
+                certsInfo:
+                  certInfo:
+                    - version: 1
+                      subject: CN=Nuno,OU=CT,O=Devoteam,L=Ilhavo,ST=Aveiro,C=PT,1.2.840.113549.1.9.1=#0c196e756e6f2e70657265697261406465766f7465616d2e636f6d
+                      issuer: CN=Nuno,OU=CT,O=Devoteam,L=Ilhavo,ST=Aveiro,C=PT,1.2.840.113549.1.9.1=#0c196e756e6f2e70657265697261406465766f7465616d2e636f6d
+                      expiryDate: "1726332174000"
+                      validFrom: "1694796174000"
+                      isValid: Yes
+                      sigAlgName: SHA256-RSA
+                      publicKey: RSA Public Key, 2048 bits
+                      basicConstraints: CA:FALSE
+                      serialNumber: 43:56:9a:cc:69:b3:f7:33:a0:16:e0:5c:2c:36:7a:be:64:0b:7d:bd
+                type: CERT
+                password: ""
+
+              - alias: poc-mtls-keystore-alias
+                certsInfo:
+                  certInfo:
+                    - version: 1
+                      subject: CN=fred,O=Test,L=Edinburgh,ST=Lothian,C=US,1.2.840.113549.1.9.1=#0c096672656440686f6d65
+                      issuer: CN=fred,O=Test,L=Edinburgh,ST=Lothian,C=US,1.2.840.113549.1.9.1=#0c096672656440686f6d65
+                      expiryDate: "1326044278000"
+                      validFrom: "1262972278000"
+                      isValid: Yes
+                      sigAlgName: SHA1-RSA
+                      publicKey: RSA Public Key, 1024 bits
+                      basicConstraints: CA:FALSE
+                      serialNumber: fc:a6:89
+                type: KEY_CERT
+                password: ""

@@ -1,0 +1,26 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    agite-apigee:
+      data:
+        email: pedro-andre-dias-qa@alticelabs.com
+        firstName: Pedro
+        lastName: Dias
+        userName: PedroD
+        developerId: 2939fd63-56e9-4a8e-a84b-6aefd1dd2bca
+        organizationName: agite-apigee
+        status: active
+        createdAt: "1692802393484"
+        lastModifiedAt: "1692802393484"
+    apidev-apigeex-sandbox-d29a:
+      data:
+        email: pedro-andre-dias-qa@alticelabs.com
+        firstName: Pedro
+        lastName: Dias
+        userName: PedroD
+        developerId: a4ddf3e2-11c0-41ca-a38b-dcef55611e57
+        organizationName: apidev-apigeex-sandbox-d29a
+        status: active
+        createdAt: "1697279217754"
+        lastModifiedAt: "1697537086346"

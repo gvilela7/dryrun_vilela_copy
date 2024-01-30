@@ -1,0 +1,102 @@
+---
+"$schema": https://json-schema.org/draft/2020-12/schema
+"$id": https://example.com/product.schema.json
+title: Build Developers yaml file
+description: Build Developers yaml file
+type: object
+additionalProperties: false
+properties:
+  status:
+    type: string
+    description: Action to execute
+    enum:
+    - enable
+    - disable
+  settings:
+    type: object
+    description: Placeholder for Developer settings.
+    additionalProperties: false
+    properties:
+      scope:
+        type: string
+        description: Scope of the file.
+        enum:
+        - org
+        - project
+      organizations:
+        type: object
+        description: Organization gcp scope.
+        additionalProperties: false
+        minProperties: 1
+        patternProperties:
+          "^[a-zA-Z0-9-_]+$":
+            type: object
+            description: Project in which the Developer will exist.
+            additionalProperties: false
+            properties:
+              data:
+                "$ref": "#/$defs/commonData"
+            required:
+            - data
+    required:
+    - scope
+    - organizations
+required:
+- status
+- settings
+"$defs":
+  commonData:
+    type: object
+    additionalProperties: false
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      userName:
+        type: string
+      developerId:
+        type: string
+      organizationName:
+        type: string
+      status:
+        type: string
+        enum:
+        - active
+        - inactive
+      createdAt:
+        type: string
+      lastModifiedAt:
+        type: string
+      accessType:
+        type: string
+      appFamily:
+        type: string
+      apps:
+        type: array
+        items:
+          type: string
+      companies:
+        type: array
+        items:
+          type: string
+      attributes:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            name:
+              type: string
+            value:
+              type: string
+          required:
+          - name
+          - value
+    required:
+    - email
+    - firstName
+    - lastName
+    - userName

@@ -1,0 +1,25 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        cicd-dev:
+          data:
+            name: AT-Financas-qa
+            aliases:
+              - alias: AT-Financas-4_9_23
+                certsInfo:
+                  certInfo:
+                    - version: 3
+                      subject: CN=batatas,O=Internet Widgits Pty Ltd,ST=Azores,C=PT
+                      issuer: CN=batatas,O=Internet Widgits Pty Ltd,ST=Azores,C=PT
+                      expiryDate: "1699625881000"
+                      validFrom: "1668089881000"
+                      isValid: Yes
+                      sigAlgName: SHA256-RSA
+                      publicKey: RSA Public Key, 4096 bits
+                      basicConstraints: CA:TRUE
+                      serialNumber: 10:1f:78:36:da:28:c9:d8:84:20:9e:40:e5:dc:89:cf:62:e6:53:9f
+                type: CERT
+                password: ""

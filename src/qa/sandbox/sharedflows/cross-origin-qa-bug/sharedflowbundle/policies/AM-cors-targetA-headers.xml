@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-cors-targetA-headers">
+    <DisplayName>AM-cors-targetA-headers</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>access_control_request_headers</Name>
+        <Value/>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>access_control_allow_headers</Name>
+        <Value>origin, x-requested-with, accept, content-type,x-origin,x-targeta</Value>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>access_control_allow_methods</Name>
+        <Value>GET, PUT</Value>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="true" enabled="true" name="AM-SetStateFromTarget">
+    <DisplayName>AM-SetStateFromTarget</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>logState</Name>
+        <Value>fromTarget</Value>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

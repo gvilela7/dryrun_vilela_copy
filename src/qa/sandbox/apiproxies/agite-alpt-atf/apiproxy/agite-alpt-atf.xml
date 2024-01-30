@@ -1,0 +1,17 @@
+<APIProxy revision="2" name="agite-alpt-atf">
+    <DisplayName></DisplayName>
+    <Description></Description>
+    <CreatedAt>1695222732723</CreatedAt>
+    <LastModifiedAt>1695222732723</LastModifiedAt>
+    <BasePaths>/agite/atf</BasePaths>
+    <Policies>
+        <Policy>FC-SendLog</Policy>
+        <Policy>FC-AuthNorthbound</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

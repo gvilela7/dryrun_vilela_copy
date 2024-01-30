@@ -1,0 +1,13 @@
+<SharedFlowBundle revision="1" name="PreProxyCommon">
+    <DisplayName></DisplayName>
+    <Description>shared flow to attach to pre-proxy flow hook</Description>
+    <CreatedAt>1685704253166</CreatedAt>
+    <LastModifiedAt>1685704339489</LastModifiedAt>
+    <Policies>
+        <Policy>FC-Logging</Policy>
+    </Policies>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

@@ -1,0 +1,28 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      data:
+        appId: 4b27d214-3059-4309-a397-32dfc6298d46
+        attributes:
+          - name: DisplayName
+            value: InternalApp-QA
+          - name: Notes
+            value: Allow access to internal APIs
+          - name: uuid
+            value: 4bc7f0f0-5a06-4d28-98f3-52ef53403a9b
+        createdAt: "1694097695700"
+        credentials:
+          - apiProducts:
+              - apiproduct: Internal
+                status: approved
+            consumerKey: k5p9ba5a4L5Y4y00tg97v3HMmpgLzVGGOBBew4PVfbUbf5nj
+            consumerSecret: o6xY6TEuCciTmAuCUCVYXaoQTHk5gEe9TRq6PKvhB32dEHcPt4mWFAOke95iYtef
+            expiresAt: "-1"
+            issuedAt: "1694097697083"
+            status: approved
+        developerId: 0aefc233-6ddc-461d-8a4d-9901349914b7
+        lastModifiedAt: "1694097695700"
+        name: InternalApp-QA
+        status: approved

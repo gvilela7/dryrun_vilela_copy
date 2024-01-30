@@ -1,0 +1,35 @@
+<SharedFlowBundle revision="12" name="auth-southbound">
+    <DisplayName></DisplayName>
+    <Description>Handle the authentication for apigee target servers</Description>
+    <CreatedAt>1695055519595</CreatedAt>
+    <LastModifiedAt>1695055519595</LastModifiedAt>
+    <Policies>
+        <Policy>AM-AppendScopeClientCredentials</Policy>
+        <Policy>AM-DecodeKey</Policy>
+        <Policy>AM-IgnoreCache</Policy>
+        <Policy>AM-IsCached</Policy>
+        <Policy>AM-SetClientCredentialsReq</Policy>
+        <Policy>AM-SetRequestJWT</Policy>
+        <Policy>AM-TempToken</Policy>
+        <Policy>EV-GetAccessToken</Policy>
+        <Policy>FC-LogServiceCallout</Policy>
+        <Policy>JWT-IssueTokenGeneric</Policy>
+        <Policy>KVM-FetchApiKey</Policy>
+        <Policy>KVM-FetchBasicToken</Policy>
+        <Policy>KVM-FetchClaimsJWT</Policy>
+        <Policy>KVM-FetchClientCredentials</Policy>
+        <Policy>KVM-FetchPrivateKey</Policy>
+        <Policy>KVM-GetProducerAuthType</Policy>
+        <Policy>LC-SouthboundToken</Policy>
+        <Policy>PC-SouthboundToken</Policy>
+        <Policy>RF-UnknownTargetSystem</Policy>
+        <Policy>SC-GetSouthboundToken</Policy>
+        <Policy>SC-OAuthClientCredentials</Policy>
+        <Policy>SC-OAuthJWT</Policy>
+        <Policy>SC-OAuthPassword</Policy>
+    </Policies>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

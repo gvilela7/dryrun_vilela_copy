@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="true" enabled="true" name="EV-PathParamAddon">
+  <DisplayName>EV-PathParamAddon</DisplayName>
+  <URIPath>
+    <Pattern ignoreCase="true">/charging/{id}</Pattern>
+  </URIPath>
+  <Source clearPayload="false">request</Source>
+  <VariablePrefix>req.path</VariablePrefix>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+</ExtractVariables>

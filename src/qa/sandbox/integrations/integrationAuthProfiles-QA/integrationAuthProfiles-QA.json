@@ -1,0 +1,389 @@
+{
+  "name": "projects/896403917428/locations/europe-west1/integrations/integrationAuthProfiles-QA/versions/4632182c-0dd9-47d9-8001-9d94a9791fe7",
+  "updateTime": "2023-09-13T14:49:25.767Z",
+  "lockHolder": "pedro.caeiro@devoteam.com",
+  "createTime": "2023-09-08T13:31:00.787Z",
+  "lastModifierEmail": "pedro.caeiro@devoteam.com",
+  "triggerConfigs": [
+    {
+      "label": "Cloud Pub/Sub Trigger",
+      "startTasks": [
+        {
+          "taskId": "2"
+        }
+      ],
+      "properties": {
+        "IP Project name": "cloud-crm-eventbus-cpsexternal",
+        "Subscription name": "agite-apigee_apim-apigeex-logs"
+      },
+      "triggerType": "CLOUD_PUBSUB_EXTERNAL",
+      "triggerNumber": "2",
+      "triggerId": "cloud_pubsub_external_trigger/projects/cloud-crm-eventbus-cpsexternal/subscriptions/agite-apigee_apim-apigeex-logs",
+      "position": {
+        "x": -210
+      }
+    },
+    {
+      "label": "API Trigger",
+      "startTasks": [
+        {
+          "taskId": "1"
+        }
+      ],
+      "properties": {
+        "Trigger name": "saasintegration_API_1"
+      },
+      "triggerType": "API",
+      "triggerNumber": "1",
+      "triggerId": "api_trigger/saasintegration_API_1",
+      "position": {
+        "x": -462
+      }
+    }
+  ],
+  "taskConfigs": [
+    {
+      "task": "ReturnTask",
+      "taskId": "2",
+      "parameters": {
+        "httpErrorCode": {
+          "key": "httpErrorCode",
+          "value": {}
+        },
+        "errorMessage": {
+          "key": "errorMessage",
+          "value": {
+            "stringValue": "$_teste$"
+          }
+        }
+      },
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Return Task",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -336,
+        "y": 378
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "3",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_3_responseBody`$"
+              ]
+            }
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "httpParams": {
+          "key": "httpParams",
+          "value": {}
+        },
+        "authConfig": {
+          "key": "authConfig",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\",\n  \"authConfigId\": \"f03a07b1-afd1-4a69-b919-37391d895931\"\n}"
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_3_responseHeader`$"
+              ]
+            }
+          }
+        },
+        "userAgent": {
+          "key": "userAgent",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_3_responseStatus`$"
+              ]
+            }
+          }
+        },
+        "url": {
+          "key": "url",
+          "value": {
+            "stringValue": "$_teste$"
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "requestorId": {
+          "key": "requestorId",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "urlQueryStrings": {
+          "key": "urlQueryStrings",
+          "value": {}
+        },
+        "requestBody": {
+          "key": "requestBody",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "additionalHeaders": {
+          "key": "additionalHeaders",
+          "value": {}
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "2"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Call REST Endpoint 1",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -336,
+        "y": 252
+      }
+    },
+    {
+      "task": "GenericRestV2Task",
+      "taskId": "1",
+      "parameters": {
+        "throwError": {
+          "key": "throwError",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "responseBody": {
+          "key": "responseBody",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_1_responseBody`$"
+              ]
+            }
+          }
+        },
+        "disableSSLValidation": {
+          "key": "disableSSLValidation",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "httpParams": {
+          "key": "httpParams",
+          "value": {}
+        },
+        "authConfig": {
+          "key": "authConfig",
+          "value": {
+            "jsonValue": "{\n  \"@type\": \"type.googleapis.com/enterprise.crm.eventbus.authconfig.AuthConfigTaskParam\",\n  \"authConfigId\": \"b7be8fdb-e619-4b46-86a9-0d06cf3037de\"\n}"
+          }
+        },
+        "responseHeader": {
+          "key": "responseHeader",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_1_responseHeader`$"
+              ]
+            }
+          }
+        },
+        "userAgent": {
+          "key": "userAgent",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "httpMethod": {
+          "key": "httpMethod",
+          "value": {
+            "stringValue": "GET"
+          }
+        },
+        "responseStatus": {
+          "key": "responseStatus",
+          "value": {
+            "stringArray": {
+              "stringValues": [
+                "$`Task_1_responseStatus`$"
+              ]
+            }
+          }
+        },
+        "url": {
+          "key": "url",
+          "value": {
+            "stringValue": "$_teste$"
+          }
+        },
+        "urlFetchingService": {
+          "key": "urlFetchingService",
+          "value": {
+            "stringValue": "HARPOON"
+          }
+        },
+        "useSSL": {
+          "key": "useSSL",
+          "value": {
+            "booleanValue": false
+          }
+        },
+        "requestorId": {
+          "key": "requestorId",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "urlQueryStrings": {
+          "key": "urlQueryStrings",
+          "value": {}
+        },
+        "requestBody": {
+          "key": "requestBody",
+          "value": {
+            "stringValue": ""
+          }
+        },
+        "followRedirects": {
+          "key": "followRedirects",
+          "value": {
+            "booleanValue": true
+          }
+        },
+        "additionalHeaders": {
+          "key": "additionalHeaders",
+          "value": {}
+        }
+      },
+      "nextTasks": [
+        {
+          "taskId": "3"
+        }
+      ],
+      "taskExecutionStrategy": "WHEN_ALL_SUCCEED",
+      "displayName": "Call REST Endpoint",
+      "externalTaskType": "NORMAL_TASK",
+      "position": {
+        "x": -336,
+        "y": 126
+      }
+    }
+  ],
+  "integrationParameters": [
+    {
+      "key": "CloudPubSubMessage",
+      "dataType": "JSON_VALUE",
+      "displayName": "CloudPubSubMessage",
+      "isTransient": true,
+      "producer": "2_2",
+      "jsonSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"title\": \"Cloud Pub/Sub Message\",\n  \"description\": \"Message received by Cloud Pub/Sub.\",\n  \"properties\": {\n    \"data\": {\n      \"type\": \"string\",\n      \"description\": \"The message data sent by the publisher\"\n    },\n    \"attributes\": {\n      \"type\": \"object\",\n      \"description\": \"Attributes for this message\"\n    },\n    \"messageId\": {\n      \"type\": \"string\",\n      \"description\": \"ID of this message, assigned by the server when the message is published. Guaranteed to be unique within the topic.\"\n    },\n    \"publishTime\": {\n      \"type\": \"string\",\n      \"description\": \"The time at which the message was published, populated by the server when it receives the topics.publish call\"\n    },\n    \"orderingKey\": {\n      \"type\": \"string\",\n      \"description\": \"Identifies related messages for which publish order should be respected.\"\n    }\n  }\n}"
+    },
+    {
+      "key": "`Task_1_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseHeader`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "`Task_1_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseBody`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "`Task_1_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_1_responseStatus`",
+      "isTransient": true,
+      "producer": "1_1"
+    },
+    {
+      "key": "_teste",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": "qa"
+      },
+      "displayName": "_teste"
+    },
+    {
+      "key": "`Task_3_responseHeader`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_3_responseHeader`",
+      "isTransient": true,
+      "producer": "1_3"
+    },
+    {
+      "key": "`Task_3_responseBody`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_3_responseBody`",
+      "isTransient": true,
+      "producer": "1_3"
+    },
+    {
+      "key": "`Task_3_responseStatus`",
+      "dataType": "STRING_VALUE",
+      "displayName": "`Task_3_responseStatus`",
+      "isTransient": true,
+      "producer": "1_3"
+    },
+    {
+      "key": "sekanevasseskasefaziaski",
+      "dataType": "STRING_VALUE",
+      "defaultValue": {
+        "stringValue": "hello"
+      },
+      "displayName": "sekanevasseskasefaziaski"
+    }
+  ]
+}

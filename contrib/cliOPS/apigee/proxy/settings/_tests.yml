@@ -1,0 +1,221 @@
+operations:
+  - id: AP_PSA_001
+    cmd: apigee proxy settings apply
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+      optional:
+        - SERVICE_ACCOUNT
+
+    overview: |
+      Import proxy with a settings file
+
+    notes: |
+      Based on settings.yml sets proxy status on APIGEE
+      STATUS:
+        - disable (delete from APIGEE)
+        - enable (create or add new revision)
+        - deploy 
+      PROJECT Variable is not implemented - used as reference only - normally is same as ORGANIZATION on Google Cloud for APIGEE
+      SERVICE ACCOUNT TO DEPLOY:
+        - you can set on payload which will be used for all deployments, or you can set per environments in settings
+
+    scenarios:
+      - case: status is disable
+        expected: |
+          ATTENTION affects all others environments
+          will undeploy proxy from the any ENVIRONMENT, delete any available revisions to remove proxy from APIGEE list
+          ENVIRONMENT "default" will be processed
+        payload: 
+          {
+            "NAME": "proxy-generic-integration-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }            
+        result: { "code": 200, "data": "Proxy settings applied!"}
+        
+      - case: status is enable
+        expected: will import a proxy, can create or increament a new version in ALL ORGANIZATIONS
+        payload: 
+          {
+              "NAME": "proxy-2-delete-qa",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }        
+        result: {"code": 200, "data": "Proxy settings applied!"}         
+
+      - case: status is deploy
+        expected: |
+          if already deployed will skip operation and inform, or will import new revision and deploy it
+          affects all available ORGANIZATIONS and ENVIRONMENTS - excludes DEFAULT
+        payload: 
+          {
+            "NAME": "proxy-2-delete-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "SERVICE_ACCOUNT": "mail@iam.gserviceaccount.com"
+          }
+        result: {"code": 200, "data": "Proxy settings applied!"}          
+
+      - case: status is disable
+        expected: |
+          ATTENTION for best pratices use only DEFAULT ENVIRONMENT in settings.yml, affects all others ENVIRONMENTS
+          will undeploy proxy from the any ENVIRONMENT, delete any available revisions to remove proxy from APIGEE list
+        payload:
+          {
+            "NAME": "proxy-2-delete-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Proxy settings applied!"}              
+        
+      - case: status is enable
+        expected: will import a proxy, can create or increament a new version in the organization
+        payload:
+          {
+            "NAME": "proxy-2-delete-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Proxy settings applied!"}                      
+
+      - case: status is deploy
+        expected: |
+          if already deployed will skip operation and inform, or will import new revision and deploy it
+          affects all available ENVIRONMENTS - excludes DEFAULT
+        payload:
+          {
+            "NAME": "proxy-2-delete-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "SERVICE_ACCOUNT": "mail@iam.gserviceaccount.com"
+          }
+        result: {"code": 200, "data": "Proxy settings applied!"}                      
+
+      - case: ORGANIZATION or environments is not set
+        expected: Should fail
+        payload:
+          {
+            "NAME": "proxy-2-delete-qa",
+            "SERVICE_ACCOUNT": "mail@iam.gserviceaccount.com"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred"}          
+
+      - case: status is disable
+        expected: |
+          ATTENTION affects all others environments
+          will undeploy proxy from the any ENVIRONMENT, delete any available revisions to remove proxy from APIGEE list
+          ENVIRONMENT "default" will be processed
+        payload:
+          {
+            "NAME": "proxy-2-delete-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Proxy settings applied!"}          
+                  
+      - case: status is enable
+        expected: will import a proxy, can create or increament a new version in the organization
+        payload:
+          {
+          "NAME": "proxy-2-delete-qa",
+          "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+          "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Proxy settings applied!"}               
+
+      - case: status is deploy
+        expected: if already deployed will skip operation and inform, or will import new revision and deploy it
+        payload:
+          {
+            "NAME": "proxy-2-delete-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Proxy settings applied!"}  
+
+  - id: AP_PSE_001
+    cmd: apigee proxy settings export
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+      optional:
+        - VERSION
+    overview: |
+      Download proxy bundle from APIGEE and add settings files with configurations
+      
+    scenarios:
+      - case: proxy exists in APIGEE within an ORGANIZATION and ENVIRONMENT not set
+        expected: |
+          proxy will be CREATED/UPDATED locally 
+          settings.yml will be CREATED/UPDATED with ORGANIZATION and default ENVIRONMENT
+        payload: 
+          {
+            "NAME": "proxy-generic-integration-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Proxy exported with settings!" }
+
+      - case: proxy exists in APIGEE within an ORGANIZATION and ENVIRONMENT is set
+        expected: |
+          proxy will be CREATED/UPDATED locally 
+          settings.yml will be CREATED/UPDATED with ORGANIZATION and ENVIRONMENT
+          dependencies will be set to none
+        payload: 
+          {
+            "NAME": "proxy-generic-integration-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",            
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Proxy exported with settings!" }
+
+      - case: proxy exists in APIGEE within an ORGANIZATION, ENVIRONMENT with given VERSION
+        expected: |
+          proxy will be CREATED/UPDATED locally  
+          settings.yml will be CREATED/UPDATED with ORGANIZATION and ENVIRONMENT and VERSION
+        payload: 
+          {
+            "NAME": "proxy-generic-integration-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": 1
+          }
+        result: {"code": 200, "data": "Proxy exported with settings!"}
+
+      - case: proxy exists in APIGEE within an ORGANIZATION, ENVIRONMENT with given VERSION and SERVICE ACCOUNT
+        expected: |
+          proxy will be CREATED/UPDATED locally  
+          settings.yml will be CREATED/UPDATED with ORGANIZATION and ENVIRONMENT and VERSION and SERVICE ACCOUNT
+        payload: 
+          {
+            "NAME": "proxy-generic-integration-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": 1
+          }
+        result: {"code": 200, "data": "Proxy exported with settings!"}
+
+      - case: proxy exists in APIGEE within an ORGANIZATION and has dependencies
+        expected: |
+          proxy will be CREATED/UPDATED locally 
+          settings.yml will be CREATED/UPDATED with ORGANIZATION and default ENVIRONMENT
+          dependencies will be listed in settings.yml without duplicates
+        payload: 
+          {
+            "NAME": "proxy-generic-integration-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Proxy exported with settings!"}
+
+  - id: AP_PSDE_001
+    cmd: apigee proxy settings dependencies
+    overview: check for dependencies
+    notes: |
+      Supports for KVM, Target Servers, Sharedflows and integrations
+
+    scenarios:
+      - case: proxy has dependencies
+        expected: settings.yml will be update according
+        payload: 
+          {
+            "NAME": "proxy-generic-integration-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200,  "data": "Proxy dependencies set!" }
+        

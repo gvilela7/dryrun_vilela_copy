@@ -1,0 +1,16 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        prod:
+          data:
+            name: Auth-Northbound-JWT-PublicKeys
+            encrypted: true
+            keyValueEntries:
+              - name: teste23333
+                value: testedryrun
+              - name: abcdefg
+                value: hijkl12444
+            nextPageToken: ""

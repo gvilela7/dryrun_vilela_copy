@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-CalloutRequestDelete">
+  <DisplayName>AM-CalloutRequestDelete</DisplayName>
+  <AssignVariable>
+    <Name>target.copy.pathsuffix</Name>
+    <Value>false</Value>
+  </AssignVariable>
+  <Set>
+    <Verb>DELETE</Verb>
+    <Headers>
+      <Header name="Authorization">Basic {southbound-token}</Header>
+      <Header name="X-QNT-Rqid">{request.header.x-request-apim-id}</Header>
+      <Header name="x-request-apim-id">{request.header.x-request-apim-id}</Header>
+    </Headers>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="true" transport="http" type="request">calloutRequest</AssignTo>
+</AssignMessage>

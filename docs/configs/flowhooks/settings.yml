@@ -1,0 +1,18 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    agite-apigee:
+      environments:
+        cicd-dev:
+          data:
+            PreProxyFlowHook:
+              sharedFlow: default-fault-handling
+              continueOnError: true
+            PostProxyFlowHook:
+              continueOnError: true
+            PreTargetFlowHook:
+              continueOnError: true
+            PostTargetFlowHook:
+              sharedFlow: qa-shared-test
+              continueOnError: false

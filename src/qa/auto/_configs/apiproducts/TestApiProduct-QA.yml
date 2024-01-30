@@ -1,0 +1,27 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      data:
+        name: TestApiProduct-QA
+        displayName: TestApiProduct-QA
+        approvalType: auto
+        attributes:
+          - name: access
+            value: private
+        description: Removing description
+        environments:
+          - dev
+          - prod
+        createdAt: "1697560050165"
+        lastModifiedAt: "1697560196924"
+        graphqlOperationGroup:
+          operationConfigs:
+            - apiSource: proxy2Delete2
+              operations:
+                - operationTypes:
+                    - QUERY
+                  operation: addthisname
+              quota: {}
+          operationConfigType: proxy

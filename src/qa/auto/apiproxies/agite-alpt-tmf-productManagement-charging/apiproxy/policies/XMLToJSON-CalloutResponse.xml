@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<XMLToJSON async="false" continueOnError="false" enabled="true" name="XMLToJSON-CalloutResponse">
+  <DisplayName>XMLToJSON-CalloutResponse</DisplayName>
+  <Properties/>
+  <Options>
+    <RecognizeNumber>false</RecognizeNumber>
+    <RecognizeBoolean>false</RecognizeBoolean>
+    <RecognizeNull>false</RecognizeNull>
+    <StripLevels>1</StripLevels>
+    <TreatAsArray>
+      <Path unwrap="true">agreement/entries/entry</Path>
+      <Path unwrap="false">agreement/usage_charges</Path>
+      <Path unwrap="true">agreement/usage_charges/usage_charge</Path>
+      <Path unwrap="true">agreement/usage_charges/usage_charge/entries/entry</Path>
+      <Path unwrap="false">agreement/topups</Path>
+      <Path unwrap="true">agreement/topups/topup</Path>
+      <Path unwrap="true">agreement/topups/topup/entries/entry</Path>
+      <Path unwrap="false">agreement/allowances</Path>
+      <Path unwrap="true">agreement/allowances/allowance</Path>
+      <Path unwrap="true">agreement/allowances/allowance/entries/entry</Path>
+      <Path unwrap="false">agreement/spending_limits</Path>
+      <Path unwrap="true">agreement/spending_limits/spending_limit</Path>
+      <Path unwrap="true">agreement/spending_limits/spending_limit/entries/entry</Path>
+      <Path unwrap="false">agreement/alarms_ng</Path>
+      <Path unwrap="true">agreement/alarms_ng/alarm_ng</Path>
+      <Path unwrap="true">agreement/alarms_ng/alarm_ng/entries/entry</Path>
+      <Path unwrap="false">agreement/recurring_charges</Path>
+      <Path unwrap="true">agreement/recurring_charges/recurring_charge</Path>
+      <Path unwrap="true">agreement/recurring_charges/recurring_charge/entries/entry</Path>
+      <Path unwrap="false">agreement/balances</Path>
+      <Path unwrap="true">agreement/balances/balance</Path>
+      <Path unwrap="true">agreement/balances/balance/entries/entry</Path>
+    </TreatAsArray>
+  </Options>
+  <OutputVariable>jsparamResponseToTransform</OutputVariable>
+  <Source>calloutResponse</Source>
+</XMLToJSON>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-SetRequestJWT">
+    <DisplayName>AM-SetRequestJWT</DisplayName>
+    <Properties/>
+    <Set>
+        <Headers/>
+        <QueryParams/>
+        <FormParams>
+            <FormParam name="grant_type">urn:ietf:params:oauth:grant-type:jwt-bearer</FormParam>
+            <FormParam name="assertion">{southbound-token}</FormParam>
+        </FormParams>
+        <Verb>POST</Verb>
+        <Path/>
+    </Set>
+    <AssignVariable>
+        <!-- Used to set service callout sent timestamp-->
+        <Name>sc_targetRequestSent</Name>
+        <Ref>system.timestamp</Ref>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="true" transport="http" type="request">serviceCalloutReq</AssignTo>
+</AssignMessage>

@@ -1,0 +1,326 @@
+operations:
+
+  - id: AS_SSE_001
+    cmd: apigee sharedflow settings export
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+      optional:
+        - VERSION
+        - KEEP_SHAREDFLOWBUNDLE
+    overview: |
+      Exports a sharedflow revision from an organization, or the latest if none is provided as input, with settings
+
+    scenarios:
+      - case: sharedflow exists in the organization but doesn't exist locally
+        expected: command succeeds and the sharedflow's latest version is exported with settings for default environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+
+      - case: sharedflow exists in the organization and already exists locally
+        expected: command succeeds and the sharedflow's latest version is exported with settings for default environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+
+
+      - case: sharedflow exists in the organization but doesn't exist locally
+        expected: command succeeds and the right version is exported with version set for the environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": 25
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+      
+      - case: sharedflow exists in the organization and already exists locally
+        expected: command succeeds, the right version is exported, and environment is updated/added to settings file with version
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": 24
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+
+      - case: sharedflow exists in the organization but doesn't exist locally
+        expected: command succeeds and the latest version is exported with service account set for the environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "SERVICE_ACCOUNT": "proxy-cicd@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+
+      - case: sharedflow exists in the organization and already exists locally
+        expected: command succeeds, the latest version is exported, and environment is updated/added to settings file with service account
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "SERVICE_ACCOUNT": "proxy-cicd@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+
+
+      - case: sharedflow exists in the organization but doesn't exist locally
+        expected: command succeeds and the specified version is exported with service account set for the environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "VERSION": 1,
+            "SERVICE_ACCOUNT": "proxy-cicd@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com"
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: organization does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "non-existant"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: sharedflow doesn't exist in the organization
+        expected: command fails
+        payload:
+          {
+            "NAME": "non-existant",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: sharedflow version doesn't exist
+        expected: command fails 
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "VERSION": 60
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AS_SSA_001
+    cmd: apigee sharedflow settings apply
+    inputs:
+      required:
+        - NAME
+        - ORGANIZATION
+    overview: |
+      Cycles through the environments of a given organization (if provided), or all the organizations, and processes each status
+
+    scenarios:
+      - case: all environemnts set to deploy
+        expected: command succeeds and the sharedflow is deployed in every environment
+        payload:
+          {
+            "NAME": "environment-testing",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: one environment set to deploy and another set to enable
+        expected: command succeeds and the sharedflow is deployed in only one environment
+        payload:
+          {
+            "NAME": "environment-testing",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: only default set to deploy, others set to enable
+        expected: command succeeds and the sharedflow is not deployed in any environment
+        payload:
+          {
+            "NAME": "environment-testing",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: all environemnts set to enable
+        expected: command succeeds and the sharedflow is not deployed in any environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: all environemnts set to disable
+        expected: command succeeds and the sharedflow is deleted
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow deleted!" }
+
+      - case: one environment set to disable and another set to enable
+        expected: command succeeds and the sharedflow is deleted
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow deleted!" }
+
+      - case: only default set to disable, others set to enable
+        expected: command succeeds and the sharedflow is deleted
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow deleted!" }
+
+      - case: all environemnts set to deploy
+        expected: command succeeds and the sharedflow is created and deployed in every environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: one environment set to deploy and another set to enable
+        expected: command succeeds and the sharedflow is created and deployed in only one environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+      
+      - case: only default set to deploy, others set to enable
+        expected: command succeeds and the sharedflow is not deployed in any environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow imported!" }
+      
+      - case: all environemnts set to enable
+        expected: command succeeds and the sharedflow is not deployed in any environment
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow imported!" }
+
+      - case: all environemnts set to disable
+        expected: command succeeds and the sharedflow is deleted
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow deleted!" }
+
+      - case: one environment set to disable and another set to enable
+        expected: command succeeds and the sharedflow is deleted
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow exported!" }
+
+      - case: only default set to disable, others set to enable
+        expected: command succeeds and the sharedflow is deleted
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow deleted!" }
+
+      - case: only default set to enable
+        expected: command succeeds but nothing happens, sharedflow not created
+        payload:
+          {
+            "NAME": "cross-origin-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 200, "data": "Sharedflow imported!" }
+
+      - case: we set a required inputs but on settings status is ENABLE
+        expected: component is not deployed, so nothing to d
+        payload:
+          {
+            "NAME": "cloud-logging-sf-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Sharedflow imported!" }
+
+      - case: we set a required inputs but on settings status is DEPLOY
+        expected: component is not deployed, so nothing to d
+        payload:
+          {
+            "NAME": "cloud-logging-sf-qa",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: {"code": 200, "data": "Sharedflow Deployed in ORGANIZATION apidev-apigeex-sandbox-d29a!"  }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: {"code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AS_SSD_001
+    cmd: apigee sharedflow settings dependencies
+    inputs:
+      required:
+        - NAME
+    overview: |
+      check for dependencies
+    notes: |
+      Supports for KVM, Target Servers, Sharedflows and integrations
+      
+    scenarios:
+      - case: proxy has dependencies
+        expected: settings.yml will be update according
+        payload: 
+          {
+            "NAME": "cross-origin-qa"
+          }
+        result: {"code": 200, "data": "{\"sharedflows\":[],\"kvms\":[],\"targetservers\":[],\"integrations\":[]}"  }          

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="true" enabled="true" name="SC-LogInfo" async="true">
+    <DisplayName>SC-LogInfo</DisplayName>
+    <Properties/>
+    <Request clearPayload="true" variable="logRequest">
+        <Set>
+            <Payload>
+                {logging.all}
+            </Payload>
+        </Set>
+        <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    </Request>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>http://137.117.190.62:8080</URL>
+    </HTTPTargetConnection>
+</ServiceCallout>

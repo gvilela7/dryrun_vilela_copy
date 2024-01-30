@@ -1,0 +1,305 @@
+operations:
+  - id: AC_API_001
+    cmd: apigee configurations apiproducts import
+    inputs:
+      required:
+        - ORGANIZATION
+        - NAME
+      optional:
+        - ENVIRONMENTS        
+    overview: Import API Products to organization defined in settings file
+    scenarios:
+      - id: AC_API_001A
+        case: Api Product does not exist in Apigee
+        expected: creates a new API Product in Apigee
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "Api Product imported!" }
+
+      - id: AC_API_001B
+        case: Api Product already exists in Apigee
+        expected: updates the api product's configuration in Apigee and updates settings file with new id, createdAt and lastModifiedAt values
+        payload: 
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "Api Product imported!" }
+      
+      - id: AC_API_001C
+        case: Api Product already exists in Apigee with APP associated
+        expected: creates a new API Product in Apigee
+        payload:
+          {
+            "NAME": "APIwApp-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "Api Product imported!" }
+      
+      - id: AC_API_001D
+        case: Api Product already exists in Apigee with SA not setting for ORGANIZATION
+        expected: commands fails
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "agite-apigee"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - id: AC_API_001E
+        case: Api Product does not exist in Apigee and not exist in setting file
+        expected: commands fails
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - id: AC_API_001F
+        case: API Product name is not set
+        expected: commands fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - id: AC_API_001G
+        case: ORGANIZATION is not set
+        expected: commands fails
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - id: AC_API_001I
+        case: Api Product have ENVIRONMENT in control file
+        expected: creates a new API Product in Apigee
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 200, "data": "Api Product imported!" }
+
+      - id: AC_API_001J
+        case: Api Product does NOT have ENVIRONMENT in control file
+        expected: creates a new API Product in Apigee
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENTS": ["not-dev"]
+          }
+        result: { "code": 501, "data": "Environment: dev not set in Organization: apidev-apigeex-sandbox-d29a control file for apiproduct: TestApiProduct-prod-QA" }
+
+  - id: AC_API_002
+    cmd: apigee configurations apiproducts importAll
+    inputs:
+      required:
+        - ORGANIZATION
+    overview: Import all api product we have in repository for organization
+    scenarios:
+      - case: Api Product are not exist in Apigee
+        expected: creates all API Product in Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 100,  "data": "{\"apiproducts\":{\"successes\":[\"APIwApp\",\"TestApiProduct-bug\",\"TestApiProductBug\",\"TestApiProduct-QA\",\"TestApiProduct-QA\",\"bug\"],\"failures\":[]}}" }
+      
+      - case: ORGANIZATION is not correctly set in Apigee
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite-apigee"
+          }
+        result: { "code": 502,  "data": "{\"apiproducts\":{\"successes\":[],\"failures\":[\"APIwApp\",\"TestApiProduct-bug\",\"TestApiProductBug\",\"TestApiProduct-QA\",\"TestApiProduct-QA\",\"bug\"]}}" }
+
+  - id: AC_API_003
+    cmd: apigee configurations apiproducts export
+    inputs:
+      required:
+        - ORGANIZATION
+        - NAME
+    overview: Export api product by organization, environments and name (each one)
+    scenarios:
+      - case: Api Product exists in Apigee but doesn't exist in repository
+        expected: creates a new API Product in Apigee in repository
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "Api Product exported!!" }
+
+      - case: Api Product already exists in Apigee and exists in repository
+        expected: updates the api product's configuration in Apigee and updates settings file with new id, createdAt and lastModifiedAt values
+        payload: 
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "Api Product exported!" }
+      
+      - case: Api Product already exists in Apigee with SA not setting for ORGANIZATION
+        expected: commands fails
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "agite-apigee"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: Api Product does not exist in Apigee and not exist in setting file
+        expected: commands fails
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: API Product name is not set
+        expected: commands fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: ORGANIZATION is not set
+        expected: commands fails
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AC_API_004
+    cmd: apigee configurations apiproducts exportAll
+    inputs:
+      required:
+        - ORGANIZATION
+        - NAME
+    overview: Export all api products we are in organization Apigee for repository
+    scenarios:
+      - case: Api Product is not exist in repository            
+        expected: creates all Api Product who not exist in repository
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 404,   "data": "API Products Settings Operation not found"}
+
+  - id: AC_API_005
+    cmd: apigee configurations apiproducts list
+    inputs:
+      required:
+        - ORGANIZATION
+    overview: Lis all api product by organizations
+    scenarios:       
+      - case: Api Product name is not set
+        expected: command success
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200,  "data": "( \"APIwApp\" \"TestApiProduct-QA\" \"teste\" \"httpbin-rev\" )" }
+
+      - case: ORGANIZATION is not according with SA
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite-apigee"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}
+
+  - id: AC_API_006
+    cmd: apigee configurations apiproducts get
+    inputs:
+      required:
+        - ORGANIZATION
+        - NAME
+    overview: Get all information about API Product by environments, organizations or name
+    scenarios:
+      - case: when settings file exist in repository and get information about api product
+        expected: command run with success
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200,  "data": "{\n \"name\": \"TestApiProduct-QA\",\n \"displayName\": \"TestApiProduct-QA\",\n \"approvalType\": \"manual\",\n \"attributes\": [\n {\n \"name\": \"access\",\n \"value\": \"private\"\n }\n ],\n \"description\": \"Removing description\",\n \"createdAt\": \"1697555445377\",\n \"lastModifiedAt\": \"1697555662771\",\n \"graphqlOperationGroup\": {\n \"operationConfigs\": [\n {\n \"apiSource\": \"proxy2Delete2\",\n \"operations\": [\n {\n \"operationTypes\": [\n \"QUERY\"\n ],\n \"operation\": \"addthisname\"\n }\n ],\n \"quota\": {}\n }\n ],\n \"operationConfigType\": \"proxy\"\n }\n}" }
+      
+      - case: Api Product name is not set correctly
+        expected: command fails
+        payload:
+          {
+            "NAME": "TestApiProduct-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}
+
+      - case: Api Product name is not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}
+
+      - case: Api Product name is not set
+        expected: command fails
+        payload:
+          {
+              "NAME": "TestApiProduct-QA"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}
+
+  - id: AC_API_007
+    cmd: apigee configurations apiproducts validate
+    inputs:
+      required:
+        - NAME
+    overview: Check all API Products settings file with schema
+
+    scenarios:
+      - case: settings file exists and is valid
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "TestApiProduct-QA"
+          }
+        result: { "code": 200, "data": "Api Product settings are valid!" }
+
+      - case: The settings file of api product is not exist
+        expected: command fails
+        payload:
+          {
+            "NAME": "Test"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+
+      - case: The settings file is invalid 
+        expected: command fails 
+        payload:
+          {
+            "NAME": "TestApiProductBugQA"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "NAME": " "
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred" }

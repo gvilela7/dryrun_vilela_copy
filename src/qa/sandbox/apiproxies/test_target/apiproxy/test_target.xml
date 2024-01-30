@@ -1,0 +1,14 @@
+<APIProxy revision="4" name="test_target">
+    <DisplayName></DisplayName>
+    <Description>Just a target for testing purposes</Description>
+    <CreatedAt>1685963498701</CreatedAt>
+    <LastModifiedAt>1685963498701</LastModifiedAt>
+    <BasePaths>/test_target</BasePaths>
+    <Policies>
+        <Policy>AM-Mock</Policy>
+        <Policy>AM-SkipLogging</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+</APIProxy>

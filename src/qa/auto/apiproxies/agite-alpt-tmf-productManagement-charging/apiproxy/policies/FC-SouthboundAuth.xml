@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-SouthboundAuth">
+  <DisplayName>FC-SouthboundAuth</DisplayName>
+  <FaultRules/>
+  <Parameters>
+    <Parameter name="targetSystem">ocs</Parameter>
+  </Parameters>
+  <SharedFlowBundle>auth-southbound</SharedFlowBundle>
+</FlowCallout>

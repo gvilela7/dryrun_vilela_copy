@@ -1,0 +1,77 @@
+"$id": https://github.com/cmgpbint/apigee-sample/tree/master/docs/configs/proxies/schema.json
+"$schema": https://json-schema.org/draft/2020-12/schema
+title: Proxy settings schema
+description: The schema of proxy settings files
+type: object
+properties:
+  organizations:
+    type: object
+    description: Organizations placeholder
+    minProperties: 1
+    additionalProperties: false
+    patternProperties:
+      "^[a-zA-Z0-9-_]+$":
+        type: object
+        description: Organization for proxy deployment
+        additionalProperties: false
+        properties:
+          projects:
+            type: object
+            description: Projects placeholder
+            minProperties: 1
+            additionalProperties: false
+            patternProperties:
+              "^[a-zA-Z0-9-_]+$":
+                  type: object
+                  description: Project for proxy deployment
+                  additionalProperties: false
+                  properties:
+                    environments:
+                      type: object
+                      description: Environments placeholder
+                      minProperties: 1
+                      additionalProperties: false
+                      patternProperties:
+                        "^[a-zA-Z0-9-_]+$":
+                          type: object
+                          description: Environments for proxy deployment
+                          additionalProperties: false
+                          properties:
+                            status:
+                              type: string
+                              enum:
+                                - disable
+                                - enable
+                                - deploy
+                            serviceAccountDeploy:
+                              type: string
+                            version:
+                              type: integer
+                          required:
+                          - status
+                  required:
+                  - environments
+        required:
+        - projects
+  kvms:
+    type: array
+    items:
+      type: string
+  targetServers:
+    type: array
+    items:
+      type: string
+  sharedflows:
+    type: array
+    items:
+      type: string
+  integrations:
+    type: array
+    items:
+      type: string
+required:
+  - organizations
+  - kvms
+  - targetServers
+  - sharedflows
+  - integrations

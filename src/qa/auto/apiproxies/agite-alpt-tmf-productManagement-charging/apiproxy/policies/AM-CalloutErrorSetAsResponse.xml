@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-CalloutErrorSetAsResponse">
+  <DisplayName>AM-CalloutErrorSetAsResponse</DisplayName>
+  <Copy source="calloutResponse"/>
+  <AssignTo createNew="true" transport="http" type="response">response</AssignTo>
+</AssignMessage>

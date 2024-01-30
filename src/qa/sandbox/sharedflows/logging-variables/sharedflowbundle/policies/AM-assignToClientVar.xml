@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="true" enabled="true" name="AM-assignToClientVar">
+    <DisplayName>AM-assignToClientVar</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>toClient.status.code</Name>
+        <Ref>message.status.code</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toClient.body</Name>
+        <Ref>message.content</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toClient.reason.phrase</Name>
+        <Ref>message.reason.phrase</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>toClient.headers</Name>
+        <Ref>jsresheaders</Ref>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

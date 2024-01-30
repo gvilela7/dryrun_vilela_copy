@@ -1,0 +1,533 @@
+operations:
+
+  - id: AC_TLSI_001
+    cmd: apigee configurations tlskeystores import
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+      optional:
+        - IGNORE_EXPIRY
+        - CONFIGS_ENCRYPTION
+    overview: |
+      Imports the data belonging to a TLS Keystore.
+    notes: |
+      Can import unencrypted and encrypted data, provided the correct passphrase is provided via the CONFIGS_ENCRYPTION input.
+      Supports two types of certificate files: .pem and .pfx.
+      These certificates must be in the folder with the keystores name at the time of import.
+      For .pfx certificates, the password must be set in the configuration file for the alias containing that certificate.
+    scenarios:
+      - case: keystore does not exist in Apigee
+        expected: creates a new keystore in Apigee with the given data, and updates the keystore's configuration file
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "pedro-teste-qa",
+            "IGNORE_EXPIRY": true
+          } 
+        result: { "code": 200, "data": "TLS Keystore imported!" }
+      
+      - case: keystore already exists in Apigee
+        expected: updates the keystore's configuration in Apigee, and updates the keystore's configuration file
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa",
+            "IGNORE_EXPIRY": true
+          }
+        result: { "code": 200, "data": "TLS Keystore imported!" }
+
+      - case: keystore contains a KEY_CERT alias, password not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa",
+            "IGNORE_EXPIRY": true
+          }
+        result: { "code": 401,  "data": "Something went wrong in requested operation" }
+
+      - case: keystore contains a KEY_CERT alias, wrong password provided
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa",
+            "IGNORE_EXPIRY": true
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: CONFIGS_ENCRYPTION is correctly set
+        expected: creates/updates the keystore's configuration in Apigee, and updates the keystore's configuration file
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa",
+            "CONFIGS_ENCRYPTION": "abcde",
+            "IGNORE_EXPIRY": true
+          }  
+        result: { "code": 200, "data": "TLS Keystore imported!" }
+
+      - case: Settings file does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "Test",
+            "IGNORE_EXPIRY": false
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+        scenarios:
+          - case: The alias type is KEY_CERT and the certificate file and key file does not exist. The user has provided a .pfx file
+            expected: creates/updates the keystore's configuration in Apigee, and updates the keystore's configuration file
+            payload:
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "ENVIRONMENT": "cicd-dev",
+              "NAME": "test-keystore-qa",
+              "IGNORE_EXPIRY": true
+            }  
+            result: { "code": 200 }
+
+          - case: The alias type is KEY_CERT and the certificate file and key file does not exist.. the user has not provided a .pfx file
+            expected: command fails
+            payload:
+            {
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "ENVIRONMENT": "cicd-dev",
+              "NAME": "test-keystore-qa",
+              "IGNORE_EXPIRY": true
+            }        
+            result: { "code": 401 }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "test-keystore-qa",
+            "IGNORE_EXPIRY": true
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+  
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "test-keystore-qa",
+            "IGNORE_EXPIRY": true
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "IGNORE_EXPIRY": false
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: organization does not exist in Apigee but is defined in the settings file
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa",
+            "IGNORE_EXPIRY": true
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+    
+      - case: environment does not exist in Apigee but is defined in the settings file
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "NAME": "test-keystore-qa",
+            "IGNORE_EXPIRY": true
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_TLSE_001
+    cmd: apigee configurations tlskeystores export
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+      optional:
+        - IGNORE_EXPIRY
+        - CONFIGS_ENCRYPTION
+    overview: |
+      Export the data regarding a keystore that exists in Apigee.
+    notes: |
+      Certificates, keys and passwords are not exported in the process.
+      Can export unencrypted and encrypted data, provided a passphrase is provided via the CONFIGS_ENCRYPTION input.
+
+    scenarios:
+      - case: first time exporting (and directory does not exist)          
+        expected: creates new directory and a file with the keystores's configuration
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa"
+          }
+        result: { "code": 200, "data": "TLS Keystore exported!" }
+      
+      - case: keystore config file already exists locally
+        expected: updates the keystore's configuration file, keeps the password properties
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa"
+          }
+        result: { "code": 200, "data": "TLS Keystore exported!" }
+
+      - case: ENCRYPTED set to true, CONFIGS_ENCRYPTION set
+        expected: populates the keystore's configuration file with encrypted data
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "AT-Financas-qa",
+            "ENCRYPTED": true,
+            "CONFIGS_ENCRYPTION": "abcde"
+          }  
+        result: { "code": 200, "data": "TLS Keystore exported!"}
+
+      - case: ENCRYPTED set to true, CONFIGS_ENCRYPTION not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "AT-Financas-qa",
+            "ENCRYPTED": true
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: ENCRYPTED set to false
+        expected: populates the keystore's configuration file with unencrypted data
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "AT-Financas-qa",
+            "ENCRYPTED": false,
+            "CONFIGS_ENCRYPTION": "abcde"
+          }  
+        result: { "code": 200, "data": "TLS Keystore exported!" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "dev",
+            "NAME": "AT-Financas-qa"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "AT-Financas-qa"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev",
+            "NAME": "AT-Financas-qa"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "NAME": "AT-Financas-qa"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+    
+      - case: keystore does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Test"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_TLSL_001
+    cmd: apigee configurations tlskeystores list
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: List available tls keystores for organization and environment
+
+    scenarios:
+      - case: organization and environment exist and S.A. has permissions
+        expected: lists the names of the keystores available in the environment of the organization
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 200, "data": "[\n \"AT-Financas\",\n \"pedro-teste-qa\",\n \"poc-mtls-keystore\",\n \"test-keystore\"\n]" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation"}
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_TLSG_001
+    cmd: apigee configurations tlskeystores get
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+    overview: Get an existing tls keystore and all information about it
+
+    scenarios:
+      - case: Organization, environment and name are valid
+        expected: command returns the data from an existing TLS keystore
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa"
+          }
+        result: { "code": 200, "data": "{\n \"name\": \"test-keystore\",\n \"aliases\": [\n {\n \"alias\": \"AT-Financas-4_9_23\",\n \"certsInfo\": {\n \"certInfo\": [\n {\n \"version\": 3,\n }" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa"
+          }
+        result: { "code": 401,  "data": "Something went wrong in requested operation" }
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {  
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+    
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "test-keystore-qa"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {  
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "test-keystore-qa"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {  
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: keystore name does not exist in Apigee
+        expected: command fails
+        payload:
+          {  
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "xpto"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_TLSV_001
+    cmd: apigee configurations tlskeystores validate
+    inputs:
+      required:
+        - NAME
+    overview: Check a configuration file against the schema
+
+    scenarios:
+      - case: settings file exists and is valid
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "test-keystore-qa"
+          }
+        result: { "code": 200, "data": "TLS Keystore configuration is valid!" }
+
+      - case: settings file for keystore does not exist
+        expected: command fails
+        payload:
+          {
+            "NAME": "Test"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: settings file is invalid (e.g. required property missing)
+        expected: command fails and ajv output is re-directed to file
+        payload:
+          { 
+            "NAME": "demo"
+          } 
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set
+        expected: command fails
+        payload: 
+          {}
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_TLSD_001
+    cmd: apigee configurations tlskeystores delete
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+    overview: Delete tlskeystores by environment, organization or name input defined.
+    scenarios:
+      - case: keystore exists in the given environment and organization
+        expected: deletes the keystore from Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "pedro-teste-qa",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: { "code": 200, "data": "TLS Keystore deleted!"}
+      
+      - case: Organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "test-keystore-qa"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation"}
+      
+      - case: Environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "NAME": "test-keystore-qa"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: keystore does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "does-not-exist"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "test-keystore-qa"
+          }  
+        result: { "code": 401,  "data": "Something went wrong in requested operation" }
+      
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "test-keystore-qa"
+          }  
+        result: { "code": 401, "data": "Something went wrong in requested operation" }

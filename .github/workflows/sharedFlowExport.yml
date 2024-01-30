@@ -1,0 +1,185 @@
+name: '[ APIGEE ] SharedFlow Export (Web to Repo)'
+on:
+  workflow_dispatch:
+    inputs:
+      NAME:
+        description: Name
+        required: true
+        type: string
+      ORGANIZATION:
+        description: Organization
+        required: true
+        type: string
+      ENVIRONMENT:
+        description: Environment
+        type: string
+        required: true
+      VERSION:
+        description: Version
+        type: number
+      SERVICE_ACCOUNT:
+        description: 'Service Account'
+        type: string        
+      APIGEE_PATH:
+        description: APIGEE Path
+        type: string
+        default: src/apigee
+      AUTO_COMMIT:
+        description: 'Open new branch ex: AUTO/sharedflow_<NAME>'
+        type: boolean
+        default: false
+      GITHUB_ENVIRONMENT:
+        description: 'GITHUB Environment'
+        type: choice
+        required: false 
+        default: DEVCI
+        options:
+          - PROD
+          - HOTFIX
+          - STG
+          - UAT
+          - SIT
+          - DEVCI
+  workflow_call:
+    inputs:
+      AUTO_COMMIT:
+        type: boolean
+        default: false    
+      NAME:
+        required: true
+        type: string
+      ORGANIZATION:
+        required: true
+        type: string
+      ENVIRONMENT:
+        type: string
+      VERSION:
+        type: number
+      SERVICE_ACCOUNT:
+        type: string        
+      APIGEE_PATH:
+        type: string
+        default: src/apigee
+      GITHUB_ENVIRONMENT:
+        type: string
+        required: false
+
+jobs:          
+  exportSharedflow:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.GITHUB_ENVIRONMENT }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Validate Target Branch
+        run: |
+          if [[ ${{inputs.AUTO_COMMIT}} == 'true' ]]
+          then 
+            BRANCH_NAME=${{ format('AUTO/sharedflow_{0}', inputs.NAME) }}
+          else 
+            BRANCH_NAME=$GITHUB_REF_NAME
+          fi
+
+          TARGET_NAME=$(basename $BRANCH_NAME)
+          [[ $TARGET_NAME == "master" || $TARGET_NAME == "main" || $TARGET_NAME == "development" ]] && \
+          echo "Protected Branch - Please run a different branch" && exit 1
+
+          echo "branchName=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Set Secrets Vars
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.PROXY_SERVICE_ACCOUNT }}
+        run: |
+          echo $SERVICE_ACCOUNT > ./contrib/cliOPS/_contrib/GCP_SA_KEY.json
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}      
+
+      - name: cliOPS setup
+        env:
+          APIGEE_PATH: ${{ inputs.APIGEE_PATH }}  
+        run: |
+          export APIGEECLI_VERSION=v1.120
+          export APIGEECLI_NO_USAGE=true
+          export APIGEECLI_NO_ERRORS=true
+          curl -L https://raw.githubusercontent.com/apigee/apigeecli/main/downloadLatest.sh | sh -
+
+          sudo apt-get install jo
+          sudo apt -y install libxml2-utils
+
+          yq -i ".googleCloud.apigee.default_path = \"$APIGEE_PATH\"" ./contrib/cliOPS/settings.yml  
+
+      - name: Set Payload Vars
+        env:
+          NAME: ${{ inputs.NAME }}
+          ORGANIZATION: ${{ inputs.ORGANIZATION }}
+          ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+          SERVICE_ACCOUNT: ${{ inputs.SERVICE_ACCOUNT }}
+          VERSION: ${{ inputs.VERSION }}
+        run: |
+            jq --null-input \
+                --arg 'name' "$NAME" \
+                --arg 'organization' "$ORGANIZATION" \
+                --arg 'environment' "$ENVIRONMENT" \
+                --arg 'version' "$VERSION" \
+                --arg 'service_account' "$SERVICE_ACCOUNT" \
+                '{"NAME": $name, "ORGANIZATION": $organization, "ENVIRONMENT": $environment, "VERSION": $version, "SERVICE_ACCOUNT": $service_account}' \
+                > ./contrib/cliOPS/_contrib/payload.json
+      
+      - name: Export Sharedflow
+        id: export_shared 
+        run: |
+          chmod +x ./contrib/cliOPS/cliOPS.sh && ./contrib/cliOPS/cliOPS.sh apigee sharedflow settings export >> ./contrib/cliOPS/_contrib/tmp/report.json
+
+
+      - name: Check for errors
+        if: ${{ failure() && steps.export_shared.conclusion == 'failure' }}
+        run: |  
+            echo "::error title=SharedFlow Export with failures::Please check what failed to export - for detailed information check artifacts logs: $(cat ./contrib/cliOPS/_contrib/tmp/report.json | jq -cr '.data')"
+
+      - name: Upload error report
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cliOpsFailReport
+          path: ./contrib/cliOPS/_contrib/tmp
+          retention-days: 10
+
+      - name: List modified files
+        id: modifiedFiles
+        run: |
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          echo "$(git ls-files -o -m --exclude-standard -- $APIGEE_PATH ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+  
+      - name: 'Open AUTOMATIC branch'
+        uses: peterjgrainger/action-create-branch@v2.2.0
+        if: ${{ inputs.AUTO_COMMIT && steps.modifiedFiles.outputs.result != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: ${{env.branchName}}
+      
+      - name: Commit Files
+        if: ${{ steps.modifiedFiles.outputs.result != ''}}        
+        run: |
+            npm install axios
+                        
+            node .github/GitVerifiedCommit/index.js \
+                            ${{secrets.GITHUB_TOKEN}} \
+                            $GITHUB_REPOSITORY_OWNER \
+                            ${{github.event.repository.name}} \
+                            ${{env.branchName}} \
+                            "${{steps.modifiedFiles.outputs.result}}" \
+                            '[AUTO] Export ${{inputs.NAME}} to git.'   
+  

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<JSONToXML async="false" continueOnError="false" enabled="true" name="JSONToXML-Request">
+  <DisplayName>JSONToXML-Request</DisplayName>
+  <Options>
+    <NullValue>NULL</NullValue>
+    <NamespaceBlockName>#namespaces</NamespaceBlockName>
+    <DefaultNamespaceNodeName/>
+    <NamespaceSeparator>:</NamespaceSeparator>
+    <TextNodeName>#text</TextNodeName>
+    <AttributeBlockName>#attrs</AttributeBlockName>
+    <AttributePrefix>@</AttributePrefix>
+    <InvalidCharsReplacement>_</InvalidCharsReplacement>
+    <ObjectRootElementName>agreement</ObjectRootElementName>
+    <ArrayRootElementName>Array</ArrayRootElementName>
+    <ArrayItemElementName>Item</ArrayItemElementName>
+  </Options>
+  <Source>request</Source>
+</JSONToXML>

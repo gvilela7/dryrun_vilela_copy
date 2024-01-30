@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-ChangeResponse">
+    <DisplayName>AM-ChangeResponse</DisplayName>
+    <Properties/>
+    <Set>
+        <Payload>
+            {
+                "test":"This is not the original response, check logs"
+            }
+        </Payload>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>

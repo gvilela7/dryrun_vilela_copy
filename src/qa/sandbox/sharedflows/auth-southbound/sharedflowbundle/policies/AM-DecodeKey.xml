@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-DecodeKey">
+  <DisplayName>AM-DecodeKey</DisplayName>
+  <Properties/>
+  <AssignVariable>
+    <Name>private.decodedKey</Name>
+    <Template>{decodeBase64(private.privateKey)}</Template>
+  </AssignVariable>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="false" enabled="true" name="EV-GetResponse">
+  <DisplayName>EV-GetResponse</DisplayName>
+  <Source clearPayload="false">responseProductManagementIntegration.content</Source>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <JSONPayload>
+    <Variable name="executionId">
+      <JSONPath>$.executionId</JSONPath>
+    </Variable>
+    <Variable name="apimRspReason">
+      <JSONPath>$.outputParameters.apimRspReason</JSONPath>
+    </Variable>
+    <Variable name="apimRspCode">
+      <JSONPath>$.outputParameters.apimRspCode</JSONPath>
+    </Variable>
+    <Variable name="apimStatusCode">
+      <JSONPath>$.outputParameters.apimStatusCode</JSONPath>
+    </Variable>
+    <Variable name="apimRspMessage">
+      <JSONPath>$.outputParameters.apimRspMessage</JSONPath>
+    </Variable>
+  </JSONPayload>
+</ExtractVariables>

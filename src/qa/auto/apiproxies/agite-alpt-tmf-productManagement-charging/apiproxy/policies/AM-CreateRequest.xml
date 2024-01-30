@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-CreateRequest">
+  <DisplayName>AM-CreateRequest</DisplayName>
+  <AssignVariable>
+    <Name>target.copy.pathsuffix</Name>
+    <Value>false</Value>
+  </AssignVariable>
+  <AssignVariable>
+    <Name>target_resource</Name>
+    <Value>agreements</Value>
+  </AssignVariable>
+  <Set>
+    <Verb>POST</Verb>
+    <Payload contentType="application/xml">{XSLOutput}</Payload>
+    <Headers>
+      <Header name="Authorization">Basic {southbound-token}</Header>
+      <Header name="X-QNT-Rqid">{request.header.x-request-apim-id}</Header>
+      <Header name="x-request-apim-id">{request.header.x-request-apim-id}</Header>
+    </Headers>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="true" transport="http" type="request"/>
+</AssignMessage>

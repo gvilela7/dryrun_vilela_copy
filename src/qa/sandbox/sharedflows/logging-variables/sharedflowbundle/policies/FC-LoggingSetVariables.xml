@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="true" enabled="true" name="FC-LoggingSetVariables">
+    <DisplayName>FC-LoggingSetVariables</DisplayName>
+    <FaultRules/>
+    <Properties/>
+    <SharedFlowBundle>logging-set-variables</SharedFlowBundle>
+</FlowCallout>

@@ -1,0 +1,24 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: Auth-Southbound-QA
+            encrypted: true
+            keyValueEntries:
+              - name: system__clientSecret
+                value: teste_dev
+              - name: system__clientId
+                value: teste_dev
+        prod:
+          data:
+            name: Auth-Southbound-QA
+            encrypted: true
+            keyValueEntries:
+              - name: system__clientSecret
+                value: teste_prod
+              - name: system__clientId
+                value: teste_prod

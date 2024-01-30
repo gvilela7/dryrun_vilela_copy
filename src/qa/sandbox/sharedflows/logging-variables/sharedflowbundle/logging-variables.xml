@@ -1,0 +1,31 @@
+<SharedFlowBundle revision="1" name="logging-variables">
+    <DisplayName>logging-variables</DisplayName>
+    <Description></Description>
+    <CreatedAt>1694448831088</CreatedAt>
+    <LastModifiedAt>1694448831088</LastModifiedAt>
+    <Policies>
+        <Policy>AM-assignFromClientVar</Policy>
+        <Policy>AM-assignFromTargetVar</Policy>
+        <Policy>AM-assignLogVariables</Policy>
+        <Policy>AM-assignServiceCalloutVar</Policy>
+        <Policy>AM-assignToClientVar</Policy>
+        <Policy>AM-assignToTargetVar</Policy>
+        <Policy>AM-SetStateFromTarget</Policy>
+        <Policy>FC-LoggingSetVariables</Policy>
+        <Policy>JS-getRequestHeaderList</Policy>
+        <Policy>JS-getResponseHeaderList</Policy>
+        <Policy>JS-setLogVariables</Policy>
+        <Policy>JS-setServiceLog</Policy>
+    </Policies>
+    <Resources>
+        <Resource>jsc://getRequestHeaders.js</Resource>
+        <Resource>jsc://getResponseHeaderList.js</Resource>
+        <Resource>jsc://setEmptyFields.js</Resource>
+        <Resource>jsc://setLogVariables.js</Resource>
+        <Resource>jsc://setServiceLog.js</Resource>
+    </Resources>
+    <SharedFlows>
+        <SharedFlow>default</SharedFlow>
+    </SharedFlows>
+    <subType>SharedFlow</subType>
+</SharedFlowBundle>

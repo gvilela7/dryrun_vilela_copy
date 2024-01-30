@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="true" enabled="true" name="SC-IntermediateCallout">
+    <DisplayName>SC-IntermediateCallout</DisplayName>
+    <Properties/>
+    <Request clearPayload="true" variable="myTestRequest">
+        <Set>
+            <Headers>
+                <Header name="this-is">a-test</Header>
+                <Header name="Hello">World</Header>
+            </Headers>
+        </Set>
+    </Request>
+    <Response>myTestResponse</Response>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>https://apigee.sandbox.gcloud.devoteam.com.pt/test_target</URL>
+    </HTTPTargetConnection>
+</ServiceCallout>

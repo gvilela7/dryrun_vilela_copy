@@ -1,0 +1,15 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: bug
+            host: fulfillment-api.sit.nossis.prv.alpt.alticelabs.cloud
+            port: 443
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+            protocol: HTTP

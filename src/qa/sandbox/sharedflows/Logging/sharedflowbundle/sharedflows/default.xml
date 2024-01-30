@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- 
+    "flow" taken as input parameter to the shared flow, 
+        describes which part of the log is being built 
+        can have one of the following values: 
+            "in.req"    - pre-proxy, before any changes are made to the incoming request
+            "out.req"   - pre-target, request sent to the target endpoint
+            "in.res"    - post-target, before any changes are made to the response from target
+            "out.res"   - post-proxy, request sent back to the client
+            "error"     - when an error occurs
+            "callout"   - for logging service callouts
+        
+    for service callout logging, the shared flow takes also the following input parameters:
+        "callout.req" name of the message/request variable for the service callout
+        "callout.res" name of the callout response variable in case it exists
+        "callout.name" name of the service callout policy to extract metric variables (time taken)
+-->
+<SharedFlow name="default">
+    <Step>
+        <Name>KVM-LoggingActiveStatus</Name>
+    </Step>
+    <Step>
+        <Name>JS-CommonLogging</Name>
+        <Condition>(logging.status != "off") and (logging.skip != true)</Condition>
+    </Step>
+    <Step>
+        <Name>SC-LogInfo</Name>
+        <Condition>(logging.status != "off") and (flow = "out.res") and (logging.skip != true)</Condition>
+    </Step>
+    <Step>
+        <Name>ML-LogInfo</Name>
+    </Step>
+</SharedFlow>

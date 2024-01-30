@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MessageLogging continueOnError="false" enabled="false" name="ML-LogInfo">
+    <DisplayName>ML-LogInfo</DisplayName>
+    <Syslog>
+        <Message>{logging.all}</Message>
+        <Host>137.117.190.62</Host>
+        <Port>8080</Port>
+    </Syslog>
+</MessageLogging>

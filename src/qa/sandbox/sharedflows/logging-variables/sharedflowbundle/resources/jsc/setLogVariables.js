@@ -1,0 +1,1 @@
+context.setVariable("servicesLogs", JSON.stringify([]));

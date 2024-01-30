@@ -1,0 +1,36 @@
+name: '[ APIGEE ] CliOPS Dependencies'
+on: [workflow_dispatch]
+jobs:
+  cache-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install npm Dependencies
+        run: |
+          npm install axios
+          npm install -g ajv-cli
+          npm install -g fake-schema-cli
+          npm install jsonlint -g
+          npm install -g apigeelint
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+
+      - name: Install other Dependencies
+        run: |
+          sudo apt-get install jo
+          sudo apt install python3-pip
+          sudo apt -y install libxml2-utils
+
+      - name: Cache other dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.dependencies
+          key: dependencies-${{ runner.os }}

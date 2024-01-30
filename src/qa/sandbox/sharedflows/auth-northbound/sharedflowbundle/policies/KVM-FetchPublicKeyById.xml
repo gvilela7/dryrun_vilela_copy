@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyValueMapOperations continueOnError="true" enabled="true" name="KVM-FetchPublicKeyById" mapIdentifier="Auth-Northbound-JWT-PublicKeys">
+    <DisplayName>KVM-FetchPublicKeyById</DisplayName>
+    <Properties/>
+    <Get assignTo="private.publicKey">
+        <Key>
+            <Parameter ref="jwt.JWT-Decode.header.kid"/>
+        </Key>
+    </Get>
+    <ExpiryTimeInSecs>600</ExpiryTimeInSecs>
+    <Scope>environment</Scope>
+</KeyValueMapOperations>

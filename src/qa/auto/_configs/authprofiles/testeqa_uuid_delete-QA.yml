@@ -1,0 +1,44 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    agite-apigee:
+      environments:
+        default:
+          data:
+            displayName: testeqa_uuid_delete-QA
+            description: hmm Interesting
+            creatorEmail: apigeeops-cicd@agite-apigee.iam.gserviceaccount.com
+            createTime: "2023-09-18T09:35:38.597342Z"
+            lastModifierEmail: apigeeops-cicd@agite-apigee.iam.gserviceaccount.com
+            updateTime: "2023-09-18T09:35:38.597354Z"
+            visibility: CLIENT_VISIBLE
+            state: VALID
+            validTime: "1970-01-01T00:00:00Z"
+            uuid: 9387ff8b-fabc-47bd-9d1e-26c15447f1c2
+            region: europe-west3
+            decryptedCredential:
+              credentialType: AUTH_TOKEN
+              authToken:
+                type: sddsds
+                token: sddsds123
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        default:
+          data:
+            displayName: testeqa_uuid_delete-QA
+            description: hmm Interesting
+            creatorEmail: apigeeops-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com
+            createTime: "2023-11-21T14:20:04.044652Z"
+            lastModifierEmail: apigeeops-dev@apidev-apigeex-sandbox-d29a.iam.gserviceaccount.com
+            updateTime: "2023-11-21T17:59:29.486769Z"
+            visibility: CLIENT_VISIBLE
+            state: VALID
+            validTime: "1970-01-01T00:00:00Z"
+            uuid: 902f0d6e-daa0-4387-b4e4-5a44c507d814
+            region: europe-west1
+            decryptedCredential:
+              credentialType: AUTH_TOKEN
+              authToken:
+                type: sddsds
+                token: sddsds321

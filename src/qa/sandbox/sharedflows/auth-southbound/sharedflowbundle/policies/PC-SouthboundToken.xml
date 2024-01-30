@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PopulateCache continueOnError="false" enabled="true" name="PC-SouthboundToken">
+    <DisplayName>PC-SouthboundToken</DisplayName>
+    <Properties/>
+    <CacheKey>
+        <Prefix/>
+        <KeyFragment ref="flow.system.name"/>
+        <KeyFragment ref="targetSystem"/>
+        <KeyFragment ref="authType"/>
+    </CacheKey>
+    <CacheResource>southbound-auth</CacheResource>
+    <Scope>Application</Scope>
+    <ExpirySettings>
+        <TimeoutInSec>300</TimeoutInSec>
+    </ExpirySettings>
+    <Source>southbound-token</Source>
+</PopulateCache>

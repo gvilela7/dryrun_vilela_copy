@@ -1,0 +1,32 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: Auth-Southbound-Basic
+            encrypted: true
+            keyValueEntries:
+              - name: salesforce__nossis__basic
+                value: value_a_atribuir=
+              - name: salesforce__rmca__basic
+                value: value_a_atribuir=2
+              - name: salesforce__filenet__basic
+                value: value_a_atribuir=3
+            nextPageToken: ""
+        prod:
+          data:
+            name: Auth-Southbound-Basic
+            encrypted: true
+            keyValueEntries:
+              - name: salesforce__nossis__basic
+                value: value_a_atribuir=4
+              - name: salesforce__rmca__basic
+                value: value_a_atribuir=5
+              - name: salesforce__filenet__basic
+                value: value_a_atribuir=6
+              - name: salesforce__ocs__basic
+                value: value_a_atribuir=7
+            nextPageToken: ""

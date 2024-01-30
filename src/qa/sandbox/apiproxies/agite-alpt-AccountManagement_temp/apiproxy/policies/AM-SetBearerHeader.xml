@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-SetBearerHeader">
+    <DisplayName>AM-SetBearerHeader</DisplayName>
+    <Set>
+        <Headers>
+            <Header name="Authorization">Bearer {southbound-token}</Header>
+        </Headers>
+    </Set>
+</AssignMessage>

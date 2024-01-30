@@ -1,0 +1,15 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        prod:
+          data:
+            name: SGP
+            host: telecom.pt
+            port: 443
+            isEnabled: true
+            sSLInfo:
+              enabled: true
+            protocol: HTTP

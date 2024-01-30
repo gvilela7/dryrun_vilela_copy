@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="true" enabled="true" name="SC-DeleteAgreement">
+  <DisplayName>SC-DeleteAgreement</DisplayName>
+  <Properties/>
+  <Request clearPayload="false" variable="calloutRequest">
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  </Request>
+  <Response>calloutResponse</Response>
+  <Timeout>20000</Timeout>
+  <HTTPTargetConnection>
+    <LoadBalancer>
+      <Server name="OCS"/>
+    </LoadBalancer>
+    <Path>/ocs-rfb/customer-accounts/acc_{req.path.id}/agreements/{req.path.id}</Path>
+  </HTTPTargetConnection>
+</ServiceCallout>

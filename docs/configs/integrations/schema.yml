@@ -1,0 +1,87 @@
+"$id": https://github.com/cmgpbint/apigee-sample/tree/master/docs/configs/integrations/schema.json
+"$schema": https://json-schema.org/draft/2020-12/schema
+title: Integration settings schema
+description: The schema of integration settings files
+type: object
+properties:
+  organizations:
+    type: object
+    description: Organizations placeholder
+    additionalProperties: false
+    minProperties: 1
+    patternProperties:
+      "^[a-zA-Z0-9-_]+$":
+        type: object
+        description: Organization for integration deployment
+        additionalProperties: false
+        properties:
+          projects:
+            type: object
+            description: Projects placeholder
+            additionalProperties: false
+            minProperties: 1
+            patternProperties:
+              "^[a-zA-Z0-9-_]+$":
+                type: object
+                description: Project for integration deployment
+                additionalProperties: false
+                properties:
+                  environments:
+                    type: object
+                    description: Environments placeholder
+                    minProperties: 1
+                    additionalProperties: false
+                    patternProperties:
+                      "^[a-zA-Z0-9-_]+$":
+                        type: object
+                        description: Environments for integration deployments
+                        additionalProperties: false
+                        properties:                
+                          status:
+                            type: string
+                            enum:
+                              - disable
+                              - enable
+                              - deploy
+                          region:
+                            type: string
+                            enum:
+                              - asia-east1
+                              - asia-northeast1
+                              - asia-southeast1 
+                              - asia-south1
+                              - australia-southeast1
+                              - australia-southeast2
+                              - europe-north1
+                              - europe-west1
+                              - europe-west2        
+                              - europe-west3
+                              - europe-west4
+                              - europe-west6
+                              - europe-west9
+                              - me-west1
+                              - me-central1
+                              - northamerica-northeast1
+                              - southamerica-east1
+                              - us
+                              - us-central1
+                              - us-east1
+                              - us-east4
+                              - us-west1
+                              - us-west2
+                          version:
+                            type: integer                            
+                        required:
+                        - status
+                        - region
+                  required:
+                  - environments                        
+        required:
+        - projects
+  authProfiles:
+    type: array
+    items:
+      type: string
+required:
+  - organizations
+  - authProfiles

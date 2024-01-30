@@ -1,0 +1,24 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    yuwG:
+      environments:
+        LwjG8:
+          data:
+            name: n78
+            aliases:
+              - alias: Lorem
+                type: CERT
+                certsInfo:
+                  certInfo:
+                    - version: -82245866
+                      subject: eiusmod
+                      issuer: cillum ad ut est
+                      expiryDate: laborum occaecat irure ut
+                      validFrom: anim aute sunt
+                      isValid: Not yet
+                      sigAlgName: officia
+                      publicKey: non
+                      basicConstraints: dolor officia nisi
+                      serialNumber: anim sit

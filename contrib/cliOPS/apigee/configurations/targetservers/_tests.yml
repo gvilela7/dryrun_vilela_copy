@@ -1,0 +1,225 @@
+operations:
+  - id: AC_TGL_001
+    cmd: apigee configurations targetservers list
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: List all target servers in Apigee by organizations and environments
+    scenarios:
+
+      - case: |
+          Get targer servers
+          Given the ORGANIZATION and ENVIRONMENT
+          When the ENVIRONMENT has targetservers
+        expected: Shoud list target servers and return a success (code 200)
+        payload:
+          {              
+          "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+          "ENVIRONMENT": "dev"
+          }
+        result: { "code": 200 }
+
+      - case: |
+          Get targer servers
+          Given a wrong ENVIRONMENT and correct ORGANIZATION
+        expected: Shoud return a error (code 401) due to an invalid inputs in payload
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "env3dev-pub"
+          }
+        result: { "code": 401 }
+
+  - id: AC_TGG_001
+    cmd: apigee configurations targetservers get
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME    
+    overview: Get all information about targetserver
+
+    scenarios:
+      - case: Given targetserver's NAME, ORGANIZATION and ENVIRONMENT
+        expected:  Shoud return a success (code 200) and show all information about targetserver
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "PoC3Producer-qa"
+          }
+        result: { "code": 200 }
+
+      - case: Given the targetserver's NAME when the targetserver's NAME doesn't exist in Apigee
+        expected: Shoud return a error (code 401)
+        payload:
+          {              
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "ENVIRONMENT": "dev",
+              "NAME": "PoC3Producersds"
+          }
+        result: { "code": 401 }
+
+  - id: AC_TGE_001
+    cmd: apigee configurations targetservers export
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+    overview: Export a targetserver
+
+    scenarios:
+      - case: Given the targetserver's NAME, ORGANIZATION and ENVIRONMENT when the targetserver's NAME is exported
+        expected:  Shoud return a success (code 200) and export targetserver to repository
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "PoC3Producer-qa"
+          }
+        result: { "code": 200 }
+
+      - case: Given the targetserver's NAME, ORGANIZATION and ENVIRONMENT when the targetserver's NAME already exist in branch execution.
+        expected: Shoud return a success (code 200) and export targetserver to repository and file is changed (if changes exists)
+        payload:
+          {               
+          "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+          "ENVIRONMENT": "dev",
+          "NAME": "PoC3Producer-qa"
+          }
+        result: { "code": 200 }
+
+      - case: Given targetserver's NAME doesn't exist in Apigee OR ORGANIZATION and ENVIRONMENT doesn't exists
+        expected: Shoud return a error (code 401)
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "PoC3Producersss"
+          }
+        result: { "code": 401 }
+
+      - case: Given ORGANIZATION and ENVIRONMENT and Not Given targetserver's NAME
+        expected: Shoud return a error (code 401)
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+          }
+        result: { "code": 401 }
+
+  - id: AC_TGI_001
+    cmd: apigee configurations targetservers import
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+    overview: Import a targetserver
+    scenarios:
+      - case: |
+          Import targer servers
+          Given the targetserver's NAME, ORGANIZATION and ENVIRONMENT 
+          When the environments in file configuration is equal to ENVIRONMENT
+        expected:  Shoud return sucess (code 200) and import targetserver to repository 
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "PoC3Producer-qa"
+          }
+        result: { "code": 200 }
+
+      - case: Import targer servers, given the targetserver's NAME, ORGANIZATION and ENVIRONMENT when the ENVIRONMENT target in file configuration isn't equal to ENVIRONMENT target in payload
+        expected:  Shoud return a error (code 401) and don't import targetserver's NAME
+        payload:
+          {              
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "PoC3Producer-qa"
+          }
+        result: { "code": 401 }
+
+      - case: Import targer servers, given the targetserver's NAME, ORGANIZATION and ENVIRONMENT when the NAME isn't correct or has a space before/after
+        expected:  Shoud return a error (code 401) and don't import targetserver's NAME 
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": " PoC3Producersss"
+          }
+        result: { "code": 401 }
+
+      - case: Import targer servers, given the targetserver's NAME, ORGANIZATION and ENVIRONMENT when the NAME is correct or has a space before/after
+        expected:  Shoud return a error (code 401) and don't import targetserver's NAME 
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": " PoC3Producer-qa"
+          }
+        result: { "code": 401 }
+
+  - id: AC_TGD_001
+    cmd: apigee configurations targetservers delete
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+    overview: Delete a targetserver
+
+    scenarios:
+      - case: 
+          Delete targer servers
+          Given the targetserver's NAME, ORGANIZATION and ENVIRONMENT 
+          When the environments in file configuration is equal to ENVIRONMENT            
+        expected:  Shoud return sucess (code 200) and delete targetserver's NAME in Apigee
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": "PoC3Producer-qa"
+          }
+        result: { "code": 200 }
+
+      - case: 
+          Delete targer servers
+          Given the targetserver's NAME, ORGANIZATION and ENVIRONMENT 
+          When the ENVIRONMENT target in file configuration isn't equal to ENVIRONMENT target in payload
+        expected:  Shoud return a error (code 401) and don't delete targetserver's NAME
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "PoC3Producer-qa"
+          }
+        result: { "code": 401 }
+
+      - case: 
+          Delete targer servers
+          Given the targetserver's NAME, ORGANIZATION and ENVIRONMENT 
+          When the NAME isn't correct or has a space before/after
+        expected:  Shoud return a error (code 401) and don't delete targetserver's NAME 
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": " PoC3Producer_error"
+          }
+        result: { "code": 401 }
+
+      - case: 
+          Delete targer servers
+          Given the targetserver's NAME, ORGANIZATION and ENVIRONMENT 
+          When the NAME isn't correct or has a space before/after
+        expected:  Shoud return a error (code 401) and don't Delete targetserver's NAME 
+        payload:
+          {               
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "NAME": " PoC3Producer-qa"
+          }
+        result: { "code": 401 }

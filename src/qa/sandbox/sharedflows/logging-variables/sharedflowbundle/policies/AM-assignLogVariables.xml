@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="true" enabled="true" name="AM-assignLogVariables">
+    <DisplayName>AM-assignLogVariables</DisplayName>
+    <Properties/>
+    <AssignVariable>
+        <Name>correlation.id</Name>
+        <Ref>request.header.x-request-apim-id</Ref>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>log.severity</Name>
+        <Value>INFO</Value>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>log.name</Name>
+        <Template>projects/{organization.name}/logs/{apiproxy.name}</Template>
+    </AssignVariable>
+    <AssignVariable>
+        <Name>services</Name>
+        <Value>[]</Value>
+    </AssignVariable>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

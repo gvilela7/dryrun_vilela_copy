@@ -1,0 +1,24 @@
+status: disable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: Auth-Northbound-JWKS-Endpoints
+            encrypted: true
+            keyValueEntries:
+              - name: teste1
+                value: salesforce.com/id/keys
+              - name: testexpto
+                value: testexpto
+            nextPageToken: ""
+        prod:
+          data:
+            name: Auth-Northbound-JWKS-Endpoints
+            encrypted: true
+            keyValueEntries:
+              - name: teste
+                value: teste
+            nextPageToken: ""

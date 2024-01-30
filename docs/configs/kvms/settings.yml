@@ -1,0 +1,16 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    example-apigee:
+      environments:
+        dev:
+          data:
+            name: KVM Example
+            encrypted: false
+            keyValueEntries:
+              - name: clientSecret
+                value: teste
+              - name: clientId
+                value: teste
+

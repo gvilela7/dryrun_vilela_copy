@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="false" enabled="true" name="SC-FetchPublicKeysJWKS">
+    <DisplayName>SC-FetchPublicKeysJWKS</DisplayName>
+    <Properties/>
+    <Request clearPayload="true" variable="reqServiceCalloutJWKS">
+        <Set>
+            <Verb>GET</Verb>
+        </Set>
+    </Request>
+    <Response>publicKeys</Response>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>https://{jwks.host}/{jwks.path}</URL>
+    </HTTPTargetConnection>
+</ServiceCallout>

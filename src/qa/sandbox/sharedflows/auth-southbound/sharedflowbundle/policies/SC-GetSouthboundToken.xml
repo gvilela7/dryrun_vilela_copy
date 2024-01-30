@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="true" enabled="true" name="SC-GetSouthboundToken">
+    <!-- Renaming this Service Callout requires-->
+    <DisplayName>SC-GetSouthboundToken</DisplayName>
+    <Properties/>
+    <Request clearPayload="false" variable="serviceCalloutReq"/>
+    <Response>tokenCalloutResponse</Response>
+    <HTTPTargetConnection>
+        <URL>https://{targetSystem.host}/{targetSystem.path}</URL>
+    </HTTPTargetConnection>
+</ServiceCallout>

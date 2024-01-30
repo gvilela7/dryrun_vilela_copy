@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-UnknownToken">
+    <DisplayName>RF-UnknownToken_change</DisplayName>
+    <Properties/>
+    <FaultResponse>
+        <AssignVariable>
+            <Name>apim.error.code</Name>
+            <Value>401.04</Value>
+        </AssignVariable>
+    </FaultResponse>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

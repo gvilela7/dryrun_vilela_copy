@@ -1,0 +1,59 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:
+        dev:
+          data:
+            name: test-keystore-qa
+            aliases:
+              - alias: AT-Financas-4_9_23
+                certsInfo:
+                  certInfo:
+                    - version: 3
+                      subject: CN=batatas,O=Internet Widgits Pty Ltd,ST=Azores,C=PT
+                      issuer: CN=batatas,O=Internet Widgits Pty Ltd,ST=Azores,C=PT
+                      expiryDate: "1699625881000"
+                      validFrom: "1668089881000"
+                      isValid: Yes
+                      sigAlgName: SHA256-RSA
+                      publicKey: RSA Public Key, 4096 bits
+                      basicConstraints: CA:TRUE
+                      serialNumber: 10:1f:78:36:da:28:c9:d8:84:20:9e:40:e5:dc:89:cf:62:e6:53:9f
+                type: CERT
+                password: ""
+              - alias: poc-mtls-keystore-alias
+                certsInfo:
+                  certInfo:
+                    - version: 3
+                      subject: CN=fred,O=Test,L=Edinburgh,ST=Lothian,C=US,1.2.840.113549.1.9.1=#0c096672656440686f6d65
+                      issuer: CN=fred,O=Test,L=Edinburgh,ST=Lothian,C=US,1.2.840.113549.1.9.1=#0c096672656440686f6d65
+                      expiryDate: "1326044278000"
+                      validFrom: "1262972278000"
+                      isValid: No
+                      sigAlgName: SHA1-RSA
+                      publicKey: RSA Public Key, 1024 bits
+                      basicConstraints: CA:FALSE
+                      serialNumber: fc:a6:89
+                type: KEY_CERT
+                password: ""
+        prod:
+          data:
+            name: test-keystore-qa
+            aliases:
+              - alias: AT-Financas-4_9_23
+                certsInfo:
+                  certInfo:
+                    - version: 3
+                      subject: CN=batatas,O=Internet Widgits Pty Ltd,ST=Azores,C=PT
+                      issuer: CN=batatas,O=Internet Widgits Pty Ltd,ST=Azores,C=PT
+                      expiryDate: "1699625881000"
+                      validFrom: "1668089881000"
+                      isValid: Yes
+                      sigAlgName: SHA256-RSA
+                      publicKey: RSA Public Key, 4096 bits
+                      basicConstraints: CA:TRUE
+                      serialNumber: 10:1f:78:36:da:28:c9:d8:84:20:9e:40:e5:dc:89:cf:62:e6:53:9f
+                type: CERT
+                password: ""

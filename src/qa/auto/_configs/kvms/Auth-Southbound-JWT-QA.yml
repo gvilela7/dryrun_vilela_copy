@@ -1,0 +1,22 @@
+status: enable
+settings:
+  scope: org
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      environments:            
+        dev:
+          data:
+            name: Auth-Southbound-JWT-QA
+            encrypted: true
+            keyValueEntries:
+              - name: salesforce__host
+                value: 
+              - name: salesforce__path
+                value: testexpto
+              - name: rmca__salesforce__issuer
+                value: testexpto1234
+              - name: rmca__salesforce__subject
+                value: testexpto123456
+              - name: rmca__salesforce__audience
+                value: testexpto789
+            nextPageToken: ""

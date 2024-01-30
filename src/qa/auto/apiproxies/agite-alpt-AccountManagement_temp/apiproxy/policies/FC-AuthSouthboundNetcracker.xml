@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-AuthSouthboundNetcracker">
+    <DisplayName>FC-AuthSouthboundNetcracker</DisplayName>
+    <FaultRules/>
+    <Parameters>
+        <Parameter name="flow.system.name">salesforce</Parameter>
+        <Parameter name="targetSystem">netcracker</Parameter>
+    </Parameters>
+    <SharedFlowBundle>auth-southbound</SharedFlowBundle>
+</FlowCallout>

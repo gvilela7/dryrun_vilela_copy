@@ -1,0 +1,18 @@
+status: enable
+settings:
+  scope: project
+  organizations:
+    apidev-apigeex-sandbox-d29a:
+      data:
+        name: APIwApp-QA
+        displayName: APIwApp-QA
+        approvalType: auto
+        attributes:
+          - name: APIwApp-QA
+            value: APIwApp-QA
+          - name: access
+            value: public
+        environments:
+          - dev
+        createdAt: "1698424157859"
+        lastModifiedAt: "1698426144207"

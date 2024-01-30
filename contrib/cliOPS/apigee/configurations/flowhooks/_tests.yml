@@ -1,0 +1,410 @@
+operations:
+  - id: AC_FG_001
+    cmd: apigee configurations flowhooks get
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - TYPE
+    overview: Get information about flowhooks in organization Apigee
+    scenarios:
+      - case: Organization, environment and name are valid
+        expected: command returns the data from an existing flow hook
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 200, "data": "{\n \"flowHookPoint\": \"PreProxyFlowHook\",\n \"sharedFlow\": \"auth-northbound\",\n \"continueOnError\": true\n}" }
+        
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "dev",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+      
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: TYPE not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+      
+      - case: Flow hook name does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "TYPE": "xpto"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AC_FGA_001
+    cmd: apigee configurations flowhooks getAll
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: Get all information about flowhooks by organization or name
+    scenarios:
+      - case: Organization and environment are valid
+        expected: command returns the data from all four flow hooks
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 200, "data": "[{\"flowHookPoint\":\"PreProxyFlowHook\",\"sharedFlow\":\"auth-northbound\",\"continueOnError\":true},{\"flowHookPoint\":\"PostProxyFlowHook\",\"continueOnError\":true},{\"flowHookPoint\":\"PreTargetFlowHook\",\"continueOnError\":true},{\"flowHookPoint\":\"PostTargetFlowHook\",\"continueOnError\":true}]" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred" }
+      
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+  
+  - id: AC_FV_001
+    cmd: apigee configurations flowhooks validate
+    inputs:
+      required:
+        - NAME
+      optionals:
+        - CONFIG_TYPE
+    overview: Check flowhooks settings file schema
+
+    scenarios:
+      - case: settings file exists and is valid
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "settings"
+          }
+        result: { "code": 200, "data": "Flow Hook configuration is valid!"  }
+
+      - case: settings file for flow hook does not exist
+        expected: command fails
+        payload:
+          {
+            "NAME": "settings"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+      - case: settings file is invalid (e.g. required property missing)
+        expected: command fails
+        payload:
+          {
+            "NAME": "settings"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+
+  - id: AC_FH_001
+    cmd: apigee configurations flowhooks delete
+    inputs:
+      required: 
+        - TYPE
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: Delete flowhooks createad in Apigee with Sharedflows attached or not
+
+    scenarios:
+      - case: Organization, environment and name are valid, with sharedflow attached
+        expected: command succeeds and detaches sharedflow from flowhook
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 200, "data": "Flow Hook detached successfully!" }
+
+      - case: Organization, environment and name are valid, without sharedflow attached
+        expected: command succeeds and nothings changes in Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "TYPE": "PreTargetFlowHook"
+          }
+        result: { "code": 200, "data": "Flow Hook detached successfully!" }
+            
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation" }
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "dev",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation" }
+      
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "TYPE": "PreProxyFlowHook"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation" }
+
+      - case: TYPE not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation" }
+      
+      - case: Flow hook name does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "TYPE": "xpto"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation" }
+
+  - id: AC_FE_001
+    cmd: apigee configurations flowhooks export
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: Exports all flow hooks from a certain environment
+
+    scenarios:
+      - case: Organization and environment are valid, first time exporting
+        expected: command succeeds and settings file is created
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 200, "data": "Flow Hooks exported!" }
+
+      - case: Organization and environment valid, second time exporting
+        expected: command succeeds and the settings file updated
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 200, "data": "Flow Hooks exported!" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred" }
+      
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd"
+          }
+        result: { "code": 500, "data": "Internal Error – a generic error occurred"}
+
+  - id: AC_FI_001
+    cmd: apigee configurations flowhooks import
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: |
+      Imports all flow hooks to a certain environment
+      If the environemnt is not set in the settings file, the default settings are imported
+      In neither the environemnt or default settings are set, the command fails
+
+    scenarios:
+      - case: Organization and environment are valid
+        expected: command succeeds and flow hooks are create in Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 200, "data": "Flow Hooks imported!" }
+
+      - case: Organization and environment are valid and flow hooks name set
+        expected: command succeeds and flow hooks are create in Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "TYPE": "flowhooktestQA"
+          }
+        result: { "code": 200, "data": "Flow Hooks imported!" }
+
+      - case: organization does not exist with settings valid and ENVIRONMENT and TYPE correctly set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev",
+            "TYPE": "flowhooktestQA"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation"}
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "dev",
+            "TYPE": "flowhooktestQA"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation"}
+      
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation"}
+
+      - case: environment does not exist, flowhook is not set in settings file
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd"
+          }
+        result: { "code": 500, "data": "Something went wrong in requested operation"}
+
+  - id: AC_FI_001
+    cmd: apigee configurations flowhook importAll
+    inputs:
+      required:
+        - ORGANIZATION
+      optional:
+        - ENVIRONMENTS
+    overview: |
+      Imports all flow hooks to each of the environments configured in the settings file
+      Ignores default
+
+    scenarios:
+      - case: Organization is valid
+        expected: command succeeds and flow hooks are updated in Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 200, "data": "{\"flowhooks\":successes\":[\"PostProxyFlowHook - env: prod\",\"PreProxyFlowHook - env: dev\",\"PostProxyFlowHook - env: dev\",\"PreTargetFlowHook - env: dev\",\"PostTargetFlowHook - env: dev\"]}}" }
+        
+      - case: organization not set in settings file
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "org"
+          }
+        result: { "code": 401, "data": "{\"flowhooks\":{\"successes\":[],\"failures\":[\"all envs\"]}}" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {}
+        result: { "code": 500, "data": "Something went wrong in requested operation" }

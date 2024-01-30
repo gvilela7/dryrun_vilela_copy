@@ -1,0 +1,153 @@
+---
+"$schema": https://json-schema.org/draft/2020-12/schema
+"$id": https://example.com/product.schema.json
+title: Build Authentication Profile yaml file
+description: Build Authentication Profile yaml file
+type: object
+additionalProperties: false
+properties:
+  status:
+    type: string
+    description: Action to execute
+    enum:
+    - enable
+    - disable
+  settings:
+    type: object
+    description: Placeholder for Authentication Profile settings.
+    additionalProperties: false
+    properties:
+      scope:
+        type: string
+        description: Scope of the file.
+        enum:
+        - org
+        - project
+      organizations:
+        type: object
+        description: Organization gcp scope.
+        additionalProperties: false
+        minProperties: 1
+        patternProperties:
+          "^[a-zA-Z0-9-_]+$":
+            type: object
+            description: Project in wich the authentication profile will exist.
+            additionalProperties: false
+            properties:
+              environments:
+                type: object
+                description: Environments placeholder.
+                minProperties: 1
+                additionalProperties: false
+                patternProperties:
+                  "^[a-zA-Z0-9-_]+$":
+                    type: object
+                    description: Environment data of the authentication profile.
+                    additionalProperties: false
+                    properties:
+                      data:
+                        "$ref": "#/$defs/commonData"
+                    required:
+                    - data
+            required:
+            - environments
+    required:
+    - scope
+    - organizations
+required:
+- status
+- settings
+"$defs":
+  commonData:
+    type: object
+    additionalProperties: false
+    properties:
+      uuid:
+        type: string
+      region:
+        type: string
+        enum:
+        - asia-east1
+        - asia-northeast1
+        - asia-southeast1 
+        - asia-south1
+        - australia-southeast1
+        - australia-southeast2
+        - europe-north1
+        - europe-west1
+        - europe-west2        
+        - europe-west3
+        - europe-west4
+        - europe-west6
+        - europe-west9
+        - me-west1
+        - me-central1
+        - northamerica-northeast1
+        - southamerica-east1
+        - us
+        - us-central1
+        - us-east1
+        - us-east4
+        - us-west1
+        - us-west2
+      displayName:
+        type: string
+      lastModifierEmail:
+        type: string
+      updateTime:
+        type: string
+      visibility:
+        type: string
+        enum:
+        - CLIENT_VISIBLE
+      state:
+        type: string
+        enum:
+        - UNAUTHORIZED
+        - VALID
+      reason:
+        type: string
+      validTime:
+        type: string
+      description:
+        type: string
+      creatorEmail:
+        type: string
+      createTime:
+        type: string
+      decryptedCredential:
+        anyOf:
+        - "$ref": "#/$defs/OAUTH2_AUTHORIZATION_CODE"
+        - "$ref": "#/$defs/GENERIC"
+    required:
+    - displayName
+    - uuid
+    - region
+    - decryptedCredential
+  GENERIC:
+    type: object
+    additionalProperties: true
+  OAUTH2_AUTHORIZATION_CODE:
+    type: object
+    additionalProperties: false
+    properties:
+      type:
+        type: string
+        const: OAUTH2_AUTHORIZATION_CODE
+      clientId:
+        type: string
+      clientSecret:
+        type: string
+      scope:
+        type: string
+      authEndpoint:
+        type: string
+      tokenEndpoint:
+        type: string
+    required:
+    - clientId
+    - clientSecret
+    - scope
+    - authEndpoint
+    - tokenEndpoint
+    - type

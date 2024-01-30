@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="false" enabled="true" name="SC-OAuthJWT">
+    <DisplayName>SC-OAuthJWT</DisplayName>
+    <Properties/>
+    <Request>
+        <Set>
+            <Headers/>
+            <QueryParams/>
+            <FormParams>
+                <FormParam name="grant_type">urn:ietf:params:oauth:grant-type:jwt-bearer</FormParam>
+                <FormParam name="assertion">{southbound-token}</FormParam>
+            </FormParams>
+            <Verb>POST</Verb>
+            <Path/>
+        </Set>
+        <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+    </Request>
+    <Response>tokenCalloutResponse</Response>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>https://{targetSystem.host}/{targetSystem.path}</URL>
+    </HTTPTargetConnection>
+</ServiceCallout>

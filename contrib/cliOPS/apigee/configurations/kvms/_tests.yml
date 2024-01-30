@@ -1,0 +1,542 @@
+operations:
+
+  - id: AC_KI_001
+    cmd: apigee configurations kvms import
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+      optional:
+        - CONFIGS_ENCRYPTION
+    overview: Import kvm to Apigee organization
+
+    scenarios:
+      - case: KVM does not exist in Apigee
+        expected: creates a new kvm in Apigee with the given data
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 200, "data": "KVM imported!" }
+      
+      - case: KVM already exists in Apigee
+        expected: updates the kvm's configuration in Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 200,  "data": "KVM imported!" }
+
+      - case: Settings file does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Test"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: organization does not exist in Apigee but is defined in the settings file
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: environment does not exist in Apigee but is defined in the settings file
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_KE_001
+    cmd: apigee configurations kvms export
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+      optional:
+        - ENCRYPTED
+        - CONFIGS_ENCRYPTION
+    overview: Export specify kvm to Apigee organization with ORGANIZATION, ENVIRONMENT and NAME set
+
+    scenarios:
+      - case: first time exporting (and directory does not exist)
+        expected: creates new directory and a file with the kvm's configuration
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 200, "data": "KVM exported!" }
+      
+      - case: KVM config file already exists locally
+        expected: updates the kvm's configuration file
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 200, "data": "KVM exported!" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "NAME": "Auth-Southbound-JWT-QA"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+    
+      - case: kvm does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "Test"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_KV_001
+    cmd: apigee configurations kvms validate
+    inputs:
+      required:
+        - NAME
+    overview: check specify kvm to Apigee organization with NAME set
+    
+    scenarios:
+      - case: settings file exists and is valid
+        expected: command succeeds
+        payload:
+          { 
+            "NAME": "demo" 
+          }
+        result: { "code": 200, "data": "KVM configuration is valid!" }
+
+      - case: settings file for kvm does not exist
+        expected: command fails
+        payload:
+          { 
+            "NAME": "Test" 
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: settings file is invalid (e.g. required property missing)
+        expected: command fails and ajv output is re-directed to file
+        payload:
+          { 
+            "NAME": "demo" 
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set
+        expected: command fails
+        payload: 
+          {
+          
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_KL_001
+    cmd: apigee configurations kvms list
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+    overview: List Apigee's kvms with ORGANIZATION and ENVIRONMENT
+
+    scenarios:
+      - case: organization and environment exist and S.A. has permissions
+        expected: lists only the names of the KVMs available in the environment of the organization
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 200, "data": "[\n \"Auth-Northbound-ClientCredentials\",\n \"Auth-Northbound-JWKS-Endpoints\",\n \"Auth-Northbound-JWT-PublicKeys\",\n \"Auth-SOAP\",\n \"Auth-Southbound-Apikey\",\n \"Auth-Southbound-Basic\",\n \"Auth-Southbound-ClientCredentials\",\n \"Auth-Southbound-JWT\",\n \"Auth-Southbound-ProducerAuthType\",\n \"Auth-Southbound-JWT-QA\",\n \"JWKS\",\n \"JWT\",\n \"KeyStore\",\n \"PoC5-KVM\",\n \"Southbound-Apikey\",\n \"Southbound-Basic\",\n \"Southbound-ClientCredentials\",\n \"Southbound-JWT\",\n \"Southbound-ProducerSupportedAuth\",\n \"TesteQA\",\n \"asyncCallbackKVM\",\n \"authentication-credentials\",\n \"backend_account_config\",\n \"backend_account_config_1\",\n \"demo\",\n \"kvm-apim-errors-list\",\n \"kvm-fault-errors-map\",\n \"poc4Mock\"\n]" }
+
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "dev"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          { 
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a" 
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          { 
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd" 
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_KG_001
+    cmd: apigee configurations kvms get
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+      optional:
+        - ENCRYPTED
+    overview: Get Apigee's kvms with ORGANIZATION, ENVIRONMENT and NAME
+
+    scenarios:
+      - case: Organization, environment and name are valid
+        expected: command returns the data from an existing KVM
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "demo"
+          }
+        result: { "code": 200, "data": "{\n \"name\": \"demo\",\n \"encrypted\": true,\n \"keyValueEntries\": [\n {\n \"name\": \"4643\",\n \"value\": \"https://6351259cdfe45bbd55b7e329.mockapi.io/v1/producer/poc/clientCallBack\"\n },\n {\n \"name\": \"50000\",\n \"value\": \"https://webhook.site/b56f16d1-81a6-454e-a855-b9740b524e18\"\n }\n ],\n \"nextPageToken\": \"\"\n}" }
+
+      - case: organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "demo",
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "demo"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "demo"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "NAME": "demo"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: kvm name does not exist in Apigee
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "xpto"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_KD_001
+    cmd: apigee configurations kvms delete
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+    overview: Delete Apigee's kvms with ORGANIZATION, ENVIRONMENT and NAME
+
+    scenarios:
+      - case: KVM exists in the given environment and organization
+        expected: deletes the kvm from Apigee
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "demo",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: { "code": 200, "data": "KVM deleted successfully!" }
+
+      - case: Organization does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "agite",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "demo"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: Environment does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd",
+            "NAME": "demo"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: KVM does not exist
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "does-not-exist"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: ORGANIZATION not set
+        expected: command fails
+        payload:
+          {
+            "ENVIRONMENT": "cicd-dev",
+            "NAME": "demo"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+      
+      - case: NAME not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "cicd-dev"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+      - case: ENVIRONMENT not set
+        expected: command fails
+        payload:
+          {
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "NAME": "demo"
+          }
+        result: { "code": 401, "data": "Something went wrong in requested operation" }
+
+  - id: AC_KENC_001
+    cmd: apigee configurations kvms encrypt
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+        - CONFIGS_ENCRYPTION
+      optional:
+        - ENCRYPTED
+    overview: |
+      Encrypt data kvms with ORGANIZATION, ENVIRONMENT and NAME. 
+      Attention, you must have the secret configured in GitHub for encrypt data kvm. 
+      This secret must be value alpha numeric
+
+    scenarios:
+      - case: settings file exists, it's valid and encrypt data for environment
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "Auth-Southbound-JWT-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "CONFIGS_ENCRYPTION": 12345
+          }
+        result: { "code": 200,   "data": "KVM Encrypted!" }
+
+      - case: settings file exists, it's valid and encrypt data for environment doesn't exist
+        expected: command fails
+        payload:
+          {
+            "NAME": "Auth-Southbound-JWT-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "env1dev-pub",
+            "ENCRYPTED": false,
+            "CONFIGS_ENCRYPTION": 12345
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred" }
+
+      - case: settings file exists, it's valid and encrypt data encrypted
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "Auth-Southbound-JWT-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "ENCRYPTED": true,
+            "CONFIGS_ENCRYPTION": 12345
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}
+
+      - case: settings file exists, it's valid and encrypt data will not be encrypt
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "Auth-Southbound-JWT-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "ENCRYPTED": false,
+            "CONFIGS_ENCRYPTION": 12345
+          }
+        result: { "code": 200,  "data": "KVM Encrypted!"} 
+
+  - id: AC_KDEC_001
+    cmd: apigee configurations kvms decrypt
+    inputs:
+      required:
+        - ORGANIZATION
+        - ENVIRONMENT
+        - NAME
+        - CONFIGS_ENCRYPTION
+      optional:
+        - ENCRYPTED
+    overview: |
+      Decrypt data kvms with ORGANIZATION, ENVIRONMENT and NAME. 
+    note: |
+      You must have the secret configured in GitHub for decrypt data kvm. 
+      This secret must be value alpha numeric
+
+    scenarios:
+      - case: settings file exists, it's valid and decrypt data for environment dev
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "Auth-Southbound-JWT-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "dev",
+            "ENCRYPTED": false,
+            "CONFIGS_ENCRYPTION": 12345
+          }
+        result: { "code": 200,   "data": "KVM Decrypted!" }
+
+      - case: settings file exists, it's valid and decrypt data for environment doesn't exist
+        expected: command succeeds
+        payload:
+          {
+            "NAME": "Auth-Southbound-JWT-QA",
+            "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+            "ENVIRONMENT": "env1dev-pub",
+            "ENCRYPTED": false,
+            "CONFIGS_ENCRYPTION": 12345
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred" }
+
+      - case: settings file exists, it's valid and encrypt data encrypted
+        expected: command succeeds
+        payload:
+          {
+              "NAME": "Auth-Southbound-JWT-QA",
+              "ORGANIZATION": "apidev-apigeex-sandbox-d29a",
+              "ENVIRONMENT": "prod",
+              "ENCRYPTED": true,
+              "CONFIGS_ENCRYPTION": 12345
+          }
+        result: { "code": 500,  "data": "Internal Error – a generic error occurred"}

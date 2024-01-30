@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-RedirectURL">
+    <DisplayName>AM-RedirectURL</DisplayName>
+    <Properties/>
+    <Set>
+        <QueryParams>
+            <QueryParam name="test">{notexist}</QueryParam>
+            <QueryParam name="url">http://httpbin.org/</QueryParam>
+        </QueryParams>
+    </Set>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+    <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>
