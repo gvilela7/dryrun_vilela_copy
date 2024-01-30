@@ -14,9 +14,8 @@ jobs:
     - name: Create branch in target repository
       env:
         TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
-        TARGET_REPO_USERNAME: gvilela7  # Replace with the owner's username of the target repository
+        TARGET_REPO_USERNAME: gvilela7
         TARGET_REPO_NAME: dryrun_vilela
-        SOURCE_BRANCH: ${{ github.ref }}
       run: |
         # Set up Git
         git config --global user.email "actions@github.com"
@@ -24,4 +23,4 @@ jobs:
 
         # Push the new branch to the target repository
         git remote add target_repo https://github.com/$TARGET_REPO_USERNAME/$TARGET_REPO_NAME.git
-        git push target_repo HEAD:new_branch_name
+        git push target_repo HEAD:new_branch_name || echo "Failed to push branch to target repository"
