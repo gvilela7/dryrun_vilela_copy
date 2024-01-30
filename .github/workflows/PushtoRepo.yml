@@ -31,17 +31,17 @@ jobs:
         echo "$(ls)"
 
     - name: Move Files 
-          run: |
-            sudo mv -f "tmp/" "src"
+        run: |
+          sudo mv -f "tmp/" "src"
     
     - name: install tree
-          run: | 
-            sudo apt-get install tree
+        run: | 
+          sudo apt-get install tree
 
     - name: check Files
-          run: |
-            cd $dir
-            tree
+        run: |
+          cd src
+          tree
 
     - name: List modified files
       if: ${{ always() }}
