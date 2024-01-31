@@ -37,7 +37,10 @@ jobs:
       - name: Commit Files
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
         run: |
-          echo "${{steps.modifiedFiles.outputs.result}}"
+          echo "modified files: ${{steps.modifiedFiles.outputs.result}}"
+          echo "repo name: ${{github.event.repository.name}}"
+          echo "ref name: $GITHUB_REF_NAME"
+          echo "ref name:: ${{ github.ref_name }}"
           npm install axios
           
           node .github/GitVerifiedCommit/index.js \
