@@ -47,7 +47,7 @@ jobs:
                ${{secrets.PIPELINE_ACCESS}} \
                $GITHUB_REPOSITORY_OWNER \
                dryrun_vilela \
-               ${{ github.ref_name }} \
+               $GITHUB_REF_NAME \
                "${{steps.modifiedFiles.outputs.result}}" \
                '[AUTO] Committing files updated by imports' 
 
