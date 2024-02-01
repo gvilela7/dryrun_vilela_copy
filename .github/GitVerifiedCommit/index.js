@@ -50,7 +50,7 @@ const main = async () => {
     
   // Get the sha of the last commit on BRANCH_NAME
   const { data: { object: { sha: currentCommitSha } } } = await axios({ url: REF_URL, headers });
- 
+  console.log("PASSOU")
   // Get the sha of the root tree on the commit retrieved previously
    const COMMIT_URL = `${COMMITS_URL}/${currentCommitSha}`;
    const { data: { tree: { sha: treeSha } } } = await axios({ url: COMMIT_URL, headers });
