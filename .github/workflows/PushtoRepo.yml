@@ -37,6 +37,24 @@ jobs:
       - name: Commit Files
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
         run: |
+          cat text.txt
+          echo "modified files: ${{steps.modifiedFiles.outputs.result}}"
+          echo "repo name: ${{github.event.repository.name}}"
+          echo "ref name: $GITHUB_REF_NAME"
+          echo "ref name:: ${{ github.ref_name }}"
+          npm install axios
+          
+          node .github/GitVerifiedCommit/index.js \
+                ${{secrets.GITHUB_TOKEN}} \
+                $GITHUB_REPOSITORY_OWNER \
+                ${{github.event.repository.name}} \
+                $GITHUB_REF_NAME \
+                "${{steps.modifiedFiles.outputs.result}}" \
+                '[AUTO] Committing files updated by imports'
+
+      - name: Commit Files
+        if: ${{ steps.modifiedFiles.outputs.result != '' }}        
+        run: |
           echo "modified files: ${{steps.modifiedFiles.outputs.result}}"
           echo "repo name: ${{github.event.repository.name}}"
           echo "ref name: $GITHUB_REF_NAME"
