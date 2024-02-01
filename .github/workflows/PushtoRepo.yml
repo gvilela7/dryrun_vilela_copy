@@ -1,16 +1,12 @@
 name: Create Branch in Target Repository
-
 on:
   workflow_dispatch:
-
 jobs:
   create-branch:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
-
       - name: Checkout tools repo
         uses: actions/checkout@v4
         with:
@@ -20,12 +16,11 @@ jobs:
           sparse-checkout: |
             text.txt
             naoMexe.txt
-          path:
-
+          path: tmp
       - name: Edit Files
         id: modifiedFiles 
         run: |
-          cat text.txt
+          cd tmp
           echo "hello world" >> text.txt
           cat naoMexe.txt
           cat text.txt
@@ -37,17 +32,20 @@ jobs:
       - name: Commit Files
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
         run: |
-            npm install axios
-    
-            node .github/GitVerifiedCommit/index.js \
-                  ${{secrets.GITHUB_TOKEN}} \
-                  $GITHUB_REPOSITORY_OWNER \
-                  ${{github.event.repository.name}} \
-                  $GITHUB_REF_NAME \
-                  "${{steps.modifiedFiles.outputs.result}}" \
-                  '[AUTO] Committing files updated by imports'   
+          echo "modified files: ${{steps.modifiedFiles.outputs.result}}"
+          echo "repo name: ${{github.event.repository.name}}"
+          echo "ref name: $GITHUB_REF_NAME"
+          echo "ref name:: ${{ github.ref_name }}"
+          npm install axios
+          
+          node .github/GitVerifiedCommit/index.js \
+               ${{secrets.PIPELINE_ACCESS}} \
+               $GITHUB_REPOSITORY_OWNER \
+               dryrun_vilela \
+               $GITHUB_REF_NAME \
+               "${{steps.modifiedFiles.outputs.result}}" \
+               '[AUTO] Committing files updated by imports'
 
       - name: Clean repo sync              
         run: |
-          sudo rm -rf tmp               
-
+          sudo rm -rf tmp 
