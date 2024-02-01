@@ -20,7 +20,7 @@ jobs:
       - name: Edit Files
         id: modifiedFiles 
         run: |
-          cd tmp
+          sudo mv -f "tmp/" .
           cat text.txt
           echo "hello world" >> text.txt
           echo "second print:"
@@ -46,7 +46,7 @@ jobs:
                $GITHUB_REPOSITORY_OWNER \
                dryrun_vilela \
                $GITHUB_REF_NAME \
-               "tmp/text.txt" \
+               "text.txt" \
                '[AUTO] Committing files updated by imports'
 
       - name: Clean repo sync              
