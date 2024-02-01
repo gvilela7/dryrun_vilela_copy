@@ -34,7 +34,7 @@ jobs:
       - name: Commit Files
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
         run: |
-          cat tmp/text.txt
+          cat text.txt
           echo "modified files: ${{steps.modifiedFiles.outputs.result}}"
           echo "repo name: ${{github.event.repository.name}}"
           echo "ref name: $GITHUB_REF_NAME"
