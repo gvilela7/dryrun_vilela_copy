@@ -20,7 +20,7 @@ jobs:
       - name: Edit Files
         id: modifiedFiles 
         run: |
-          sudo mv -f "tmp/" .
+          sudo mv -f tmp/* .
           cat text.txt
           echo "hello world" >> text.txt
           echo "second print:"
