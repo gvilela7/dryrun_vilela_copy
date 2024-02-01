@@ -23,47 +23,47 @@ jobs:
           path: tmp
 
       - name: Edit Files
-        id: modifiedFiles 
-        run: |
-          cd tmp
-          echo "hello world" >> text.txt
-          cat naoMexe.txt
-          cat text.txt
-          echo "ficheiros alterados: $(git ls-files -o -m)"
-          echo "result<<EOF" >> $GITHUB_OUTPUT
-          echo "$(git ls-files -o -m --exclude-standard -- ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          id: modifiedFiles 
+          run: |
+            cd tmp
+            echo "hello world" >> text.txt
+            cat naoMexe.txt
+            cat text.txt
+            echo "ficheiros alterados: $(git ls-files -o -m)"
+            echo "result<<EOF" >> $GITHUB_OUTPUT
+            echo "$(git ls-files -o -m --exclude-standard -- ':!:contrib/*' ':!node_modules/*' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Commit Files actual
-        if: ${{ steps.modifiedFiles.outputs.result != '' }}        
-        run: |
-          cat text.txt
-          npm install axios
+          if: ${{ steps.modifiedFiles.outputs.result != '' }}        
+          run: |
+            cat text.txt
+            npm install axios
     
-          node .github/GitVerifiedCommit/index.js \
-                ${{secrets.GITHUB_TOKEN}} \
-                $GITHUB_REPOSITORY_OWNER \
-                ${{github.event.repository.name}} \
-                $GITHUB_REF_NAME \
-                "${{steps.modifiedFiles.outputs.result}}" \
-                '[AUTO] Committing files updated by imports'
+            node .github/GitVerifiedCommit/index.js \
+                  ${{secrets.GITHUB_TOKEN}} \
+                  $GITHUB_REPOSITORY_OWNER \
+                  ${{github.event.repository.name}} \
+                  $GITHUB_REF_NAME \
+                  "${{steps.modifiedFiles.outputs.result}}" \
+                  '[AUTO] Committing files updated by imports'
 
       - name: Commit Files
-        if: ${{ steps.modifiedFiles.outputs.result != '' }}        
-        run: |
-          echo "modified files: ${{steps.modifiedFiles.outputs.result}}"
-          echo "repo name: ${{github.event.repository.name}}"
-          echo "ref name: $GITHUB_REF_NAME"
-          echo "ref name:: ${{ github.ref_name }}"
-          npm install axios
+          if: ${{ steps.modifiedFiles.outputs.result != '' }}        
+          run: |
+            echo "modified files: ${{steps.modifiedFiles.outputs.result}}"
+            echo "repo name: ${{github.event.repository.name}}"
+            echo "ref name: $GITHUB_REF_NAME"
+            echo "ref name:: ${{ github.ref_name }}"
+            npm install axios
           
-          node .github/GitVerifiedCommit/index.js \
-               ${{secrets.PIPELINE_ACCESS}} \
-               $GITHUB_REPOSITORY_OWNER \
-               dryrun_vilela \
-               $GITHUB_REF_NAME \
-               "${{steps.modifiedFiles.outputs.result}}" \
-               '[AUTO] Committing files updated by imports' 
+            node .github/GitVerifiedCommit/index.js \
+                  ${{secrets.PIPELINE_ACCESS}} \
+                  $GITHUB_REPOSITORY_OWNER \
+                  dryrun_vilela \
+                  $GITHUB_REF_NAME \
+                  "${{steps.modifiedFiles.outputs.result}}" \
+                  '[AUTO] Committing files updated by imports' 
 
       - name: Clean repo sync              
         run: |
