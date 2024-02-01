@@ -35,18 +35,18 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Commit Files actual
-          if: ${{ steps.modifiedFiles.outputs.result != '' }}        
-          run: |
-              cat text.txt
-              npm install axios
+        if: ${{ steps.modifiedFiles.outputs.result != '' }}        
+        run: |
+          cat text.txt
+          npm install axios
     
-              node .github/GitVerifiedCommit/index.js \
-                    ${{secrets.GITHUB_TOKEN}} \
-                    $GITHUB_REPOSITORY_OWNER \
-                    ${{github.event.repository.name}} \
-                    $GITHUB_REF_NAME \
-                    "${{steps.modifiedFiles.outputs.result}}" \
-                    '[AUTO] Committing files updated by imports'
+          node .github/GitVerifiedCommit/index.js \
+                ${{secrets.GITHUB_TOKEN}} \
+                $GITHUB_REPOSITORY_OWNER \
+                ${{github.event.repository.name}} \
+                $GITHUB_REF_NAME \
+                "${{steps.modifiedFiles.outputs.result}}" \
+                '[AUTO] Committing files updated by imports'
 
       - name: Commit Files
         if: ${{ steps.modifiedFiles.outputs.result != '' }}        
