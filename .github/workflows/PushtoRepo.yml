@@ -20,12 +20,12 @@ jobs:
           sparse-checkout: |
             text.txt
             naoMexe.txt
-          path: tmp
+          path:
 
       - name: Edit Files
         id: modifiedFiles 
         run: |
-          cd tmp
+          cat text.txt
           echo "hello world" >> text.txt
           cat naoMexe.txt
           cat text.txt
