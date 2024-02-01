@@ -46,7 +46,7 @@ jobs:
                $GITHUB_REPOSITORY_OWNER \
                dryrun_vilela \
                $GITHUB_REF_NAME \
-               "${{steps.modifiedFiles.outputs.result}}" \
+               "tmp/text.txt" \
                '[AUTO] Committing files updated by imports'
 
       - name: Clean repo sync              
