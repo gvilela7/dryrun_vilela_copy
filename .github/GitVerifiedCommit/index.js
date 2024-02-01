@@ -33,7 +33,7 @@ const REPOSITORY_TREES_URL = `https://api.github.com/repos/${REPOSITORY_OWNER}/$
 
 // See: https://docs.github.com/en/free-pro-team@latest/rest/reference/git#get-a-reference
 const REF_URL = `https://api.github.com/repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/git/refs/heads/${BRANCH_NAME}`;
-
+console.log(REF_URL)
 // see:
 const BLOB_URL = `https://api.github.com/repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/git/blobs`
 
@@ -42,7 +42,7 @@ const headers = {
   Accept: 'application/vnd.github.v3+json',
   Authorization: `Bearer ${GITHUB_TOKEN}`,
 };
-
+console.log(headers)
 
 const main = async () => {
 
