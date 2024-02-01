@@ -21,7 +21,9 @@ jobs:
         id: modifiedFiles 
         run: |
           cd tmp
+          cat text.txt
           echo "hello world" >> text.txt
+          echo "second print:"
           cat naoMexe.txt
           cat text.txt
           echo "ficheiros alterados: $(git ls-files -o -m)"
